@@ -1,0 +1,127 @@
+Starting with the 20120614 the ability is provided to use libtsctl directly
+from interpreted languages such as Python, Perl, and Tcl.  This is
+accomplished with the use of a SWIG .i file.
+
+More information on SWIG can be found here:
+     http://www.swig.org/
+
+We provide the file "tsctl.i" which can be used with the SWIG utility to
+generate the necessary bindings to any language supported by SWIG.
+Unfortunately, due to the large number of combinations between architectures,
+library versions, SWIG versions, etc. we are not able to provide pre-compiled
+binaries.  This document will attempt to guide you through the basic steps
+that are needed to compile the SWIG bindings.  We will be happy to help if
+you run into any problems, especially if you can point out any changes
+or additions needed in the documentation, however we also encourage
+you to consult the SWIG documentation linked from the above URL for more
+specific information to the language you want to use.
+
+1. Install SWIG
+
+First, you will need to install SWIG on your development machine.  If
+you are running Debian it should be sufficient to run the following as root:
+	apt-get install swig
+
+If you are using a different distribution there may be a similar process.
+Some other Linux distributions also use the apt package management system,
+and so the above command may work for them.  On some systems, the name
+of the package may be something other than "swig" so you may have to
+search your packages for the appropriate name.
+
+Otherwise, you may need to go to the SWIG website mentioned above and
+download and compile their code per their instructions.
+
+2. Install development headers
+
+Once you have installed swig on your development machine, you will need
+to make sure the development headers for your language of choice are
+installed as well.  The development version must match the version of
+the language interpreter on your target machine.
+
+Example:
+Suppose the goal is to create Python bindings for a TS-4500 board.
+To determine the version of python running on the board you can run
+the 'python' command on the board:
+
+TS-4500# python --version                              
+Python 2.5.2
+TS-4500#
+
+The debian package management system (on my system) lists the following
+python development packages:
+	python2.5-dev
+	python2.6-dev
+
+The former package most closely matches the version of Python on my board,
+so I would install that.
+	apt-get install python2.5-dev
+
+If the wrong development headers are used, the most likely symptom will be
+unexplainable compilation errors.
+
+3. Ensure you have the correct compiler
+
+Technologic Systems provides several cross-tools, as well as an on-board
+compiler for most systems.  For best results, you should pick the compiler
+which most closely matches the requirements of the interpreter you are going
+to use.
+
+For example, most interpreters are part of Debian packages, and thus are
+dependant on glibc.  Therefore, the most recently glibc based cross-compiler,
+or the on-board compiler would be the best choice.  (By contrast, the uclibc
+compiler would be a poor choice.)
+
+If the wrong library is used you will likely get obscure errors when you try
+to import tsctl into your language.
+
+
+4. Run the appropriate commands to generate bindings
+
+4.1 Run swig to convert the tsctl.i file into tsctl_wrap.c
+
+Example: If we are creating python bindings, the command would be:
+	swig -python tsctl.i
+
+4.2 Compile tsctl_wrap.c to an object file
+
+You will probably need to supply the path to the language development headers
+in this command.
+
+Example: For our previous Python example, we would run something like this:
+	$CC -I/usr/include/python2.5 -c tsctl_wrap.c -o tsctl_wrap.o
+
+4.3 Link tsctl_wrap.o against libtsctl
+
+The file libtsctl.c is provided for this purpose.  This includes "libtsctl.h"
+but has no main() function, so that the produced code effectively acts as a
+library code which we will be calling.
+
+Example: Something like the following should work in most cases:
+	$CC -shared libtsctl.c tsctl_wrap.o -o  _tsctl.so
+
+5. Copy the library file and any language specific file(s) to your setup
+
+Please consult the SWIG documentation for specific details of this.
+
+Example: For python, there will be two files to copy: _tsctl.so and tsctl.py.
+You will need to copy both files where you python script can find them.
+The simplest way to do this is to put them in the same directory as your
+script, and run it from that directory.
+
+Here is sample output from our Python example showing how to use the module:
+TS-4500# python                                                       
+Python 2.5.2 (r252:60911, Jan 24 2010, 20:48:41)                         
+[GCC 4.3.2] on linux2                                                    
+Type "help", "copyright", "credits" or "license" for more information.   
+>>> from tsctl import *                                                  
+>>> s = SystemInit(0)                                                    
+>>> s                                                                    
+<tsctl.System; proxy of <Swig Object of type 'System *' at 0x40289a40> > 
+>>> bus = BusInit(0)                                                     
+>>> bus                                                                  
+<tsctl.Bus; proxy of <Swig Object of type 'struct Bus *' at 0x40289a28> >
+>>> bus.API.Peek16(bus,0x60)                                             
+17664                                                                    
+>>> print hex(17664)                                                     
+0x4500                                                                   
+>>>                                                                      
