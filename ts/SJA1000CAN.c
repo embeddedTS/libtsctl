@@ -605,12 +605,13 @@ void wait(SJA1000CAN *can,int socketwait,int txwait,int rxwait) {
     */
     Log(LOG_CAN,"ints=%d(%d)\n",ints,debug);
     fprintf(stderr,"ints=%d(%04X/%04X)",ints,debug,can->bus->Peek8(can->bus,4));
-    if (!FD_ISSET(d->irqfd,&fdr)) {
+    if (FD_ISSET(d->irqfd,&fdr)) {
+      read(d->irqfd,&dummy,4); //read IRQ fd to acknowledge with OS
+      fprintf(stderr,".\n",ints);
+    } else {
       fprintf(stderr,"Uh-oh!\n");
     }
-    read(d->irqfd,&dummy,4); //read IRQ fd to acknowledge with OS
     can->bus->Poke8(can->bus,4,0);
-    fprintf(stderr,".\n",ints);
   }
   // if listen descriptor is ready, accept a new connection
   if (FD_ISSET(d->listen,&fdr)) {
@@ -869,7 +870,7 @@ int CANMain(void *can0,int listen,int irqfd,int s) {
   while (1) {
     ___ CANStatus = can->bus->Peek8(can->bus,2);
     socketwait = txwait = rxwait = 0;
-    //fprintf(stderr,"CANStatus=%X\n",CANStatus);
+    fprintf(stderr,"CANStatus=%X\n",CANStatus);
     if (CANStatus & CAN_BusOff) {
     terminate_connections:
       for (i=0;i<can->D.nconn;i++) {
@@ -881,6 +882,7 @@ int CANMain(void *can0,int listen,int irqfd,int s) {
       goto escape_hatch;
     }
     if (CANStatus & CAN_TxRdy) {
+fprintf(stderr,"3");
       if (emptyTxQ(can)) {
         readSocketsToTxQ(can);
       }
@@ -895,7 +897,7 @@ int CANMain(void *can0,int listen,int irqfd,int s) {
       // emptyTxQ(can), since we fell out of the loop
       socketwait = 1;
       if (!can->D.nconn) { // no open sockets remain
-	//___ fprintf(stderr,"AAA\n");
+	___ fprintf(stderr,"AAA\n");
       escape_hatch:
 	can->bus->Unlock(can->bus,0,0);
 	fprintf(stderr,"(896-)");
@@ -924,7 +926,12 @@ int CANMain(void *can0,int listen,int irqfd,int s) {
       txwait = 1;
     }
     label1:
+fprintf(stderr,"4");
+    if (CANStatus & CAN_RxRdy) {
+      fprintf(stderr,"1");
+    }
     while ((CANStatus & CAN_RxRdy) && (msg=pushRxQ(can))) {
+      fprintf(stderr,"2");
       i++;
       can->bus->Unlock(can->bus,0,0);
       can->Rx(can,msg);
