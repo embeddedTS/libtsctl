@@ -64,17 +64,17 @@ int check_fds(const int* fds,int *ready,unsigned uswait) {
     if (fds[i] > max) max = fds[i];
   }
   ret = select(max+1,&fdset,0,0,&tv);
-  printf("ready:");
+  //printf("ready:");
   for (i=0;i<ArrayLength(fds);i++) {
     ready[i] = FD_ISSET(fds[i],&fdset) ? 1 : 0;
-    if (FD_ISSET(fds[i],&fdset)) printf("%d ",fds[i]);
+    //if (FD_ISSET(fds[i],&fdset)) printf("%d ",fds[i]);
   }
-  printf("\n");
+  //printf("\n");
   return ret;
 }
 
 int main(int argc,char *argv[]) {
-  int i,j;
+  int i,j,k,x;
   ArrayAutoOfSize(char,data,8);
   int* fds = ArrayAlloc(argc-1,sizeof(int));
   int* ready = ArrayAlloc(argc-1,sizeof(int));
@@ -111,23 +111,42 @@ int main(int argc,char *argv[]) {
   // send a CAN frame
   int n;
   CANMessage msg;
+  
+  for (i=0;i<8;i++) data[i] = i;
 
-  i=0;
-
-  usleep(10000); // 
-  n = can[i]->Tx(can[i],FLAG_EXT_ID,0x1234,data);
-  do {
+  for (i=0;i<argc-1;i++) {
     usleep(10000);
-    n = check_fds(fds,ready,0);
-  } while (n < 4);
-  printf("%d rx\n",n);
-  return 1;
-
-  i = can[0]->Rx(can[0],&msg);
-  if (i > 0) {
-    CANMessagePrint(&msg);
-  } else {
-    printf("Error %d receiving\n",i);
+    data[7] = i;
+    printf("Tx %d\n",i);
+    n = can[i]->Tx(can[i],FLAG_EXT_ID,0x1234,data);
+    do {
+      usleep(10000);
+      n = check_fds(fds,ready,0);
+    } while (n < 4);
+    //printf("%d rx\n",n);
+    //return 1;
+    
+    for (j=0;j<argc-1;j++) {
+      if (i == j) continue;
+      printf("Rx %d\n",j);
+      x = can[j]->Rx(can[j],&msg);
+      if (x > 0) {
+	for (k=0;k<8;k++) if (msg.data[i] != data[i]) break;
+	if (k < 8) {
+	  fprintf(stderr,"data mismatch:\ngot:");
+	  for (k=0;k<8;k++) {
+	    fprintf(stderr,"%02X ",msg.data[i]);
+	  }
+	  fprintf(stderr,"\nnot:");
+	  for (k=0;k<8;k++) {
+	    fprintf(stderr,"%02X ",data[i]);
+	  }
+	  fprintf(stderr,"\n");
+	}
+      } else {
+	printf("Error %d receiving\n",i);
+      }
+    }
   }
   return 0;
 }

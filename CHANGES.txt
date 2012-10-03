@@ -27127,3 +27127,6 @@ C prototypes.
 20121002:
 	modified FPGA.c to use Array, thus retiring obselete array.h and array.hh
 	removed obsolete file arch2.h from project
+
+20121003:
+	removed obsolete file tsinit.h from project

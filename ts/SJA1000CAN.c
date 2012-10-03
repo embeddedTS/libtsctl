@@ -574,14 +574,24 @@ void wait(SJA1000CAN *can,int socketwait,int txwait,int rxwait) {
   can->bus->Unlock(can->bus,0,0);
   fprintf(stderr,"(-573)");
   if (socketwait && txwait) fprintf(stderr,"warn: socketwait and txwait both set\n");
-#if 0
-  if (txwait) {
-    tv.tv_sec = 5;
+  //#if 0
+  //  if (txwait) {
+    tv.tv_sec = 1;
     tv.tv_usec = 0;
-    tvp = &tv;
-  }
-#endif
-  NOSIG(rc=select(d->fdmax+1,&fdr,&fdw,0,tvp));
+    //tvp = &tv;
+    //  }
+    //#endif
+  while (1) {
+    NOSIG(rc=select(d->fdmax+1,&fdr,&fdw,0,tvp));
+    if (rc > 0) break;
+    can->bus->Lock(can->bus,0,0);
+    ints = can->bus->Peek8(can->bus,3);
+    can->bus->Unlock(can->bus,0,0);
+    fprintf(stderr,"<%X>",ints);
+    if (ints) break;
+    tv.tv_sec = 1;
+    tv.tv_usec = 0;
+  } 
   fprintf(stderr,"(+584)");
   can->bus->Lock(can->bus,0,0);
 #if 0
@@ -591,7 +601,7 @@ void wait(SJA1000CAN *can,int socketwait,int txwait,int rxwait) {
   }
 #endif
   int debug = can->bus->Peek8(can->bus,4);
-  //can->bus->Poke8(can->bus,4,0);
+  can->bus->Poke8(can->bus,4,0);
   ints = can->bus->Peek8(can->bus,3);
   // note: do something with this "ints". check for errors
   
@@ -610,8 +620,9 @@ void wait(SJA1000CAN *can,int socketwait,int txwait,int rxwait) {
       fprintf(stderr,".\n",ints);
     } else {
       fprintf(stderr,"Uh-oh!\n");
+      // Why exactly did select() return anyway???
     }
-    can->bus->Poke8(can->bus,4,0);
+    //can->bus->Poke8(can->bus,4,0);
   }
   // if listen descriptor is ready, accept a new connection
   if (FD_ISSET(d->listen,&fdr)) {
@@ -936,6 +947,7 @@ fprintf(stderr,"4");
       can->bus->Unlock(can->bus,0,0);
       can->Rx(can,msg);
       can->bus->Lock(can->bus,0,0); 
+      fprintf(stderr,"Rx");
       Log(LOG_CAN,"Rx %X\n",msg->id);
       CANStatus = can->bus->Peek8(can->bus,2);
     }
