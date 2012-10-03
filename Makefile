@@ -1,9 +1,8 @@
 -include Makefile.ext
+CC=$(TOOL_PREFIX)-gcc
 
-CC=$(TOOL_PREFIX)gcc
-
-LDFLAGS=-Wl,--rpath,/slib -Wl,-dynamic-linker,/slib/ld-uClibc.so.0 -Wl,-gc-sections -static
-CFLAGS+=-fms-extensions -march=armv4 -ffunction-sections -fdata-sections
+LDFLAGS=-Wl,--rpath,/slib -Wl,-dynamic-linker,/slib/ld-uClibc.so.0 -Wl,-gc-sections -static -D$(BOARDSEL)=1
+CFLAGS+=-fms-extensions -march=armv4 -ffunction-sections -fdata-sections -D$(BOARDSEL)=1
 
 ifeq ($(DEBUG),)
 CFLAGS+=-Os
@@ -19,7 +18,6 @@ cavium:
 	@ln -sf libtsctl-cavium.h libtsctl.h
 	@if [ -e .target ]; then TMP=`cat .target`; if [ "$$TMP" != "$@" ]; then make clean > /dev/null; fi; fi
 	@echo "cavium" > .target
-#	@echo "TOOL_PREFIX=$(TOOL_PREFIX2)" > Makefile.ext
 
 noncavium:
 	@ln -sf libtsctl-noncavium.h libtsctl.h
@@ -27,10 +25,12 @@ noncavium:
 	@echo "noncavium" > .target
 
 %: %.c
-	@echo "Compiling $<";$(CC) $(CFLAGS) $(CFLAGS_$(lastword $(subst /, ,$(patsubst %.o,%,$@)))) $< -o  $@ $(LDFLAGS) $(LDFLAGS_$@)
+	@echo "Compiling $<" $(CC) $(CFLAGS) $(CFLAGS_$(lastword $(subst /, ,$(patsubst %.o,%,$@)))) $< -o  $@ $(LDFLAGS) $(LDFLAGS_$@)
+	@echo "Compiling $<"; $(CC) $(CFLAGS) $(CFLAGS_$(lastword $(subst /, ,$(patsubst %.o,%,$@)))) $< -o  $@ $(LDFLAGS) $(LDFLAGS_$@)
 
 %.o: %.c
-	@echo "Compiling $<";$(CC) -c $(CFLAGS) $(CFLAGS_$(lastword $(subst /, ,$(patsubst %.o,%,$@)))) $< -o  $@
+	@echo "Compiling $<" $(CC) -c $(CFLAGS) $(CFLAGS_$(lastword $(subst /, ,$(patsubst %.o,%,$@)))) $< -o  $@
+	@echo "Compiling $<"; $(CC) -c $(CFLAGS) $(CFLAGS_$(lastword $(subst /, ,$(patsubst %.o,%,$@)))) $< -o  $@
 
 tsctl_wrap.c: tsctl.i
 	swig -python tsctl.i
