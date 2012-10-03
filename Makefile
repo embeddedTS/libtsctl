@@ -1,4 +1,4 @@
--include Makefile.ext
+-include Makefile.config
 CC=$(TOOL_PREFIX)-gcc
 
 LDFLAGS=-Wl,--rpath,/slib -Wl,-dynamic-linker,/slib/ld-uClibc.so.0 -Wl,-gc-sections -static -D$(BOARDSEL)=1
