@@ -1,6 +1,3 @@
-TOOL_PREFIX=/opt/ts/toolchains/arm-uclibc-3.4.6/bin/arm-linux-
-#TOOL_PREFIX2=/usr/local/x-tools/arm-ts-linux-uclibcgnueabi/bin/arm-ts-linux-uclibcgnueabi-
-
 -include Makefile.ext
 
 CC=$(TOOL_PREFIX)gcc
