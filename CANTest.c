@@ -116,8 +116,10 @@ int main(int argc,char *argv[]) {
 
   usleep(10000); // 
   n = can[i]->Tx(can[i],FLAG_EXT_ID,0x1234,data);
-  usleep(10000);
-  n = check_fds(fds,ready,0);
+  do {
+    usleep(10000);
+    n = check_fds(fds,ready,0);
+  } while (n < 4);
   printf("%d rx\n",n);
   return 1;
 
