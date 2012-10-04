@@ -14,6 +14,10 @@ your compiler (or cross-compiler) plus any common prefix such as
 "arm-linux" if that exists.  You will also need to define BOARDSEL
 to be either "cavium" if you are compiling for a Cavium based board
 (TS-4500 or TS-75XX), or "noncavium" for all other CPU boards.
+The LDFLAGS variable must be set to any linker flags.  The sample
+config shows the flags necessary for using our uclibc cross tools
+in a way that is compatible with our initrd and Debian. If you are
+linking against glibc you should not use most of these flags.
 
 For ease of embedding libtsctl in your own application while still
 being able to support a wide range of hardware, the approach is

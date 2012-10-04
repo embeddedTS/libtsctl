@@ -1,8 +1,8 @@
 -include Makefile.config
 CC=$(TOOL_PREFIX)-gcc
 
-LDFLAGS=-Wl,--rpath,/slib -Wl,-dynamic-linker,/slib/ld-uClibc.so.0 -Wl,-gc-sections -static -D$(BOARDSEL)=1
 CFLAGS+=-fms-extensions -march=armv4 -ffunction-sections -fdata-sections -D$(BOARDSEL)=1
+LDFLAGS+=-D$(BOARDSEL)=1
 
 CFLAGS_tsctl_wrap=-I/usr/include/python2.5
 LDFLAGS_CAN2=-lpthread
