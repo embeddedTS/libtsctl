@@ -1,2 +1,2 @@
-TOOL_PREFIX=~/toolchain/arm-2008q3/bin/arm-none-linux-gnueabi
-BOARDSEL=noncavium
+TOOL_PREFIX?=~/toolchain/arm-2008q3/bin/arm-none-linux-gnueabi
+BOARDSEL?=noncavium

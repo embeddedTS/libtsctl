@@ -22,7 +22,7 @@ endif
 
 BUILD_DIR:=$(BOARDSEL)
 
-PRODUCTS = CAN2 CANTx CANDiag CANRx diotoggle spi8200 ts8160ctl DIOTest canctl tsctl spictl _tsctl.so
+PRODUCTS ?= CAN2 CANTx CANDiag CANRx diotoggle spi8200 ts8160ctl DIOTest canctl tsctl spictl _tsctl.so
 
 all: $(BUILD_DIR) $(addprefix $(BUILD_DIR)/,$(PRODUCTS))
 
