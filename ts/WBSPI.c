@@ -4,19 +4,6 @@
 #include "Thread.h"
 #include "Array.h"
 
-static SPIAPI WBSPIAPI =  {
-  .Init = (void *)WBSPIInit,
-  .Fini = (void *)WBSPIFini,
-  .Lock = (void *)WBSPILock,
-  .Unlock = (void *)WBSPIUnlock,
-  .Preempt = (void *)WBSPIPreempt,
-  .Write = (void *)WBSPIWrite,
-  .Read = (void *)WBSPIRead,
-  .ReadWrite = (void *)WBSPIReadWrite,
-  .ClockSet = (void *)WBSPIClockSet,
-  .EdgeSet = (void *)WBSPIEdgeSet
-};
-
 void *WBSPIInit(WBSPI *spi,void *bus1,void *bus8,int offset,
 		void (*cs)(WBSPI *,unsigned,int)) {
   Bus *bus = bus1;

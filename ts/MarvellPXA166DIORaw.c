@@ -10,19 +10,6 @@
 #define LOCK_CLASS MarvellPXA166DIORaw
 #include "TSLock.h"
 
-static DIORawAPI MarvellPXA166DIORawAPI = {
-  .Init = (void *)MarvellPXA166DIORawInit,
-  .Fini = (void *)MarvellPXA166DIORawFini,
-  .Lock = (void *)MarvellPXA166DIORawLock,
-  .Unlock = (void *)MarvellPXA166DIORawUnlock,
-  .Preempt = (void *)MarvellPXA166DIORawPreempt,
-  .DirSet = (void *)MarvellPXA166DIORawDirSet,
-  .DataSet = (void *)MarvellPXA166DIORawDataSet,
-  .DirGet = (void *)MarvellPXA166DIORawDirGet,
-  .DataGet = (void *)MarvellPXA166DIORawDataGet,
-  .Count = (void *)MarvellPXA166DIORawCount
-};
-
 void *MarvellPXA166DIORawInit(MarvellPXA166DIORaw *dio,void *bus1) {
   Bus *bus = bus1;
 

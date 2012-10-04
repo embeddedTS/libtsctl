@@ -11,45 +11,6 @@
 #define LOCK_CLASS MMapBus
 #include "TSLock.h"
 
-static BusAPI MMapBusAPI = {
-  .Init = (void *)MMapBusInit,
-  .Fini = (void *)MMapBusFini,
-  .Lock = (void *)MMapBusLock,
-  .Unlock = (void *)MMapBusUnlock,
-  .Preempt = (void *)MMapBusPreempt,
-  .Peek8 = (void *)MMapBusPeek8,
-  .Poke8 = (void *)MMapBusPoke8,
-  .Peek16 = (void *)MMapBusPeek16,
-  .Poke16 = (void *)MMapBusPoke16,
-  .Peek32 = (void *)MMapBusPeek32,
-  .Poke32 = (void *)MMapBusPoke32,
-  .BitGet8 = (void *)MMapBusBitGet8,
-  .BitAssign8 = (void *)MMapBusBitAssign8,
-  .BitSet8 = (void *)MMapBusBitSet8,
-  .BitClear8 = (void *)MMapBusBitClear8,
-  .BitGet16 = (void *)MMapBusBitGet16,
-  .BitAssign16 = (void *)MMapBusBitAssign16,
-  .BitSet16 = (void *)MMapBusBitSet16,
-  .BitClear16 = (void *)MMapBusBitClear16,
-  .BitGet32 = (void *)MMapBusBitGet32,
-  .BitAssign32 = (void *)MMapBusBitAssign32,
-  .BitSet32 = (void *)MMapBusBitSet32,
-  .BitClear32 = (void *)MMapBusBitClear32,
-  .PeekStream = (void *)MMapBusPeekStream,
-  .PokeStream = (void *)MMapBusPokeStream,
-  .Refresh = (void *)MMapBusRefresh,
-  .Commit = (void *)MMapBusCommit,
-  .BitToggle8 = (void *)MMapBusBitToggle8,
-  .BitToggle16 = (void *)MMapBusBitToggle16,
-  .BitToggle32 = (void *)MMapBusBitToggle32,
-  .Assign8X = (void *)MMapBusAssign8X,
-  .Assign16X = (void *)MMapBusAssign16X,
-  .Assign32X = (void *)MMapBusAssign32X,
-  .BitsGet8 = (void *)MMapBusBitsGet8,
-  .BitsGet16 = (void *)MMapBusBitsGet16,
-  .BitsGet32 = (void *)MMapBusBitsGet32
-};
-
 void *MMapBusInit2(MMapBus *bus,void *mem,int Pages) {
   if (bus->InitStatus > 0) return bus;
   MMapBusLockInit(bus,1);

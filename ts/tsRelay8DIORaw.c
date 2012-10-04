@@ -6,19 +6,6 @@
 #define LOCK_CLASS tsRelay8DIORaw
 #include "TSLock.h"
 
-static DIORawAPI tsRelay8DIORawAPI = {
-  .Init = (void *)tsRelay8DIORawInit,
-  .Fini = (void *)tsRelay8DIORawFini,
-  .Lock = (void *)tsRelay8DIORawLock,
-  .Unlock = (void *)tsRelay8DIORawUnlock,
-  .Preempt = (void *)tsRelay8DIORawPreempt,
-  .DirSet = (void *)tsRelay8DIORawDirSet,
-  .DataSet = (void *)tsRelay8DIORawDataSet,
-  .DirGet = (void *)tsRelay8DIORawDirGet,
-  .DataGet = (void *)tsRelay8DIORawDataGet,
-  .Count = (void *)tsRelay8DIORawCount
-};
-
 // Return 0 and refuse to initialize 
 // if board is not detected at specified address
 void *tsRelay8DIORawInit(tsRelay8DIORaw *dio,void *bus1,int adrs) {

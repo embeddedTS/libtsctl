@@ -5,16 +5,6 @@
 //#define LOCK_CLASS ts8900Pin
 //#include "TSLock.h"
 
-static PinAPI ts8900PinAPI = {
-  .Init = (void *)ts8900PinInit,
-  .Fini = (void *)ts8900PinFini,
-  //  .Lock = (void *)ts8900PinLock,
-  //  .Unlock = (void *)ts8900PinUnlock,
-  //  .Preempt = (void *)ts8900PinPreempt,
-  .ModeGet = (void *)ts8900PinModeGet,
-  .ModeSet = (void *)ts8900PinModeSet
-};
-
 void *ts8900PinInit(ts8900Pin *pin,void *parent,void *bus,int start) {
   if (pin->InitStatus > 0) return pin;
   /*

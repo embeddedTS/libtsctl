@@ -10,22 +10,6 @@
   our DIO numbers will always remain constant for any DIO classes
   instantiated after us.
  */
-static DIOAPI DummyDIOAPI = {
-  .Init = (void *)DummyDIOInit,
-  .Fini = (void *)DummyDIOFini,
-  .Lock = (void *)DummyDIOLock,
-  .Unlock = (void *)DummyDIOUnlock,
-  .Preempt = (void *)DummyDIOPreempt,
-  .Refresh = (void *)DummyDIORefresh,
-  .Commit = (void *)DummyDIOCommit,
-  .Set = (void *)DummyDIOSet,
-  .Get = (void *)DummyDIOGet,
-  .SetAsync = (void *)DummyDIOSetAsync,
-  .GetAsync = (void *)DummyDIOGetAsync,
-  .Count = (void *)DummyDIOCount,
-  .Capabilities = (void *)DummyDIOCapabilities
-};
-
 void *DummyDIOInit(DummyDIO *dio,int count) {
   if (dio->InitStatus > 0) return dio;
 

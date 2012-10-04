@@ -1,18 +1,6 @@
 #include "Cavium2132Time.h"
 #include "peekpoke.h"
 
-static TimeAPI Cavium2132TimeAPI = {
-  .Init = (void *)Cavium2132TimeInit,
-  .Fini = (void *)Cavium2132TimeFini,
-  .Wait = (void *)Cavium2132TimeWait,
-  .Delay = (void *)Cavium2132TimeDelay,
-  .Tick = (void *)Cavium2132TimeTick,
-  .usElapsed = (void *)Cavium2132USElapsed,
-  .usFuture = (void *)Cavium2132USFuture,
-  .TimeoutQ = (void *)Cavium2132TimeoutQ,
-  .TPS = (void *)Cavium2132TimeTPS
-};
-
 void *Cavium2132TimeInit(Cavium2132Time *me,...) {
 
   if (me->InitStatus > 0) return me;

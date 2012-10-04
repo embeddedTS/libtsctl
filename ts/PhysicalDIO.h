@@ -1,5 +1,6 @@
 #ifndef __PhysicalDIO_H
 #define __PhysicalDIO_H
+#include "arch.h"
 #include "DIO.h"
 #include "Bus.h"
 #include "DIORaw.h"

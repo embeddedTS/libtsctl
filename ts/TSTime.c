@@ -5,18 +5,6 @@
 
 // Generic TS syscon 16-bit access to 32-bit 1Mhz timer
 
-static TimeAPI TSTimeAPI = {
-  .Init = (void *)TSTimeInit,
-  .Fini = (void *)TSTimeFini,
-  .Wait = (void *)TSTimeWait,
-  .Delay = (void *)TSTimeDelay,
-  .Tick = (void *)TSTimeTick,
-  .usElapsed = (void *)TSUSElapsed,
-  .usFuture = (void *)TSUSFuture,
-  .TimeoutQ = (void *)TSTimeoutQ,
-  .TPS = (void *)TSTimeTPS
-};
-
 void *TSTimeInit(TSTime *me,void *bus,int adrsMSB,int adrsLSB,int Hz) {
 
   if (me->InitStatus > 0) return me;

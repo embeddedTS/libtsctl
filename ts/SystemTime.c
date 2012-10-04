@@ -3,18 +3,6 @@
 #include <sys/time.h>
 #include "SystemTime.h"
 
-static TimeAPI SystemTimeAPI = {
-  .Init = (void *)SystemTimeInit,
-  .Fini = (void *)SystemTimeFini,
-  .Wait = (void *)SystemTimeWait,
-  .Delay = (void *)SystemTimeDelay,
-  .Tick = (void *)SystemTimeTick,
-  .usElapsed = (void *)SystemTimeUSElapsed,
-  .usFuture = (void *)SystemTimeUSFuture,
-  .TimeoutQ = (void *)SystemTimeTimeoutQ,
-  .TPS = (void *)SystemTimeTPS
-};
-
 static inline unsigned long long TimeDifference(struct timeval t0,struct timeval t1) {
   return (t1.tv_usec - t0.tv_usec) + 1000000 * (t1.tv_sec - t0.tv_sec);
 }

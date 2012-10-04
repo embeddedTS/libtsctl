@@ -11,16 +11,6 @@ unsigned DIOCount();
 #define LOCK_CLASS ts4700Pin
 #include "TSLock.h"
 
-static PinAPI ts4700PinAPI = {
-  .Init = (void *)ts4700PinInit,
-  .Fini = (void *)ts4700PinFini,
-  .Lock = (void *)ts4700PinLock,
-  .Unlock = (void *)ts4700PinUnlock,
-  .Preempt = (void *)ts4700PinPreempt,
-  .ModeGet = (void *)ts4700PinModeGet,
-  .ModeSet = (void *)ts4700PinModeSet
-};
-
 /*
 syscon[2]: active low to enable DIO
 bit 8: DIO 15,16

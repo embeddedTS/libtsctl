@@ -27130,3 +27130,6 @@ C prototypes.
 
 20121003:
 	removed obsolete file tsinit.h from project
+
+20121004:
+	base class header files are now auto-generated

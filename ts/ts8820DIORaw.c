@@ -6,19 +6,6 @@
 #define LOCK_CLASS ts8820DIORaw
 #include "TSLock.h"
 
-static DIORawAPI ts8820DIORawAPI = {
-  .Init = (void *)ts8820DIORawInit,
-  .Fini = (void *)ts8820DIORawFini,
-  .Lock = (void *)ts8820DIORawLock,
-  .Unlock = (void *)ts8820DIORawUnlock,
-  .Preempt = (void *)ts8820DIORawPreempt,
-  .DirSet = (void *)ts8820DIORawDirSet,
-  .DataSet = (void *)ts8820DIORawDataSet,
-  .DirGet = (void *)ts8820DIORawDirGet,
-  .DataGet = (void *)ts8820DIORawDataGet,
-  .Count = (void *)ts8820DIORawCount
-};
-
 void *ts8820DIORawInit(ts8820DIORaw *dio,void *bus1) {
   if (dio->InitStatus > 0) return dio;
 

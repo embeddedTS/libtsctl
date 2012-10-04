@@ -11,16 +11,6 @@ unsigned DIOCount();
 #define LOCK_CLASS ts4200Pin
 #include "TSLock.h"
 
-static PinAPI ts4200PinAPI = {
-  .Init = (void *)ts4200PinInit,
-  .Fini = (void *)ts4200PinFini,
-  .Lock = (void *)ts4200PinLock,
-  .Unlock = (void *)ts4200PinUnlock,
-  .Preempt = (void *)ts4200PinPreempt,
-  .ModeGet = (void *)ts4200PinModeGet,
-  .ModeSet = (void *)ts4200PinModeSet
-};
-
 void *ts4200PinInit(ts4200Pin *pin,void *syscon,void *busb,void *buspmc,void *busc) {
   if (pin->InitStatus > 0) return pin;
   LogEnter("%p,%p,%p,%p,%p\n",pin,syscon,busb,buspmc,busc);

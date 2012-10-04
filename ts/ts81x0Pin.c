@@ -5,16 +5,6 @@
 #define LOCK_CLASS ts81x0Pin
 #include "TSLock.h"
 
-static PinAPI ts81x0PinAPI = {
-  .Init = (void *)ts81x0PinInit,
-  .Fini = (void *)ts81x0PinFini,
-  .Lock = (void *)ts81x0PinLock,
-  .Unlock = (void *)ts81x0PinUnlock,
-  .Preempt = (void *)ts81x0PinPreempt,
-  .ModeGet = (void *)ts81x0PinModeGet,
-  .ModeSet = (void *)ts81x0PinModeSet
-};
-
 void *ts81x0PinInit(ts81x0Pin *pin,void *parent,void *bus) {
   if (pin->InitStatus > 0) return pin;
 

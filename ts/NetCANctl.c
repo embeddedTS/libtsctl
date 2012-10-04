@@ -2,17 +2,6 @@
 #include "Packet.h"
 #include "Array.h"
 
-static CANAPI NetCANctlAPI = {
-  .Init = (void *)NetCANctlInit,
-  .Fini = (void *)NetCANctlFini,
-  .Rx = (void *)NetCANctlRx,
-  .Tx = (void *)NetCANctlTx,
-  .BaudSet = (void *)NetCANctlBaudSet,
-  .BaudGet = (void *)NetCANctlBaudGet,
-  .Abort = (void *)NetCANctlAbort,
-  .RxMulti = (void *)NetCANctlRxMulti
-};
-
 void *NetCANctlInit(NetCANctl *can,int socket) {
   if (can->InitStatus > 0) return can;
 
@@ -22,7 +11,8 @@ void *NetCANctlInit(NetCANctl *can,int socket) {
   can->Tx = (void *)NetCANctlTx;
   can->BaudSet = (void *)NetCANctlBaudSet;
   can->BaudGet = (void *)NetCANctlBaudGet;
-
+  can->Abort = (void *)NetCANctlAbort;
+  can->RxMulti = (void *)NetCANctlRxMulti;
   can->socket = socket;
   can->InitStatus = can->socket >= 0 ? 1 : -1;
   return can;

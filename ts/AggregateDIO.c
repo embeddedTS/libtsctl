@@ -6,23 +6,6 @@
 #include "Array.h"
 #include "Time.h"
 
-static DIOAPI AggregateDIOAPI = {
-  .Init = (void *)AggregateDIOInit,
-  .Fini = (void *)AggregateDIOFini,
-  .Lock = (void *)AggregateDIOLock,
-  .Unlock = (void *)AggregateDIOUnlock,
-  .Preempt = (void *)AggregateDIOPreempt,
-  .Refresh = (void *)AggregateDIORefresh,
-  .Commit = (void *)AggregateDIOCommit,
-  .Set = (void *)AggregateDIOSet,
-  .Get = (void *)AggregateDIOGet,
-  .SetAsync = (void *)AggregateDIOSetAsync,
-  .GetAsync = (void *)AggregateDIOGetAsync,
-  .Wait = (void*)AggregateDIOWait,
-  .Count = (void *)AggregateDIOCount,
-  .Capabilities = (void *)AggregateDIOCapabilities
-};
-
 void *AggregateDIOInit(AggregateDIO *dio,unsigned Count,void *pin1,
 		       int *SubCount,DIO **pDIO) {
   int i;

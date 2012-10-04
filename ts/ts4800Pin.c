@@ -11,16 +11,6 @@ unsigned DIOCount();
 #define LOCK_CLASS ts4800Pin
 #include "TSLock.h"
 
-static PinAPI ts4800PinAPI = {
-  .Init = (void *)ts4800PinInit,
-  .Fini = (void *)ts4800PinFini,
-  .Lock = (void *)ts4800PinLock,
-  .Unlock = (void *)ts4800PinUnlock,
-  .Preempt = (void *)ts4800PinPreempt,
-  .ModeGet = (void *)ts4800PinModeGet,
-  .ModeSet = (void *)ts4800PinModeSet
-};
-
 void *ts4800PinInit(ts4800Pin *pin,void *syscon,void *dio1) {
   int h;
   Bus *dio1bus = dio1;

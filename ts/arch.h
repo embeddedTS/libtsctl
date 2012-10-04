@@ -14,6 +14,85 @@
 #include "System.h"
 #include "Array.h"
 
+// AIO
+#define AIO_PR(start,step,count) ((PeriodRange){start,step,count});
+#define AIO_VR(lowstart,lowstep,lowcount,highstart,highstep,highcount) ((VoltageRange){(VoltageSubRange){lowstart,lowstep,lowcount},(VoltageSubRange){highstart,highstep,highcount}})
+#define AIO_HZ(hz) ((int)(1000000000/hz))
+
+// CAN
+/*
+  Raw Packet Format:
+
+  UINT8    flags:
+               control information present (reserved for future use)
+               message originates from this node (unused)
+               message has extended ID
+               remote transmission request (RTR)
+               error warning
+               data overrun
+               error passive
+               bus error
+  UINT32   id
+  UINT32   timestamp_seconds
+  UINT32   timestamp_microseconds
+  UINT8    bytes
+  UINT8[8] data
+ */
+#include <sys/time.h>
+#include <sys/select.h>
+/*
+  Statistics:
+  Tx count
+  Rx count
+  overruns
+  other error counters
+ */
+typedef struct CANPort {
+  CAN *can;
+  int port;
+} CANPort;
+
+
+// DIO
+static inline DIOState DIOValue(DIOState state) {
+  switch (state) {
+  case INPUT_LOW:
+  case LOW:
+    return LOW;
+  case INPUT_HIGH:
+  case HIGH:
+    return HIGH;
+  default: return LOW;
+  }
+}
+
+static inline const char *DIOValueString(DIOState state) {
+  switch(state) {
+  case INPUT_LOW: return "InputLow";
+  case INPUT_HIGH: return "InputHigh";
+  case INPUT: return "Input";
+  case LOW: return "Low";
+  case HIGH: return "High";
+  default: return "Invalid";
+  }
+}
+
+// Pin
+static inline const char *PinModeString(PinMode mode) {
+  switch (mode) {
+  case MODE_DIO: return "DIO";
+  case MODE_CAN: return "CAN";
+  case MODE_SPI: return "SPI";
+  case MODE_ADC: return "ADC";
+  case MODE_TWI: return "TWI";
+  case MODE_UART: return "UART";
+  case MODE_TS: return "TS";
+  case MODE_UNKNOWN: return "UNKNOWN";
+  default: return "ILLEGAL";
+  }
+}
+
+
 enum {
   ClassSystem = 0,
   ClassBus = 1,

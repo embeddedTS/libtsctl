@@ -5,22 +5,6 @@
 #include "FPGA.h"
 #include "Array.h"
 
-static DIOAPI PhysicalDIOAPI = {
-  .Init = (void *)PhysicalDIOInit,
-  .Fini = (void *)PhysicalDIOFini,
-  .Lock = (void *)PhysicalDIOLock,
-  .Unlock = (void *)PhysicalDIOUnlock,
-  .Preempt = (void *)PhysicalDIOPreempt,
-  .Refresh = (void *)PhysicalDIORefresh,
-  .Commit = (void *)PhysicalDIOCommit,
-  .Set = (void *)PhysicalDIOSet,
-  .Get = (void *)PhysicalDIOGet,
-  .SetAsync = (void *)PhysicalDIOSetAsync,
-  .GetAsync = (void *)PhysicalDIOGetAsync,
-  .Count = (void *)PhysicalDIOCount,
-  .Capabilities = (void *)PhysicalDIOCapabilities
-};
-
 void *PhysicalDIOInit(PhysicalDIO *dio,void *bus1,void *sub1) {
   Bus *bus = bus1;
   DIORaw *sub = sub1;

@@ -8,16 +8,6 @@
 #include "TSLock.h"
 #include "Array.h"
 
-static TWIAPI LinuxTWIAPI =  {
-  .Init = (void *)LinuxTWIInit,
-  .Fini = (void *)LinuxTWIFini,
-  .Lock = (void *)LinuxTWILock,
-  .Unlock = (void *)LinuxTWIUnlock,
-  .Preempt = (void *)LinuxTWIPreempt,
-  .Write = (void *)LinuxTWIWrite,
-  .Read = (void *)LinuxTWIRead,
-};
-
 void *LinuxTWIInit(LinuxTWI *twi,char *devfile) {
   if (twi->InitStatus > 0) return twi;
 

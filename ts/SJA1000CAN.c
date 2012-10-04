@@ -9,16 +9,6 @@
 #include "Log.h"
 
 #define S11(x) ((char *)x)
-static CANAPI SJA1000CANAPI = {
-  .Init = (void *)SJA1000CANInit,
-  .Fini = (void *)SJA1000CANFini,
-  .Rx = (void *)SJA1000CANRx,
-  .Tx = (void *)SJA1000CANTx,
-  .BaudSet = (void *)SJA1000CANBaudSet,
-  .BaudGet = (void *)SJA1000CANBaudGet,
-  .Abort = (void *)SJA1000CANAbort
-};
-
 static void BusOff(SJA1000CAN *can) {
   can->bus->Poke8(can->bus,0, 0x1); // Enter reset mode
   can->bus->Poke8(can->bus,31, 0x80); // Enable PeliCAN mode

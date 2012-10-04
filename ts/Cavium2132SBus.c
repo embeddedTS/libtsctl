@@ -24,46 +24,6 @@ static void Cavium2132SBusLockCallback(Cavium2132SBus *obj,unsigned num);
 static void reservemem(void);
 static void Cavium2132SBusReInit(Cavium2132SBus *bus);
 
-static BusAPI Cavium2132SBusAPI = {
-  .Init = (void *)Cavium2132SBusInit,
-  .Fini = (void *)Cavium2132SBusFini,
-  .Lock = (void *)Cavium2132SBusLock,
-  .Unlock = (void *)Cavium2132SBusUnlock,
-  .Preempt = (void *)Cavium2132SBusPreempt,
-  .Peek8 = (void *)Cavium2132SBusPeek8,
-  .Poke8 = (void *)Cavium2132SBusPoke8,
-  .Peek16 = (void *)Cavium2132SBusPeek16,
-  .Poke16 = (void *)Cavium2132SBusPoke16,
-  .Peek32 = (void *)Cavium2132SBusPeek32,
-  .Poke32 = (void *)Cavium2132SBusPoke32,
-  .BitGet8 = (void *)Cavium2132SBusBitGet8,
-  .BitAssign8 = (void *)Cavium2132SBusBitAssign8,
-  .BitSet8 = (void *)Cavium2132SBusBitSet8,
-  .BitClear8 = (void *)Cavium2132SBusBitClear8,
-  .BitGet16 = (void *)Cavium2132SBusBitGet16,
-  .BitAssign16 = (void *)Cavium2132SBusBitAssign16,
-  .BitSet16 = (void *)Cavium2132SBusBitSet16,
-  .BitClear16 = (void *)Cavium2132SBusBitClear16,
-  .BitGet32 = (void *)Cavium2132SBusBitGet32,
-  .BitAssign32 = (void *)Cavium2132SBusBitAssign32,
-  .BitSet32 = (void *)Cavium2132SBusBitSet32,
-  .BitClear32 = (void *)Cavium2132SBusBitClear32,
-  .PeekStream = (void *)Cavium2132SBusPeekStream,
-  .PokeStream = (void *)Cavium2132SBusPokeStream,
-  .Refresh = (void *)Cavium2132SBusRefresh,
-  .Commit = (void *)Cavium2132SBusCommit,
-  .BitToggle8 = (void *)Cavium2132SBusBitToggle8,
-  .BitToggle16 = (void *)Cavium2132SBusBitToggle16,
-  .BitToggle32 = (void *)Cavium2132SBusBitToggle32,
-  .Assign8X = (void *)Cavium2132SBusAssign8X,
-  .Assign16X = (void *)Cavium2132SBusAssign16X,
-  .Assign32X = (void *)Cavium2132SBusAssign32X,
-  .BitsGet8 = (void *)Cavium2132SBusBitsGet8,
-  .BitsGet16 = (void *)Cavium2132SBusBitsGet16,
-  .BitsGet32 = (void *)Cavium2132SBusBitsGet32
-
-};
-
 void *Cavium2132SBusInit(Cavium2132SBus *bus,void *spibus0,void *gpiobus0) {
   int ret;
   Bus *spibus = spibus0;

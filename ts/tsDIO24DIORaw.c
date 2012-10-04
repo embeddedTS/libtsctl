@@ -6,19 +6,6 @@
 #define LOCK_CLASS tsDIO24DIORaw
 #include "TSLock.h"
 
-static DIORawAPI tsDIO24DIORawAPI = {
-  .Init = (void *)tsDIO24DIORawInit,
-  .Fini = (void *)tsDIO24DIORawFini,
-  .Lock = (void *)tsDIO24DIORawLock,
-  .Unlock = (void *)tsDIO24DIORawUnlock,
-  .Preempt = (void *)tsDIO24DIORawPreempt,
-  .DirSet = (void *)tsDIO24DIORawDirSet,
-  .DataSet = (void *)tsDIO24DIORawDataSet,
-  .DirGet = (void *)tsDIO24DIORawDirGet,
-  .DataGet = (void *)tsDIO24DIORawDataGet,
-  .Count = (void *)tsDIO24DIORawCount
-};
-
 // Return 0 and refuse to initialize 
 // if board is not detected at specified address
 void *tsDIO24DIORawInit(tsDIO24DIORaw *dio,void *bus1,int adrs) {

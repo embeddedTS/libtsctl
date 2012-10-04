@@ -1,6 +1,7 @@
 #ifndef __Net_H
 #define __Net_H
 #include "Packet.h"
+#include "Net2.h"
 
 #undef FUNC
 #ifndef SWIGGY
@@ -17,21 +18,6 @@ enum {
   // caller is responsible for making sure it doesn't queue too many
   // commands (and run out of transmit buffer space)
 };
-
-enum {
-  NetSystemClass = 0,
-  NetBusClass = 1,
-  NetTimeClass = 2,
-  NetPinClass = 3,
-  NetDIORawClass = 4,
-  NetDIOClass = 5,
-  NetTWIClass = 6,
-  NetCANClass = 7,
-  NetSPIClass = 8,
-  NetAIOClass = 9,
-  NetEDIOClass = 10
-};
-#define Net_ClassCount (NetSPIClass+1)
 
 typedef struct Net Net;
 typedef struct NetAPI NetAPI;

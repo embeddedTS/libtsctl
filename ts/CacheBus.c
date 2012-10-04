@@ -17,45 +17,6 @@
 #define LOCK_CLASS CacheBus
 #include "TSLock.h"
 
-static BusAPI CacheBusAPI = {
-  .Init = (void *)CacheBusInit,
-  .Fini = (void *)CacheBusFini,
-  .Lock = (void *)CacheBusLock,
-  .Unlock = (void *)CacheBusUnlock,
-  .Preempt = (void *)CacheBusPreempt,
-  .Peek8 = (void *)CacheBusPeek8,
-  .Poke8 = (void *)CacheBusPoke8,
-  .Peek16 = (void *)CacheBusPeek16,
-  .Poke16 = (void *)CacheBusPoke16,
-  .Peek32 = (void *)CacheBusPeek32,
-  .Poke32 = (void *)CacheBusPoke32,
-  .BitGet8 = (void *)CacheBusBitGet8,
-  .BitAssign8 = (void *)CacheBusBitAssign8,
-  .BitSet8 = (void *)CacheBusBitSet8,
-  .BitClear8 = (void *)CacheBusBitClear8,
-  .BitGet16 = (void *)CacheBusBitGet16,
-  .BitAssign16 = (void *)CacheBusBitAssign16,
-  .BitSet16 = (void *)CacheBusBitSet16,
-  .BitClear16 = (void *)CacheBusBitClear16,
-  .BitGet32 = (void *)CacheBusBitGet32,
-  .BitAssign32 = (void *)CacheBusBitAssign32,
-  .BitSet32 = (void *)CacheBusBitSet32,
-  .BitClear32 = (void *)CacheBusBitClear32,
-  .PeekStream = (void *)CacheBusPeekStream,
-  .PokeStream = (void *)CacheBusPokeStream,
-  .Refresh = (void *)CacheBusRefresh,
-  .Commit = (void *)CacheBusCommit,
-  .BitToggle8 = (void *)CacheBusBitToggle8,
-  .BitToggle16 = (void *)CacheBusBitToggle16,
-  .BitToggle32 = (void *)CacheBusBitToggle32,
-  .Assign8X = (void *)CacheBusAssign8X,
-  .Assign16X = (void *)CacheBusAssign16X,
-  .Assign32X = (void *)CacheBusAssign32X,
-  .BitsGet8 = (void *)CacheBusBitsGet8,
-  .BitsGet16 = (void *)CacheBusBitsGet16,
-  .BitsGet32 = (void *)CacheBusBitsGet32
-};
-
 void *CacheBusInit(CacheBus *bus,void *bus1) {
   Bus *sub = bus1;
   int i,j,err=0;

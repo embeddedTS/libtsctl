@@ -7,19 +7,6 @@
 #define LOCK_CLASS Cavium2132DIORaw
 #include "TSLock.h"
 
-static DIORawAPI Cavium2132DIORawAPI = {
-  .Init = (void *)Cavium2132DIORawInit,
-  .Fini = (void *)Cavium2132DIORawFini,
-  .Lock = (void *)Cavium2132DIORawLock,
-  .Unlock = (void *)Cavium2132DIORawUnlock,
-  .Preempt = (void *)Cavium2132DIORawPreempt,
-  .DirSet = (void *)Cavium2132DIORawDirSet,
-  .DataSet = (void *)Cavium2132DIORawDataSet,
-  .DirGet = (void *)Cavium2132DIORawDirGet,
-  .DataGet = (void *)Cavium2132DIORawDataGet,
-  .Count = (void *)Cavium2132DIORawCount
-};
-
 void *Cavium2132DIORawInit(Cavium2132DIORaw *dio,void *bus1) {
   Bus *bus = bus1;
 

@@ -290,7 +290,7 @@ void Output1000008(OutInfo *oi,char *name,int val) {
 	if (oi->fAssign==2) hprintf(oi->tsctl_o,"\",\n");
 	  else hprintf(oi->tsctl_o,"\n");
 }
-void Output1000009(OutInfo *oi,char *name,LockHolderInfo* arg) {
+void Output1000009(OutInfo *oi,char *name,LockHolderInf* arg) {
 	int i;
 	for (i=0;i<ArrayLength(arg);i++) {
 		Output_32(oi,"pid",(arg+i)->pid);
@@ -298,7 +298,7 @@ void Output1000009(OutInfo *oi,char *name,LockHolderInfo* arg) {
 	}
 }
 
-void Output1000010(OutInfo *oi,char *name,ConnectionWaitInfo* arg) {
+void Output1000010(OutInfo *oi,char *name,ConnectionWaitInf* arg) {
 	int i;
 	for (i=0;i<ArrayLength(arg);i++) {
 		Output_32(oi,"pid",(arg+i)->pid);
@@ -306,7 +306,7 @@ void Output1000010(OutInfo *oi,char *name,ConnectionWaitInfo* arg) {
 	}
 }
 
-void Output1000011(OutInfo *oi,char *name,BuildInfo* arg) {
+void Output1000011(OutInfo *oi,char *name,BuildInf* arg) {
 	int i;
 	for (i=0;i<ArrayLength(arg);i++) {
 		Output32(oi,"buildTime",(arg+i)->buildTime);
@@ -520,7 +520,7 @@ void SystemCommand5(OutInfo *oi,int inst,char *argv[]) {
 	pthread_mutex_unlock(&Systemmutex);
 #endif
 	if (!SystemArr[inst]) { Output_32(oi,"Error",-2); return; }
-	LockHolderInfo* ret = SystemArr[inst]->LockHolderInfo(SystemArr[inst]);
+	LockHolderInf* ret = SystemArr[inst]->LockHolderInfo(SystemArr[inst]);
 	Output1000009(oi,"LockHolderInfo",ret);
 	ArrayFree(ret);
 }
@@ -558,7 +558,7 @@ void SystemCommand6(OutInfo *oi,int inst,char *argv[]) {
 	pthread_mutex_unlock(&Systemmutex);
 #endif
 	if (!SystemArr[inst]) { Output_32(oi,"Error",-2); return; }
-	ConnectionWaitInfo* ret = SystemArr[inst]->ConnWaitInfo(SystemArr[inst]);
+	ConnectionWaitInf* ret = SystemArr[inst]->ConnWaitInfo(SystemArr[inst]);
 	Output1000010(oi,"ConnWaitInfo",ret);
 	ArrayFree(ret);
 }
@@ -634,7 +634,7 @@ void SystemCommand8(OutInfo *oi,int inst,char *argv[]) {
 	pthread_mutex_unlock(&Systemmutex);
 #endif
 	if (!SystemArr[inst]) { Output_32(oi,"Error",-2); return; }
-	BuildInfo *arg0 = ArrayAlloc(1,sizeof(BuildInfo));
+	BuildInf *arg0 = ArrayAlloc(1,sizeof(BuildInf));
 	SystemArr[inst]->BuildInfo(SystemArr[inst],arg0);
 	Output1000011(oi,"BuildInfo",arg0);
 	ArrayFree(arg0);

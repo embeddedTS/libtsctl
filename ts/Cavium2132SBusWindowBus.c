@@ -3,45 +3,6 @@
 #include "Bit.h"
 #include "Array.h"
 
-static BusAPI Cavium2132SBusWindowBusAPI = {
-  .Init = (void *)Cavium2132SBusWindowBusInit,
-  .Fini = (void *)Cavium2132SBusWindowBusFini,
-  .Lock = (void *)Cavium2132SBusWindowBusLock,
-  .Unlock = (void *)Cavium2132SBusWindowBusUnlock,
-  .Preempt = (void *)Cavium2132SBusWindowBusPreempt,
-  .Peek8 = (void *)Cavium2132SBusWindowBusPeek8,
-  .Poke8 = (void *)Cavium2132SBusWindowBusPoke8,
-  .Peek16 = (void *)Cavium2132SBusWindowBusPeek16,
-  .Poke16 = (void *)Cavium2132SBusWindowBusPoke16,
-  .Peek32 = (void *)Cavium2132SBusWindowBusPeek32,
-  .Poke32 = (void *)Cavium2132SBusWindowBusPoke32,
-  .BitGet8 = (void *)Cavium2132SBusWindowBusBitGet8,
-  .BitAssign8 = (void *)Cavium2132SBusWindowBusBitAssign8,
-  .BitSet8 = (void *)Cavium2132SBusWindowBusBitSet8,
-  .BitClear8 = (void *)Cavium2132SBusWindowBusBitClear8,
-  .BitGet16 = (void *)Cavium2132SBusWindowBusBitGet16,
-  .BitAssign16 = (void *)Cavium2132SBusWindowBusBitAssign16,
-  .BitSet16 = (void *)Cavium2132SBusWindowBusBitSet16,
-  .BitClear16 = (void *)Cavium2132SBusWindowBusBitClear16,
-  .BitGet32 = (void *)Cavium2132SBusWindowBusBitGet32,
-  .BitAssign32 = (void *)Cavium2132SBusWindowBusBitAssign32,
-  .BitSet32 = (void *)Cavium2132SBusWindowBusBitSet32,
-  .BitClear32 = (void *)Cavium2132SBusWindowBusBitClear32,
-  .PeekStream = (void *)Cavium2132SBusWindowBusPeekStream,
-  .PokeStream = (void *)Cavium2132SBusWindowBusPokeStream,
-  .Refresh = (void *)Cavium2132SBusWindowBusRefresh,
-  .Commit = (void *)Cavium2132SBusWindowBusCommit,
-  .BitToggle8 = (void *)Cavium2132SBusWindowBusBitToggle8,
-  .BitToggle16 = (void *)Cavium2132SBusWindowBusBitToggle16,
-  .BitToggle32 = (void *)Cavium2132SBusWindowBusBitToggle32,
-  .Assign8X = (void *)Cavium2132SBusWindowBusAssign8X,
-  .Assign16X = (void *)Cavium2132SBusWindowBusAssign16X,
-  .Assign32X = (void *)Cavium2132SBusWindowBusAssign32X,
-  .BitsGet8 = (void *)Cavium2132SBusWindowBusBitsGet8,
-  .BitsGet16 = (void *)Cavium2132SBusWindowBusBitsGet16,
-  .BitsGet32 = (void *)Cavium2132SBusWindowBusBitsGet32
-};
-
 void *Cavium2132SBusWindowBusInit(Cavium2132SBusWindowBus *bus,void *sbus0) {
   if (bus->InitStatus > 0) return bus;
   bus->sbus = sbus0;

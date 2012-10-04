@@ -7,45 +7,6 @@
 #define LOCK_CLASS WindowBus
 #include "TSLock.h"
 
-static BusAPI WindowBusAPI = {
-  .Init = (void *)WindowBusInit,
-  .Fini = (void *)WindowBusFini,
-  .Lock = (void *)WindowBusLock,
-  .Unlock = (void *)WindowBusUnlock,
-  .Preempt = (void *)WindowBusPreempt,
-  .Peek8 = (void *)WindowBusPeek8,
-  .Poke8 = (void *)WindowBusPoke8,
-  .Peek16 = (void *)WindowBusPeek16,
-  .Poke16 = (void *)WindowBusPoke16,
-  .Peek32 = (void *)WindowBusPeek32,
-  .Poke32 = (void *)WindowBusPoke32,
-  .BitGet8 = (void *)WindowBusBitGet8,
-  .BitAssign8 = (void *)WindowBusBitAssign8,
-  .BitSet8 = (void *)WindowBusBitSet8,
-  .BitClear8 = (void *)WindowBusBitClear8,
-  .BitGet16 = (void *)WindowBusBitGet16,
-  .BitAssign16 = (void *)WindowBusBitAssign16,
-  .BitSet16 = (void *)WindowBusBitSet16,
-  .BitClear16 = (void *)WindowBusBitClear16,
-  .BitGet32 = (void *)WindowBusBitGet32,
-  .BitAssign32 = (void *)WindowBusBitAssign32,
-  .BitSet32 = (void *)WindowBusBitSet32,
-  .BitClear32 = (void *)WindowBusBitClear32,
-  .PeekStream = (void *)WindowBusPeekStream,
-  .PokeStream = (void *)WindowBusPokeStream,
-  .Refresh = (void *)WindowBusRefresh,
-  .Commit = (void *)WindowBusCommit,
-  .BitToggle8 = (void *)WindowBusBitToggle8,
-  .BitToggle16 = (void *)WindowBusBitToggle16,
-  .BitToggle32 = (void *)WindowBusBitToggle32,
-  .Assign8X = (void *)WindowBusAssign8X,
-  .Assign16X = (void *)WindowBusAssign16X,
-  .Assign32X = (void *)WindowBusAssign32X,
-  .BitsGet8 = (void *)WindowBusBitsGet8,
-  .BitsGet16 = (void *)WindowBusBitsGet16,
-  .BitsGet32 = (void *)WindowBusBitsGet32
-};
-
 void *WindowBusInit(WindowBus *bus,void *sub,int adrs,int data) {
   if (bus->InitStatus > 0) return bus;
   bus->sub = sub;

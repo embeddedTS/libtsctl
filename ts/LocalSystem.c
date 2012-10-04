@@ -53,28 +53,6 @@ int CompareNameValuePairPartial(const void *a1,const void *b1) {
   }
 }
 
-
-SystemAPI LocalSystemAPI = {
-  .Init = (void *)LocalSystemInit,
-  .Fini = (void *)LocalSystemFini,
-  .ClassCount = (void *)LocalSystemClassCount,
-  .InstanceCount = (void *)LocalSystemInstanceCount,
-  .APICount = (void *)LocalSystemAPICount,
-  .LockCount = (void *)LocalSystemLockCount,
-  .LockHolderInfo = (void *)LocalSystemLockHolderInfo,
-  .ConnWaitInfo = (void *)LocalSystemConnWaitInfo,
-  .CANBusGet = (void *)LocalSystemCANBusGet,
-  .BuildInfo = (void *)LocalSystemBuildInfo,
-  .ModelId = (void *)LocalSystemModelId,
-  .BaseBoardId = (void *)LocalSystemBaseBoardId,
-  .MapLength = (void *)LocalSystemMapLength,
-  .MapGet = (void *)LocalSystemMapGet,
-  .MapLookup = (void *)LocalSystemMapLookup,
-  .MapLookupPartial = (void *)LocalSystemMapLookupPartial,
-  .MapAdd = (void *)LocalSystemMapAdd,
-  .MapDelete = (void *)LocalSystemMapDelete
-};
-
 void NameValuePairDump(NameValuePair *map) {
   int i,n;
 
@@ -256,23 +234,23 @@ int LocalSystemInstanceCount(System *sys,int class) {
 int LocalSystemAPICount(System *sys,int class) {
   switch (class) {                             
   case ClassSystem:
-    return System_APICount;
+    return XSystem_APICount;
   case ClassBus:
-    return Bus_APICount;
+    return XBus_APICount;
   case ClassTime:
-    return Time_APICount;
+    return XTime_APICount;
   case ClassPin:
-    return Pin_APICount;
+    return XPin_APICount;
   case ClassDIORaw:
-    return DIORaw_APICount;
+    return XDIORaw_APICount;
   case ClassDIO:
-    return DIO_APICount;
+    return XDIO_APICount;
   case ClassTWI:
-    return TWI_APICount;
+    return XTWI_APICount;
   case ClassCAN:
-    return CAN_APICount;
+    return XCAN_APICount;
   case ClassSPI:                        
-    return SPI_APICount;
+    return XSPI_APICount;
   default:                                 
     return 0;
   }
@@ -282,11 +260,11 @@ int LocalSystemLockCount(System *sys) {
   return ThreadMutexCount();
 }
 
-LockHolderInfo *LocalSystemLockHolderInfo(System *sys) {
+LockHolderInf *LocalSystemLockHolderInfo(System *sys) {
   return 0;
 }
 
-ConnectionWaitInfo *LocalSystemConnWaitInfo(System *sys) {
+ConnectionWaitInf *LocalSystemConnWaitInfo(System *sys) {
   // TO DO: implement this using Thread module
   // but, thread module does not expose this information, so add that!
   /*
@@ -355,7 +333,7 @@ static time_t tFromDateTime(char const *time) {
   return mktime(&t);
 }
 
-void LocalSystemBuildInfo(System *sys,BuildInfo inf[1]) {
+void LocalSystemBuildInfo(System *sys,BuildInf inf[1]) {
   char *str;
   unsigned buildNumber = strtoul(build+7,&str,10);
 

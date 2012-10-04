@@ -120,7 +120,7 @@ Type "help", "copyright", "credits" or "license" for more information.
 >>> bus = BusInit(0)                                                     
 >>> bus                                                                  
 <tsctl.Bus; proxy of <Swig Object of type 'struct Bus *' at 0x40289a28> >
->>> bus.API.Peek16(bus,0x60)                                             
+>>> bus.Peek16(bus,0x60)                                             
 17664                                                                    
 >>> print hex(17664)                                                     
 0x4500                                                                   

@@ -17,45 +17,6 @@ static inline void TSMuxBusLockCallback(TSMuxBus *bus,int num) {
 #define LOCK_CALLBACK TSMuxBusLockCallback
 #include "TSLock.h"
 
-static BusAPI TSMuxBusAPI = {
-  .Init = (void *)TSMuxBusInit,
-  .Fini = (void *)TSMuxBusFini,
-  .Lock = (void *)TSMuxBusLock,
-  .Unlock = (void *)TSMuxBusUnlock,
-  .Preempt = (void *)TSMuxBusPreempt,
-  .Peek8 = (void *)TSMuxBusPeek8,
-  .Poke8 = (void *)TSMuxBusPoke8,
-  .Peek16 = (void *)TSMuxBusPeek16,
-  .Poke16 = (void *)TSMuxBusPoke16,
-  .Peek32 = (void *)TSMuxBusPeek32,
-  .Poke32 = (void *)TSMuxBusPoke32,
-  .BitGet8 = (void *)TSMuxBusBitGet8,
-  .BitAssign8 = (void *)TSMuxBusBitAssign8,
-  .BitSet8 = (void *)TSMuxBusBitSet8,
-  .BitClear8 = (void *)TSMuxBusBitClear8,
-  .BitGet16 = (void *)TSMuxBusBitGet16,
-  .BitAssign16 = (void *)TSMuxBusBitAssign16,
-  .BitSet16 = (void *)TSMuxBusBitSet16,
-  .BitClear16 = (void *)TSMuxBusBitClear16,
-  .BitGet32 = (void *)TSMuxBusBitGet32,
-  .BitAssign32 = (void *)TSMuxBusBitAssign32,
-  .BitSet32 = (void *)TSMuxBusBitSet32,
-  .BitClear32 = (void *)TSMuxBusBitClear32,
-  .PeekStream = (void *)TSMuxBusPeekStream,
-  .PokeStream = (void *)TSMuxBusPokeStream,
-  .Refresh = (void *)TSMuxBusRefresh,
-  .Commit = (void *)TSMuxBusCommit,
-  .BitToggle8 = (void *)TSMuxBusBitToggle8,
-  .BitToggle16 = (void *)TSMuxBusBitToggle16,
-  .BitToggle32 = (void *)TSMuxBusBitToggle32,
-  .Assign8X = (void *)TSMuxBusAssign8X,
-  .Assign16X = (void *)TSMuxBusAssign16X,
-  .Assign32X = (void *)TSMuxBusAssign32X,
-  .BitsGet8 = (void *)TSMuxBusBitsGet8,
-  .BitsGet16 = (void *)TSMuxBusBitsGet16,
-  .BitsGet32 = (void *)TSMuxBusBitsGet32
-};
-
 // cadrs = 0x20 for TS-4200
 void *TSMuxBusInit(TSMuxBus *bus,void *configbus,int cadrs,void *regbus8, int base8, void *regbus16, int base16) {
   if (bus->InitStatus > 0) return bus;

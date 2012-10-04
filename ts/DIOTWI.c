@@ -119,16 +119,6 @@ static int rx (DIOTWI *twi,int nak)
 }
 
 //-----------------------------------------------------------------------------
-static TWIAPI DIOTWIAPI =  {
-  .Init = (void *)DIOTWIInit,
-  .Fini = (void *)DIOTWIFini,
-  .Lock = (void *)DIOTWILock,
-  .Unlock = (void *)DIOTWIUnlock,
-  .Preempt = (void *)DIOTWIPreempt,
-  .Write = (void *)DIOTWIWrite,
-  .Read = (void *)DIOTWIRead,
-};
-
 void *DIOTWIInit(DIOTWI *twi,void *dio1,void *t1) {
   DIO *dio = dio1;
   Time *t = t1;

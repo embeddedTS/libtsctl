@@ -5,8 +5,7 @@
 typedef struct NetCANctl NetCANctl;
 
 struct NetCANctl {
-  CANAPI;
-  int InitStatus;
+  CAN;
   int socket;
 };
 

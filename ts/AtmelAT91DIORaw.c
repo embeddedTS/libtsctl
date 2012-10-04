@@ -8,19 +8,6 @@
 #define LOCK_CLASS AtmelAT91DIORaw
 #include "TSLock.h"
 
-static DIORawAPI AtmelAT91DIORawAPI = {
-  .Init = (void *)AtmelAT91DIORawInit,
-  .Fini = (void *)AtmelAT91DIORawFini,
-  .Lock = (void *)AtmelAT91DIORawLock,
-  .Unlock = (void *)AtmelAT91DIORawUnlock,
-  .Preempt = (void *)AtmelAT91DIORawPreempt,
-  .DirSet = (void *)AtmelAT91DIORawDirSet,
-  .DataSet = (void *)AtmelAT91DIORawDataSet,
-  .DirGet = (void *)AtmelAT91DIORawDirGet,
-  .DataGet = (void *)AtmelAT91DIORawDataGet,
-  .Count = (void *)AtmelAT91DIORawCount
-};
-
 void *AtmelAT91DIORawInit(AtmelAT91DIORaw *dio,void *bus1) {
   Bus *bus = bus1;
 

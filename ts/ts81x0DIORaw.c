@@ -6,19 +6,6 @@
 #define LOCK_CLASS ts81x0DIORaw
 #include "TSLock.h"
 
-static DIORawAPI ts81x0DIORawAPI = {
-  .Init = (void *)ts81x0DIORawInit,
-  .Fini = (void *)ts81x0DIORawFini,
-  .Lock = (void *)ts81x0DIORawLock,
-  .Unlock = (void *)ts81x0DIORawUnlock,
-  .Preempt = (void *)ts81x0DIORawPreempt,
-  .DirSet = (void *)ts81x0DIORawDirSet,
-  .DataSet = (void *)ts81x0DIORawDataSet,
-  .DirGet = (void *)ts81x0DIORawDirGet,
-  .DataGet = (void *)ts81x0DIORawDataGet,
-  .Count = (void *)ts81x0DIORawCount
-};
-
 void *ts81x0DIORawInit(ts81x0DIORaw *dio,void *bus1) {
   if (dio->InitStatus > 0) return dio;
 

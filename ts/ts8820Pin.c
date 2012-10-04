@@ -5,16 +5,6 @@
 #define LOCK_CLASS ts8820Pin
 #include "TSLock.h"
 
-static PinAPI ts8820PinAPI = {
-  .Init = (void *)ts8820PinInit,
-  .Fini = (void *)ts8820PinFini,
-  .Lock = (void *)ts8820PinLock,
-  .Unlock = (void *)ts8820PinUnlock,
-  .Preempt = (void *)ts8820PinPreempt,
-  .ModeGet = (void *)ts8820PinModeGet,
-  .ModeSet = (void *)ts8820PinModeSet
-};
-
 void *ts8820PinInit(ts8820Pin *pin,void *parent,void *bus,int start) {
   if (pin->InitStatus > 0) return pin;
 

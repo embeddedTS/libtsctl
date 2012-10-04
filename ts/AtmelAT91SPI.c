@@ -4,19 +4,6 @@
 #include "Thread.h"
 #include "Log.h"
 
-static SPIAPI AtmelAT91SPIAPI =  {
-  .Init = (void *)AtmelAT91SPIInit,
-  .Fini = (void *)AtmelAT91SPIFini,
-  .Lock = (void *)AtmelAT91SPILock,
-  .Unlock = (void *)AtmelAT91SPIUnlock,
-  .Preempt = (void *)AtmelAT91SPIPreempt,
-  .Write = (void *)AtmelAT91SPIWrite,
-  .Read = (void *)AtmelAT91SPIRead,
-  .ReadWrite = (void *)AtmelAT91SPIReadWrite,
-  .ClockSet = (void *)AtmelAT91SPIClockSet,
-  .EdgeSet = (void *)AtmelAT91SPIEdgeSet
-};
-
 // bus maps the AtmelAT91 SPI registers (p.403) (p.19)
 // SPI0: 0xFFFC8000
 // SPI1: 0xFFFCC000

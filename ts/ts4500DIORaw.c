@@ -8,19 +8,6 @@
 #define LOCK_CLASS ts4500DIORaw
 #include "TSLock.h"
 
-static DIORawAPI ts4500DIORawAPI = {
-  .Init = (void *)ts4500DIORawInit,
-  .Fini = (void *)ts4500DIORawFini,
-  .Lock = (void *)ts4500DIORawLock,
-  .Unlock = (void *)ts4500DIORawUnlock,
-  .Preempt = (void *)ts4500DIORawPreempt,
-  .DirSet = (void *)ts4500DIORawDirSet,
-  .DataSet = (void *)ts4500DIORawDataSet,
-  .DirGet = (void *)ts4500DIORawDirGet,
-  .DataGet = (void *)ts4500DIORawDataGet,
-  .Count = (void *)ts4500DIORawCount
-};
-
 void *ts4500DIORawInit(ts4500DIORaw *dio,void *bus1) {
   Bus *bus = bus1;
 

@@ -10,19 +10,6 @@
 #define LOCK_CLASS FreescaleIMX51DIORaw
 #include "TSLock.h"
 
-static DIORawAPI FreescaleIMX51DIORawAPI = {
-  .Init = (void *)FreescaleIMX51DIORawInit,
-  .Fini = (void *)FreescaleIMX51DIORawFini,
-  .Lock = (void *)FreescaleIMX51DIORawLock,
-  .Unlock = (void *)FreescaleIMX51DIORawUnlock,
-  .Preempt = (void *)FreescaleIMX51DIORawPreempt,
-  .DirSet = (void *)FreescaleIMX51DIORawDirSet,
-  .DataSet = (void *)FreescaleIMX51DIORawDataSet,
-  .DirGet = (void *)FreescaleIMX51DIORawDirGet,
-  .DataGet = (void *)FreescaleIMX51DIORawDataGet,
-  .Count = (void *)FreescaleIMX51DIORawCount
-};
-
 void *FreescaleIMX51DIORawInit(FreescaleIMX51DIORaw *dio,void *bus1) {
   Bus *bus = bus1;
 
