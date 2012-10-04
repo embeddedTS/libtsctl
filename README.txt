@@ -6,100 +6,50 @@ The CHANGES.txt file contains a summary of changes for each release.
 For more in depth information, please visit the libtsctl blog at:
 http://libtsctl.blogspot.com
 
-Before you can compile you must do two things:
-1. make sure that libtsctl.h is symlinked properly
 
-Currently it is only possible to do two compiles.
+Before you can compile you create a file called Makefile.config.
+There is a sample "Makefile.config.sample" that you can use as a
+reference.  You will need to define TOOL_PREFIX to be the path to
+your compiler (or cross-compiler) plus any common prefix such as
+"arm-linux" if that exists.  You will also need to define BOARDSEL
+to be either "cavium" if you are compiling for a Cavium based board
+(TS-4500 or TS-75XX), or "noncavium" for all other CPU boards.
 
-If you want to compile for a Non-cavium based CPU board (TS-4200, TS-4700,
-TS-4800), then libtsctl.h must be symlinked to libtsctl-noncavium.h
+For ease of embedding libtsctl in your own application while still
+being able to support a wide range of hardware, the approach is
+taking of including the C files for each architecture to be supported.
+If you want to import libtsctl into your own project, it should be
+sufficient to copy the .h header files and the ts/ sub-directory 
+to your own project directory, and then  #include "libtsctl.h" in 
+your program.
 
-If you want to compile for a Cavium based CPU board (TS-4500, TS-75XX),
-then libtsctl.h must be symlinked to libtsctl-cavium.h
+If for your own purposes you want to create a stripped-down version
+of libtsctl that supports only the specific architecture for your
+board, you will need to edit either libtsctl-cavium.h or 
+libtsctl-noncavium.h and remove the include statements for all
+boards you are not using.  You will then need to edit near the top
+of ts4200.c (for noncavium) or ts4500.c (for cavium) to remove the 
+data structures corresponding to these boards.  More specifically,
+look for the lines starting with "ArrayAuto" and remove the references
+from each line to the variables containing those board names in each
+list.
 
-For simplicity, you may run "make cavium" to set the symlink to cavium, or
-"make noncavium" to set the symlink to non-cavium.
+The provided Makefile by default will compile all the sample applications
+for your selected board class (cavium or noncavium), putting the binaries
+in a sub-directory of the same name.  You can compile a subset of the
+applications be prefixing the make command with a "PRODUCTS=..."
+assignment with the list of applications to compile.
 
-In the past, libtsctl has only supported compilation for a single architecture
-at a time.  If you wish to strip down libtsctl to support this mode, you
-will need to edit ts4200.c or ts4500.c to remove references to architectures
-you do not wish to support.  Then, edit libtsctl.h to remove include
-references to those same architectures.
-
-The remainder of this section is retained for reference purposes, but its
-instructions should no longer be followed due to the fact that libtsctl
-now supports multiple architectures in a single binary.
-
-Your architecture consists of all the boards you have connected together,
-starting with the CPU board, followed by a base board, followed by any
-peripheral boards.  Your system will contain at least the CPU board.
-
-You must #include the C file for each component of your architecture in the
-order specified above.  You must also #include "ts/tsinit.c" after all
-arch files are included.   The C files for each arch are found in the ts/
-sub-directory, and are named according to the name of the board.
-
-Here is the current list of architecture files:
-
-  CPU boards
-  ts4200.c
-  ts4500.c
-  ts4700.c
-  ts4800.c
-  ts7552.c
-  ts7553.c
-  ts7558.c
-
-  Base boards
-  ts81x0.c
-  ts8820.c
-  ts8900.c
-
-  Peripheral boards
-  tsdio24.c
-  tsrelay8.c
-
-Note that it is not necessary to #include "libtsctl.h" in your own project.
-Instead, you can directly include the required files as specified above in
-your own program.  The only purpose for libtsctl.h here is to allow all
-sample files to use the architecture as specified in a single place, and to
-remain compatible with the previous method of using the API.  The libtsctl.h
-that you are editing should not be confused with "ts/libtsctl.h".
-
-2. edit Makefile, or replace it with your own
-
-A Makefile is supplied for convenience in compiling all the provided sample
-applications.  For your own project you can use whatever build mechanism you
-wish.  All that is required is that you include the correct arch files as
-specified in step 1 above.  It is also recommended that you keep the libtsctl
-files in the sub-directory ts/ to keep it separate from your own code.
-
-If you wish to use the included Makefile, at the least you must modify the CC 
-variable assignment to point to your compiler.  You will also need to modify 
-LDFLAGS if you are not using uclibc.
-
-After you have done the above two steps run 'make' in the directory with
-the Makefile to build all the sample source code for your architecture.
-The binaries will be placed in the same directory.
-
-After you compile and before you use the resulting binaries, it is highly
-recommended to install the appropriate dioctl.config file in the /etc
-directory of your board.  Without this file you will not have available the
-default name to number lookups for DIOs specific to your board.
-
-All available config files are in the config/ directory.  To find the 
-appropriate dioctl.config file for your board, select the file which has
-the list of architecture names corresponding to the architecture you selected
-in step 1, above. Note that dioctl.config architectures are more specific
-in some cases (e.g. ts8160 or ts8100 instead of ts81x0, or ts8200 which
-does not have a specific arch support C file.)
-
-IMPORTANT NOTE: The sample Makefile does not contain any provision to detect
-whether the sample code you are compiling is appropriate for your architecture.
-For instance, canctl will not work on the TS-4200 since it does not support CAN.
+The resulting binaries can be run from anywhere on your board, although
+it is recommended that they go somewhere in your PATH to avoid needing
+to specify an explicit path.  If you wish to override or extend any
+of the default configuration you can do so by creating an /etc/dioctl.config
+file containing name=value assignments as specific in the documentation.
 
 Support for using libtsctl from languages other than C is provided by
 a SWIG .i file.  Please read the SWIG.txt file for more information.
+
+=== SAMPLE CODE ===
 
 Currently the following sample programs are included:
 
@@ -114,7 +64,7 @@ board into sleep mode.  Requires a TS-8160 base board to be present.
 
 DIOTest: interacts with a test harness to test DIOs.  Some base boards have
 this harness (e.g. TS-8200).  The /etc/dioctl.config file must define the
-wires in the test harness.
+wires in the test harness unless they are already in the built-in config.
 
 CANTx: demonstrates how to directly send a CAN frame
 
@@ -142,7 +92,7 @@ dioctl: implements the classic standalone dioctl server and command line
 options using the libtsctl API.  cannot be run simultaneously with any of the 
 other ctl servers documented here.
 
-tsctl: implements the tsctl client and server. also incorporates the canctl, 
-dioctl, and spictl servers.  in addition, implements modbus and http servers.
-compile time options can selectively exclude any of the auxiliary (canctl, 
-dioctl, spictl, modbus, http) servers.
+tsctl: implementint the full tsctl client and server. also incorporates the 
+canctl, dioctl, and spictl servers.  in addition, implements modbus and 
+http servers.  compile time options can selectively exclude any of the 
+auxiliary (canctl, dioctl, spictl, modbus, http) servers.
