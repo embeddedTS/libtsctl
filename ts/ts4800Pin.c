@@ -83,6 +83,11 @@ PinMode ts4800PinModeGet(ts4800Pin *pin,int npin) {
 int ts4800PinModeSet(ts4800Pin *pin,int npin,PinMode mode) {
   // in the case of CAN, setting either pin of the pair to MODE_CAN
   // automatically sets the other pin as well, so only need to call once.
+  if (npin == 20) {
+    if (mode == MODE_DIO) {
+      pin->bus->BitClear16(pin->bus,0x10,9);
+    }
+  }
   if (npin >= 21 && npin <= 55) {
     if (mode == MODE_BUS) {
       pin->bus->BitSet16(pin->bus,0x12,0);
