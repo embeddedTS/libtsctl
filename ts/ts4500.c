@@ -217,6 +217,21 @@ Bus *ts4500__BusInit7(Bus *bus,int inst) {
   return Cavium2132SBusWindowBusInit(&canbus,ts4500__BusInit0(0,0));
 }
 Bus *ts4500__BusInit8(Bus *bus,int inst) {
+  Bus *bus0 = ts4500__BusInit0(0,0);
+  int modelid,fpgarev,muxpresent;
+  bus0->Lock(bus0,0,0);
+  modelid = bus0->Peek16(bus0,0x60);
+  fpgarev = bus0->BitsGet16(bus0,0x62,3,0);
+  bus0->Unlock(bus0,0,0);
+
+  if ((modelid & 0x7000)==0x7000) return DummyBusInit(&altmux);
+  if (fpgarev < 6) return DummyBusInit(&altmux);
+  bus0->Lock(bus0,0,0);
+  bus0->Poke16(bus0,0x18,0x55);
+  muxpresent = (bus0->Peek16(bus0,0x18) == 0x55);
+  bus0->Unlock(bus0,0,0);
+  if (!muxpresent) return DummyBusInit(&altmux);
+
   return WBWindowBusInit(&wbwin,ts4500__BusInit0(0,0),0x18,0);
 }
 #define ts4500BusInstances 9
@@ -282,7 +297,7 @@ CAN *ts4500__CANInit0(CAN *can,int inst) {
   Bus *bus0 = ts4500__BusInit0(0,0);
   int modelid;
   bus0->Lock(bus0,0,0);
-  modelid = bus0->Peek16(bus0,0);
+  modelid = bus0->Peek16(bus0,0x60);
   bus0->Unlock(bus0,0,0);
 
   CAN0.LockBase = 2;
