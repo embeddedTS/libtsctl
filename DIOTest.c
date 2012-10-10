@@ -197,6 +197,8 @@ int main(int argc,char *argv[]) {
   case 0x47008160: tests = 104; break;
   case 0x48008160: tests = 104; break;
 
+  case 0x48008390: tests = 24; break;
+
   default: tests = 0;
   }
   if (failed) {

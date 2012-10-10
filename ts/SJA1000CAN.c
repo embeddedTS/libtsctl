@@ -22,6 +22,25 @@ static inline void BusOn(SJA1000CAN *can) {
   can->bus->Poke8(can->bus,0, 0); /* Enter operational mode */
 }
 
+/*
+  determining the current baud rate from the bus timing registers
+
+1. 2 * (REG6[5:0] + 1) * 1/24Mhz = clock period
+   2 * (4+1) = 10 => 2.4 Mhz
+   2 * (0+1) = 2 -> 12Mhz
+
+2. bit period = ( 1 + REG7[6:4] + REG7[3:0] ) * clock period
+   (1+6+15) = 22 => 109090  (need 24 for 100k)
+   (1+2+7)  = 10 -> 1.2M (need 12 for 1M)
+ */
+unsigned get_baud(int btr0,int btr1) {
+  int inv_clock_period = 2 * (1 + (btr0 & 0x3F));
+  int tseg2 = (1 + (btr1 >> 4) & 7);
+  int tseg1 = (1 + (btr1 & 15));
+  int inv_bit_period = inv_clock_period * (1+tseg1+tseg2);
+  return 24000000 / inv_bit_period;
+}
+
 static unsigned init_baud(int opt_baud,int *baudparms,
 		      int *opt_btr0,int *opt_btr1) {
   int i;
@@ -123,22 +142,33 @@ CANDetectDone:
 unsigned _SJA1000CANBaudSet(SJA1000CAN *can,unsigned opt_baud,int force,int *changed) {
   int new_baud;
   int BTR0,BTR1;
+
+  can->bus->Lock(can->bus,0,0);
+  BTR0 = can->bus->Peek8(can->bus,6);
+  BTR1 = can->bus->Peek8(can->bus,7);
+  can->baud = get_baud(BTR0,BTR1);
+
   //fprintf(stderr,"new baud=%d, old baud=%d\n",opt_baud,can->baud);
   can->baud = opt_baud;
   new_baud = init_baud(can->baud,can->baudparms,&BTR0,&BTR1);
-  can->bus->Lock(can->bus,0,0);
+
+
+  if (can->bus->BitGet8(can->bus,0,1) // in reset
+      || can->bus->BitGet8(can->bus,2,7) // error warning
+      || can->bus->BitGet8(can->bus,2,6)) { // Bus Off
+    BusOff(can);
+    BusOn(can);
+  }
 
   BusOn(can);
   if (BTR0 == can->bus->Peek8(can->bus,6)
       && BTR1 == can->bus->Peek8(can->bus,7)) {
     can->bus->Unlock(can->bus,0,0);
     *changed = 0;
-    //fprintf(stderr,"baud rate not changed\n");
     return can->baud;
   }
   *changed = 1;
 
-  //fprintf(stderr,"BaudSet %d (%d)\n",opt_baud,force);
   if (force || (can->bus->Peek8(can->bus,31) & 0x80) == 0
       || can->bus->Peek8(can->bus,2) & 0xC0 ) {
 
@@ -149,11 +179,9 @@ unsigned _SJA1000CANBaudSet(SJA1000CAN *can,unsigned opt_baud,int force,int *cha
     // 0x04, 0x6F = 100kbps
     // 0x2F, 0x7F = 10kbps
     can->baud = new_baud;
-    //fprintf(stderr,"BTR=%d, %x\n",BTR0,BTR1);
 
     can->bus->Poke8(can->bus,6, BTR0);
     can->bus->Poke8(can->bus,7, BTR1);
-    //fprintf(stderr,"BTR:%X,%X\n",BTR0,BTR1);
     can->txto = 150000000/can->baud; // us
     if (can->txto > 300) can->txto=0;
 
@@ -184,7 +212,14 @@ unsigned SJA1000CANBaudSet(SJA1000CAN *can,unsigned opt_baud) {
 
 
 unsigned SJA1000CANBaudGet(SJA1000CAN *can) {
-  return can->baud;
+  int BTR0, BTR1;
+
+  can->bus->Lock(can->bus,0,0);
+  BTR0 = can->bus->Peek8(can->bus,6);
+  BTR1 = can->bus->Peek8(can->bus,7);
+  can->bus->Unlock(can->bus,0,0);
+
+  return (can->baud = get_baud(BTR0,BTR1));
 }
 
 void SJA1000CANAbort(SJA1000CAN *can) {
@@ -275,7 +310,18 @@ int SJA1000CANRx(SJA1000CAN *can,CANMessage msg[0]){
   //gettimeofday(&msg->timestamp,NULL);
   // block until CAN message ready
   timeout = 100;
-  while (!can->doabort && ((ret = (j=can->bus->Peek8(can->bus,2))) & 0x01)==0) {
+  while (!can->doabort) {
+    j=can->bus->Peek8(can->bus,2);
+    
+    if ((j & 0x01)==1) break;
+    if (j & 0xC0) {
+      can->bus->Unlock(can->bus,0,0);
+      ArraySizeAuto(msg->data,0);
+      msg->flags = (j & 0x80 ? FLAG_BUS_ERROR : 0) +
+	(j & 0x40 ? FLAG_ERROR_WARNING : 0);
+      msg->id = 0;
+      return -100 - (j >> 6);
+    }
     if (--timeout == 0) {
       can->bus->Preempt(can->bus);
       timeout = 1000;
@@ -350,16 +396,31 @@ int SJA1000CANTx(SJA1000CAN *can,unsigned flags,unsigned id,const char* data){
   int len = ArrayLength(data) > 8 ? 8 : ArrayLength(data);
   ArrayAutoOfSize(unsigned char,buf,13);
   unsigned char *b = buf;
-  int i,timeout=1000;
+  int i,j,timeout=1000;
 
   can->bus->Lock(can->bus,0,0);
-  // block until CAN is ready to accept another message
+  // block until CAN is ready to accept another message or an error occurs
+  while (!can->doabort) {
+    j=can->bus->Peek8(can->bus,2);
+    
+    if (j & 0xC0) {
+      can->bus->Unlock(can->bus,0,0);
+      return -100 - (j >> 6);
+    }
+    if ((j & 0x04)==4) break;
+    if (--timeout == 0) {
+      can->bus->Preempt(can->bus);
+      timeout = 1000;
+    }
+  }
+  /*
   while  (!can->doabort && ((i=can->bus->Peek8(can->bus,2)) & 0x04)==0) {
     if (--timeout == 0) {
       can->bus->Preempt(can->bus);
       timeout = 1000;
     }  
   }
+  */
   if (can->doabort) {
     can->doabort = 0;
     return -1;
@@ -550,7 +611,6 @@ void wait(SJA1000CAN *can,int socketwait,int txwait,int rxwait) {
     intmask |= 2; // unmask CAN Tx Rdy interrupt
   }
   can->bus->Poke8(can->bus,4,intmask);
-  printf("intmask=%04X\n",intmask);
   dummy = can->bus->Peek8(can->bus,2);
   if (((dummy & CAN_TxRdy) && txwait)
       ||((dummy & CAN_RxRdy) && rxwait)) {
@@ -562,7 +622,6 @@ void wait(SJA1000CAN *can,int socketwait,int txwait,int rxwait) {
   }
   // write set must be modified as needed elsewhere
   can->bus->Unlock(can->bus,0,0);
-  fprintf(stderr,"(-573)");
   if (socketwait && txwait) fprintf(stderr,"warn: socketwait and txwait both set\n");
   //#if 0
   //  if (txwait) {
@@ -577,16 +636,13 @@ void wait(SJA1000CAN *can,int socketwait,int txwait,int rxwait) {
     can->bus->Lock(can->bus,0,0);
     ints = can->bus->Peek8(can->bus,3);
     can->bus->Unlock(can->bus,0,0);
-    fprintf(stderr,"<%X>",ints);
     if (ints) break;
     tv.tv_sec = 1;
     tv.tv_usec = 0;
   } 
-  fprintf(stderr,"(+584)");
   can->bus->Lock(can->bus,0,0);
 #if 0
   if (rc == 0) {
-    fprintf(stderr,"Tx timeout, aborting\n");
     can->bus->Poke8(can->bus,1,2);
   }
 #endif
@@ -604,12 +660,10 @@ void wait(SJA1000CAN *can,int socketwait,int txwait,int rxwait) {
     }
     */
     Log(LOG_CAN,"ints=%d(%d)\n",ints,debug);
-    fprintf(stderr,"ints=%d(%04X/%04X)",ints,debug,can->bus->Peek8(can->bus,4));
     if (FD_ISSET(d->irqfd,&fdr)) {
       read(d->irqfd,&dummy,4); //read IRQ fd to acknowledge with OS
-      fprintf(stderr,".\n",ints);
     } else {
-      fprintf(stderr,"Uh-oh!\n");
+      fprintf(stderr,"Uh-oh! IRQ descriptor was not ready!\n");
       // Why exactly did select() return anyway???
     }
     //can->bus->Poke8(can->bus,4,0);
@@ -809,9 +863,7 @@ static int process_command(SJA1000CAN *can,CANMessage *msg) {
     int changed;
     //can->baud = ((unsigned *)msg->data)[0];
     can->bus->Unlock(can->bus,0,0);
-    fprintf(stderr,"(805-)");
     _SJA1000CANBaudSet(can,((unsigned *)msg->data)[0],1,&changed);
-    fprintf(stderr,"(807+)");
     can->bus->Lock(can->bus,0,0);
     return 0;
   }
@@ -865,13 +917,12 @@ int CANMain(void *can0,int listen,int irqfd,int s) {
   start1 = start2 = end1 = can->time->Tick(can->time);
   end2 = can->time->usFuture(can->time,start1,10000);
   CANMainPreInit(can,listen,irqfd,s);
-  ___ fprintf(stderr,"(859+)"); can->bus->Lock(can->bus,0,0); 
+  can->bus->Lock(can->bus,0,0); 
 
   
   while (1) {
     ___ CANStatus = can->bus->Peek8(can->bus,2);
     socketwait = txwait = rxwait = 0;
-    fprintf(stderr,"CANStatus=%X\n",CANStatus);
     if (CANStatus & CAN_BusOff) {
     terminate_connections:
       for (i=0;i<can->D.nconn;i++) {
@@ -883,7 +934,6 @@ int CANMain(void *can0,int listen,int irqfd,int s) {
       goto escape_hatch;
     }
     if (CANStatus & CAN_TxRdy) {
-fprintf(stderr,"3");
       if (emptyTxQ(can)) {
         readSocketsToTxQ(can);
       }
@@ -898,10 +948,8 @@ fprintf(stderr,"3");
       // emptyTxQ(can), since we fell out of the loop
       socketwait = 1;
       if (!can->D.nconn) { // no open sockets remain
-	___ fprintf(stderr,"AAA\n");
       escape_hatch:
 	can->bus->Unlock(can->bus,0,0);
-	fprintf(stderr,"(896-)");
 	dump();
 	can->pin->Unlock(can->pin,can->CAN_TX,0);
 	can->pin->Unlock(can->pin,can->CAN_RX,0);
@@ -927,17 +975,11 @@ fprintf(stderr,"3");
       txwait = 1;
     }
     label1:
-fprintf(stderr,"4");
-    if (CANStatus & CAN_RxRdy) {
-      fprintf(stderr,"1");
-    }
     while ((CANStatus & CAN_RxRdy) && (msg=pushRxQ(can))) {
-      fprintf(stderr,"2");
       i++;
       can->bus->Unlock(can->bus,0,0);
       can->Rx(can,msg);
       can->bus->Lock(can->bus,0,0); 
-      fprintf(stderr,"Rx");
       Log(LOG_CAN,"Rx %X\n",msg->id);
       CANStatus = can->bus->Peek8(can->bus,2);
     }
@@ -946,15 +988,12 @@ fprintf(stderr,"4");
       //___ fprintf(stderr,"CCC %d\n",i); goto escape_hatch; // <RE?> N
       ___ dumpRxQToAllSockets(can); 
     } else if (can->time->TimeoutQ(can->time,start2,end2)) {
-      fprintf(stderr,"<PRE>");
       can->bus->Preempt(can->bus);
       start2 = can->time->Tick(can->time);
       end2 = can->time->usFuture(can->time,start2,10000);
     } else if (can->time->TimeoutQ(can->time,start1,end1)) {
-      fprintf(stderr,"X");
       //___ fprintf(stderr,"DDD\n"); goto escape_hatch; // <RR?> Y, timeout no
       wait(can,socketwait,txwait,rxwait);
-      fprintf(stderr,"Y");
     } 
   }
 }
@@ -988,7 +1027,7 @@ void *CANStart(void *arg) {
   //fprintf(stderr,"CAN listen=%d, ci=%p,CAN=%p\n",listen,ci,ci->can);
   while (SJA1000CANRunning) {
     if ((s=accept(listen, (struct sockaddr *)&csa, &size_csa)) >= 0) {
-      fprintf(stderr,"accept %d, ci=%p,CAN=%p\n",s,ci,ci->can);
+      //fprintf(stderr,"accept %d, ci=%p,CAN=%p\n",s,ci,ci->can);
       //fprintf(stderr,"Entering CANMain (%d)\n",s);
       //log9(LOG_CAN,"cans[%d]->D.nconn=%d ",inst,((SJA1000CAN *)cans[inst])->D.nconn);
       //for (i=0;i<((SJA1000CAN *)cans[inst])->D.nconn;i++) {
@@ -996,7 +1035,7 @@ void *CANStart(void *arg) {
       //}
       //log9(LOG_CAN,"\n");
       tmp = CANMain(ci->can,listen,irqfd,s);
-      fprintf(stderr,"CANMain returned %d\n",tmp);
+      //fprintf(stderr,"CANMain returned %d\n",tmp);
       if (tmp == 6) break;
     }
   }

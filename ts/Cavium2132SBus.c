@@ -141,6 +141,7 @@ void Cavium2132SBusCommit(Cavium2132SBus *obj,int forceall) {
 static unsigned short _Cavium2132SBusPeek16(Cavium2132SBus *obj,unsigned int adr) {
   unsigned short ret;
   unsigned int adr0 = adr;
+
   /*
     This is an ugly hack!  The assembly code below is hard-coding what it
     expects to be a pointer to the SPI registers.  This means that it will
@@ -177,6 +178,7 @@ static unsigned short _Cavium2132SBusPeek16(Cavium2132SBus *obj,unsigned int adr
 static void _Cavium2132SBusPoke16(Cavium2132SBus *obj,unsigned int adr, unsigned short dat) {
   unsigned int dummy;
   unsigned int d = dat;
+
   // same ugly hack as above!
   struct HACK { Bus f; volatile unsigned *data; };
   volatile unsigned int *spi = ((struct HACK *)(obj->spibus))->data;

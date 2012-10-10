@@ -564,7 +564,11 @@ int ThreadMutexLock(unsigned num,int mode) {
 
   if (num == 0) {
     struct sembuf sop = { 0, -1, SEM_UNDO };
-    return 1+2*TEMP_FAILURE_RETRY(semop(semid, &sop, 1));
+    //fprintf(stderr,"SBUS LOCK...");
+    //system("/mnt/host/home/michael/semtest -q");
+    int ret =  1+2*TEMP_FAILURE_RETRY(semop(semid, &sop, 1));
+    //fprintf(stderr,"LOCKED\n");
+    return ret;
   }
 
   if (num==WANTED) fprintf(stderr,"ThreadMutexLock(%p/%d:%d)\n",th,th->pid,num);
@@ -616,7 +620,10 @@ int ThreadMutexUnlock(unsigned num) {
   Thread *th = pthread_getspecific(threadKey);
   if (num == 0) {
     struct sembuf sop = { 0, 1, SEM_UNDO };
-    return 1+2*TEMP_FAILURE_RETRY(semop(semid, &sop, 1));
+    //fprintf(stderr,"SBUS UNLOCK...");
+    int ret = 1+2*TEMP_FAILURE_RETRY(semop(semid, &sop, 1));
+    //fprintf(stderr,"UNLOCK\n");
+    return ret;
   } 
   if (num==WANTED) fprintf(stderr,"ThreadMutexUnlock(%p/%d:%d)\n",th,th->pid,num);
   int ret = pthread_mutex_unlock(mutexes+num);

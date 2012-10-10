@@ -1,6 +1,10 @@
+#define POLYGLOT_AUTO_COMPILE \
+  gcc -g -fms-extensions -o CANTest CANTest.c ; exit
+
 #include "libtsctl.h"
 #include <stdlib.h>
 #include <stdio.h>
+#include <time.h>
 #include "ts/Array.h"
 
 #include "ts/NetCANctl.c"
@@ -53,7 +57,7 @@ CAN *Net_CANctlInit(int inst,char *host){
 
 int check_fds(const int* fds,int *ready,unsigned uswait) {
   fd_set fdset;
-  int i,ret=0,max=0;
+  int i,n,ret=0,max=0;
   struct timeval tv;
 
   tv.tv_sec = uswait / 1000000;
@@ -73,8 +77,45 @@ int check_fds(const int* fds,int *ready,unsigned uswait) {
   return ret;
 }
 
+int drain_fds(NetCANctl* *can,const int* fds) {
+  int i,n=0;
+  int* ready = ArrayAlloc(ArrayLength(fds),sizeof(int));
+  CANMessage msg;
+
+  check_fds(fds,ready,0);
+  for (i=0;i<ArrayLength(fds);i++) {
+    if (ready[i]) {
+      n++;
+      can[i]->Rx(can[i],&msg);
+    }
+  }
+  return n;
+}
+
+char *getinst(char *host,int *inst) {
+  char *colon = strchr(host,':');
+
+  if (!colon) {
+    *inst = 0;
+    return host;
+  }
+  *colon = 0;
+  colon++;
+  *inst = strtol(colon,0,0);
+  return host;
+}
+
+void dump(char* arr) {
+  int i;
+
+  for (i=0;i<ArrayLength(arr);i++) {
+    printf("%02X ",arr[i]);
+  }
+  printf("\n");
+}
+
 int main(int argc,char *argv[]) {
-  int i,j,k,x;
+  int h,i,j,k,x;
   ArrayAutoOfSize(char,data,8);
   int* fds = ArrayAlloc(argc-1,sizeof(int));
   int* ready = ArrayAlloc(argc-1,sizeof(int));
@@ -89,14 +130,18 @@ int main(int argc,char *argv[]) {
   NetCANctl* *can=ArrayAlloc(argc-1,sizeof(CAN *));
   int retries=100;
   for (i=1;i<argc;i++) {
-    can[i-1] = (NetCANctl *)Net_CANctlInit(0,argv[i]);
+    char *str;
+    int inst;
+
+    str = getinst(argv[i],&inst);
+    can[i-1] = (NetCANctl *)Net_CANctlInit(inst,str);
     if (!can[i-1]) {
       fprintf(stderr,"can't connect to canctl server %s\n",argv[i]);
       return 1;
     } else {
-      printf("ok %s\n",argv[i]);
+      //printf("ok %s\n",argv[i]);
       fds[i-1] = can[i-1]->socket;
-      printf("%s=%d\n",argv[i],fds[i-1]);
+      //printf("%s=%d\n",argv[i],fds[i-1]);
     }
   }
 
@@ -104,9 +149,13 @@ int main(int argc,char *argv[]) {
   // Part 3:
   // set the baud rate 
   for (i=1;i<argc;i++) {
-    can[i-1]->BaudSet(can[0],1000000);
+    can[i-1]->BaudSet(can[i-1],100000);
   }
-  
+
+  // drain off anything already received
+  usleep(20000);
+  while (drain_fds(can,fds));
+
   // Part 4:
   // send a CAN frame
   int n;
@@ -114,37 +163,51 @@ int main(int argc,char *argv[]) {
   
   for (i=0;i<8;i++) data[i] = i;
 
-  for (i=0;i<argc-1;i++) {
-    usleep(10000);
-    data[7] = i;
-    printf("Tx %d\n",i);
-    n = can[i]->Tx(can[i],FLAG_EXT_ID,0x1234,data);
-    do {
+  
+  for (h=0;h<1000000;h++) {
+    fprintf(stderr,"\r%d   ",h);
+    for (i=0;i<argc-1;i++) {
       usleep(10000);
-      n = check_fds(fds,ready,0);
-    } while (n < 4);
-    //printf("%d rx\n",n);
-    //return 1;
-    
-    for (j=0;j<argc-1;j++) {
-      if (i == j) continue;
-      printf("Rx %d\n",j);
-      x = can[j]->Rx(can[j],&msg);
-      if (x > 0) {
-	for (k=0;k<8;k++) if (msg.data[i] != data[i]) break;
-	if (k < 8) {
-	  fprintf(stderr,"data mismatch:\ngot:");
-	  for (k=0;k<8;k++) {
-	    fprintf(stderr,"%02X ",msg.data[i]);
-	  }
-	  fprintf(stderr,"\nnot:");
-	  for (k=0;k<8;k++) {
-	    fprintf(stderr,"%02X ",data[i]);
-	  }
-	  fprintf(stderr,"\n");
+      data[7] = i;
+      //printf("\nTx %d:",i); fflush(stdout);
+      n = can[i]->Tx(can[i],FLAG_EXT_ID,0x1234,data);
+
+      retries = 100;
+      do {
+	usleep(10000);
+	n = check_fds(fds,ready,0);
+      } while (n < argc-2 && --retries);
+
+      if (n < argc-2) {
+	for (j=0;j<argc-1;j++) {
+	  if (i!=j && !ready[j]) fprintf(stderr,"%s ",argv[j+1]);
 	}
-      } else {
-	printf("Error %d receiving\n",i);
+	fprintf(stderr,"timeout\n");
+	return 1;
+      }
+      //printf("%d rx\n",n);
+      //return 1;
+      
+      for (j=0;j<argc-1;j++) {
+	if (i == j) continue;
+	//printf("%d",j);
+	x = can[j]->Rx(can[j],&msg);
+	if (x > 0) {
+	  for (k=0;k<8;k++) if (msg.data[k] != data[k]) break;
+	  if (k < 8) {
+	    fprintf(stderr,"Rx %d data mismatch:\ngot:",j);
+	    for (k=0;k<8;k++) {
+	      fprintf(stderr,"%02X ",msg.data[k]);
+	    }
+	    fprintf(stderr,"\nnot:");
+	    for (k=0;k<8;k++) {
+	      fprintf(stderr,"%02X ",data[k]);
+	    }
+	    fprintf(stderr,"\n");
+	  }
+	} else {
+	  printf("Error %d receiving\n",i);
+	}
       }
     }
   }

@@ -70,6 +70,7 @@ static void alarmsig(int x) {
   alarmed = 1;
   if (CANTestRxObject) {    
     CANTestRxObject->Abort(CANTestRxObject);
+    usleep(100000);
   }
 }
 
@@ -358,13 +359,13 @@ int canctl(int argc,char *argv[]) {
   void SigPrep() {
     gotSigInt = 0;
     if (!sigcap) {
-      if (SignalCapture(SIGINT,alarmsig) < 0) {
+      if (SignalCapture(SIGINT,SigInt) < 0) {
 	fprintf(stderr,"signal %d capture error:%m\n",SIGINT);
       }
-      if (SignalCapture(SIGTERM,alarmsig) < 0) {
+      if (SignalCapture(SIGTERM,SigInt) < 0) {
 	fprintf(stderr,"signal %d capture error:%m\n",SIGTERM);
       }
-      if (SignalCapture(SIGHUP,alarmsig) < 0) {
+      if (SignalCapture(SIGHUP,SigInt) < 0) {
 	fprintf(stderr,"signal %d capture error:%m\n",SIGHUP);
       }
       sigcap = 1;
@@ -373,12 +374,14 @@ int canctl(int argc,char *argv[]) {
 
   int DoDump(char *arg,void *target0,int opt) {
     CANMessage msg;
+    int ret;
+
     SigPrep();
     CANPrep();
     printf("Dumping\n");
     while (!gotSigInt) {
-      if (can->Rx(can,&msg) <= 0) {
-	fprintf(stderr,"Rx error\n");
+      if ((ret =can->Rx(can,&msg)) <= 0) {
+	fprintf(stderr,"Rx error %d\n",ret);
 	return 1;
       } else {
 	CANMessagePrint(&msg);
@@ -388,13 +391,14 @@ int canctl(int argc,char *argv[]) {
   }
 
   int DoTxTest(char *arg,void *target0,int opt) {
-    int i,j;
+    int i,j,ret;
     ArrayAutoOfSize(char,data,8);
     SigPrep();
     CANPrep();
     for (i=0;!gotSigInt;i++) {
       for (j=0;j<8;j++) data[j] = (i << 3) + j + 1;
-      if (can->Tx(can,(OptExt ? FLAG_EXT_ID : 0),i,data) < 0) {
+      if ((ret=can->Tx(can,(OptExt ? FLAG_EXT_ID : 0),i,data)) < 0) {
+	fprintf(stderr,"Tx error %d\n",ret);
 	break;
       }
     }
