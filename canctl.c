@@ -406,6 +406,7 @@ int canctl(int argc,char *argv[]) {
 
   int DoRxTest(char *arg,void *target0,int opt) {
     CANMessage msg;
+    SigPrep();
     CANPrep();
     CANTestRx(can,OptVerbose);
   }
