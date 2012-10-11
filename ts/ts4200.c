@@ -319,6 +319,7 @@ DIO *ts4200__DIOInit4(DIO *dio,int inst) {
   ts4200DIOCapabilities[25] = DIO_NORMAL;
   ts4200DIOCapabilities[26] = DIO_NORMAL;
   ts4200DIOCapabilities[28] = DIO_NORMAL;
+  ts4200DIOCapabilities[31] = DIO_NORMAL;
   
   ts4200DIOCapabilities[32] = DIO_OUTPUT_ONLY;
   ts4200DIOCapabilities[33] = DIO_OUTPUT_ONLY;
