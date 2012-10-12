@@ -26,7 +26,8 @@ void *ts81x0PinInit(ts81x0Pin *pin,void *parent,void *bus) {
   return pin;
 }
 
-void ts81x0PinPostInit(ts81x0Pin *pin,int CAN_TX1,int CAN_TX2,int CAN_RX1,int CAN_RX2) {
+void ts81x0PinPostInit(void *pin0,int CAN_TX1,int CAN_TX2,int CAN_RX1,int CAN_RX2) {
+  ts81x0Pin *pin = pin0;
   pin->CAN_TX1 = CAN_TX1;
   pin->CAN_TX2 = CAN_TX2;
   pin->CAN_RX1 = CAN_RX1;

@@ -33,7 +33,7 @@ DIOTWI ts4700TWI0;
 SJA1000CAN ts4700CAN0;
 ts4700Pin ts4700Pin0;
 WBSPI ts4700SPI0;
-System ts4700sys;
+LocalSystem ts4700sys;
 
 CANConn ts4700CAN0conn[16];
 

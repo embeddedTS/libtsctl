@@ -203,6 +203,7 @@ int main(int argc,char *argv[]) {
 
   default: tests = 0;
   }
+  fprintf(stderr,"Test %04X-%04X (%d tests)\n",model,bb,tests);
   if (failed) {
     printf("failed=%d\n",failed);
     rc++;

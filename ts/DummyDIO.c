@@ -1,5 +1,5 @@
-#ifndef __DummyDIO_h
-#define __DummyDIO_h
+#ifndef __DummyDIO_c
+#define __DummyDIO_c
 #include "DummyDIO.h"
 
 /*
@@ -63,11 +63,11 @@ int DummyDIOLock(DummyDIO *dio,unsigned num,int flags) {
 int DummyDIOUnlock(DummyDIO *dio,unsigned num,int flags) {
   return 1;
 }
-void DummyDIOPreempt(DummyDIO *dio) {
+int DummyDIOPreempt(DummyDIO *dio) {
 }
 
 void DummyDIOWait(DummyDIO *dio,int* match,int min,int max,
-		    int* h,int* l) {
+		    const int* h,const int* l) {
   ArraySizeAuto(match,0);
 }
 

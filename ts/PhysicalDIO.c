@@ -136,11 +136,11 @@ int PhysicalDIOLock(PhysicalDIO *dio,unsigned num,int flags) {
 int PhysicalDIOUnlock(PhysicalDIO *dio,unsigned num,int flags) {
   return 1;
 }
-void PhysicalDIOPreempt(PhysicalDIO *dio) {
+int PhysicalDIOPreempt(PhysicalDIO *dio) {
 }
 
 void PhysicalDIOWait(PhysicalDIO *dio,int* match,int min,int max,
-		    int* h,int* l) {
+		    const int* h,const int* l) {
 
 }
 

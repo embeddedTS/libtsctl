@@ -169,7 +169,7 @@ int AggregateDIOUnlock(AggregateDIO *dio,unsigned num,int flags) {
   }
 }
 
-void AggregateDIOPreempt(AggregateDIO *dio) {
+int AggregateDIOPreempt(AggregateDIO *dio) {
 }
 
 extern Time *TimeInit(int);
@@ -177,7 +177,7 @@ extern Time *TimeInit(int);
 #define ASYNC_WAIT
 
 void AggregateDIOWait(AggregateDIO *dio,int* match,int min,int max,
-		     int* h,int* l) {
+		     const int* h,const int* l) {
   int nh=ArrayLength(h),nl=ArrayLength(l);
   int i,j,matched,val;
   int h2[nh],l2[nl],dioh[nh],diol[nl];

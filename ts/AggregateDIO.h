@@ -1,46 +1,53 @@
-#ifndef __AggregateDIO_H
-#define __AggregateDIO_H
-#include "DIO.h"
-#include "Bus.h"
-#include "Pin.h"
+#ifndef __AggregateDIO_h
+#define __AggregateDIO_h
+#undef FUNC
+#ifndef SWIGGY
+#define FUNC(x) (*x)
+#else
+#define FUNC(x) x
+#endif
 
 typedef struct AggregateDIO AggregateDIO;
-
 struct AggregateDIO {
-  DIO;
-  DIO **dio;
-  Pin *pin;
-  int nCount; // number of DIO sub objects
-  int *SubCount; // number of DIOs in each sub DIO object
+	void *FUNC(Init)(AggregateDIO *me,unsigned Count,void *pin,int *SubCount,DIO **pDIO);
+	void FUNC(Fini)(AggregateDIO *me);
+	int FUNC(Lock)(AggregateDIO *me,unsigned num,int flags);
+	int FUNC(Unlock)(AggregateDIO *me,unsigned num,int flags);
+	int FUNC(Preempt)(AggregateDIO *me);
+	void FUNC(Refresh)(AggregateDIO *me);
+	void FUNC(Commit)(AggregateDIO *me,int forceall);
+	void FUNC(Set)(AggregateDIO *me,int DIONum,DIOState State);
+	DIOState FUNC(Get)(AggregateDIO *me,int DIONum);
+	void FUNC(SetAsync)(AggregateDIO *me,int DIONum,DIOState State);
+	DIOState FUNC(GetAsync)(AggregateDIO *me,int DIONum);
+	void FUNC(Wait)(AggregateDIO *me,int *match,int min,int max,const int *nh,const int *nl);
+	unsigned FUNC(Count)(AggregateDIO *me);
+	DIOCaps FUNC(Capabilities)(AggregateDIO *me,unsigned num);
+	int FUNC(GetMulti)(AggregateDIO *me,char *,int offset);
+	int InitStatus;
+	DIO **dio;
+	Pin *pin;
+	int nCount;
+	int *SubCount;
 };
 
-/*
-AggregateDIO dio0;
-DIO *pDIO[4];
-int SubCount[4];
-
-AggregateDIOInit(&dio0,4,PinInit(0),SubCount,pDIO,
-                 DIOInit(1),DIOInit(1),DIOInit(1),DIOInit(1));
- */
-void *AggregateDIOInit(AggregateDIO *ob,unsigned Count,void *pin,
-		       int *SubCount,DIO **pDIO);
-void AggregateDIOFini(AggregateDIO *);
-int AggregateDIOLock(AggregateDIO *dio,unsigned num,int flags);
-int AggregateDIOUnlock(AggregateDIO *dio,unsigned num,int flags);
-void AggregateDIOPreempt(AggregateDIO *dio);
-void AggregateDIORefresh(AggregateDIO *);
-void AggregateDIOCommit(AggregateDIO *,int forceall);
-void AggregateDIOSet(AggregateDIO *,int DIONum,DIOState State);
-DIOState AggregateDIOGet(AggregateDIO *,int DIONum);
-void AggregateDIOSetAsync(AggregateDIO *,int DIONum,DIOState State);
-DIOState AggregateDIOGetAsync(AggregateDIO *,int DIONum);
-void AggregateDIOWait(AggregateDIO *,int* match,int min,int max,
-		     int* h,int* l);
-unsigned AggregateDIOCount(AggregateDIO *);
-DIOCaps AggregateDIOCapabilities(AggregateDIO *,unsigned num);
-int AggregateDIOGetMulti(AggregateDIO *dio,char* bits,int offset);
-
+void *AggregateDIOInit(AggregateDIO* ob,unsigned Count,void *pin,int *SubCount,DIO **pDIO);
+void AggregateDIOFini(AggregateDIO* ob);
+int AggregateDIOLock(AggregateDIO* ob,unsigned num,int flags);
+int AggregateDIOUnlock(AggregateDIO* ob,unsigned num,int flags);
+int AggregateDIOPreempt(AggregateDIO* ob);
+void AggregateDIORefresh(AggregateDIO* ob);
+void AggregateDIOCommit(AggregateDIO* ob,int forceall);
+void AggregateDIOSet(AggregateDIO* ob,int DIONum,DIOState State);
+DIOState AggregateDIOGet(AggregateDIO* ob,int DIONum);
+void AggregateDIOSetAsync(AggregateDIO* ob,int DIONum,DIOState State);
+DIOState AggregateDIOGetAsync(AggregateDIO* ob,int DIONum);
+void AggregateDIOWait(AggregateDIO* ob,int *match,int min,int max,const int *nh,const int *nl);
+unsigned AggregateDIOCount(AggregateDIO* ob);
+DIOCaps AggregateDIOCapabilities(AggregateDIO* ob,unsigned num);
+int AggregateDIOGetMulti(AggregateDIO* ob,char *,int offset);
 #endif
+
 // Author: Michael Schmidt (michael@embeddedARM.com)
 // Copyright (c) 2012, Technologic Systems, All Rights Reserved
 // Refer to the COPYRIGHT file provided with this project for licensing terms.

@@ -14,9 +14,9 @@ void *TSTimeInit(TSTime *me,void *bus,int adrsMSB,int adrsLSB,int Hz) {
   me->Wait = (void *)TSTimeWait;
   me->Delay = (void *)TSTimeDelay;
   me->Tick = (void *)TSTimeTick;
-  me->usElapsed = (void *)TSUSElapsed;
-  me->usFuture = (void *)TSUSFuture;
-  me->TimeoutQ = (void *)TSTimeoutQ;
+  me->usElapsed = (void *)TSTimeusElapsed;
+  me->usFuture = (void *)TSTimeusFuture;
+  me->TimeoutQ = (void *)TSTimeTimeoutQ;
   me->TPS = (void *)TSTimeTPS;
 
   me->bus = bus;
@@ -63,7 +63,7 @@ unsigned TSTimeTick(TSTime *me) {
   return _TSTimeTick(me);
 }
 
-unsigned TSUSElapsed(TSTime *time,unsigned start) {
+unsigned TSTimeusElapsed(TSTime *time,unsigned start) {
   unsigned now = _TSTimeTick(time);
   if (now < start) {
     return 1 * ((unsigned)(-start) + now);
@@ -72,13 +72,13 @@ unsigned TSUSElapsed(TSTime *time,unsigned start) {
   }
 }
 
-unsigned TSUSFuture(TSTime *time,unsigned start,unsigned us) {
+unsigned TSTimeusFuture(TSTime *time,unsigned start,unsigned us) {
   //if (us == 0) return start;
   return start + us;
   //return start + us/1 + ((us % 1) ? 1 : 0);
 }
 
-unsigned TSTimeoutQ(TSTime *time,unsigned start,unsigned end) {
+int TSTimeTimeoutQ(TSTime *time,unsigned start,unsigned end) {
   unsigned now = _TSTimeTick(time);
   if (end > start) {
     return now >= end || now < start;

@@ -124,7 +124,7 @@ NameValuePair* _MapConfigLineAssign(NameValuePair* map,char *name,
 // parse str according to "name=value" and replace in map
 // if value is a string, interpret as "name.value=1"
 // returns 1 on success, or 0 on failure
-static void MapConfigLineAssign(System *sys,char *str) {
+static void MapConfigLineAssign(LocalSystem *sys,char *str) {
   char *str0 = str;
   char *name;
   char* tmp;
@@ -147,7 +147,7 @@ static void MapConfigLineAssign(System *sys,char *str) {
   sys->map = _MapConfigLineAssign(sys->map,name,value);
 }
 
-void MapLoadFromFile(System *sys,char *filename) {
+void MapLoadFromFile(LocalSystem *sys,char *filename) {
   char buf[301],*str,*inst_str,*wc;
   int lines=0,n;
   FILE *f;
@@ -179,7 +179,7 @@ void MapLoadFromFile(System *sys,char *filename) {
 
 extern int startuptime;
 
-void *LocalSystemInit(System *sys) {
+void *LocalSystemInit(LocalSystem *sys) {
   if (sys->InitStatus > 0) return sys;
 
   sys->Init = (void *)LocalSystemInit;
@@ -210,14 +210,14 @@ void *LocalSystemInit(System *sys) {
   return sys;
 }
 
-void LocalSystemFini(System *sys) {
+void LocalSystemFini(LocalSystem *sys) {
 }
 
-int LocalSystemClassCount(System *sys) {
+int LocalSystemClassCount(LocalSystem *sys) {
   return ClassesCount;
 }
 
-int LocalSystemInstanceCount(System *sys,int class) {
+int LocalSystemInstanceCount(LocalSystem *sys,int class) {
   int i,n=0;
   ArchInfo *arch = ArchFirst;
 
@@ -231,7 +231,7 @@ int LocalSystemInstanceCount(System *sys,int class) {
   return n;  
 }
 
-int LocalSystemAPICount(System *sys,int class) {
+int LocalSystemAPICount(LocalSystem *sys,int class) {
   switch (class) {                             
   case ClassSystem:
     return XSystem_APICount;
@@ -256,15 +256,15 @@ int LocalSystemAPICount(System *sys,int class) {
   }
 }
 
-int LocalSystemLockCount(System *sys) {
+int LocalSystemLockCount(LocalSystem *sys) {
   return ThreadMutexCount();
 }
 
-LockHolderInf *LocalSystemLockHolderInfo(System *sys) {
+LockHolderInf *LocalSystemLockHolderInfo(LocalSystem *sys) {
   return 0;
 }
 
-ConnectionWaitInf *LocalSystemConnWaitInfo(System *sys) {
+ConnectionWaitInf *LocalSystemConnWaitInfo(LocalSystem *sys) {
   // TO DO: implement this using Thread module
   // but, thread module does not expose this information, so add that!
   /*
@@ -290,7 +290,7 @@ ConnectionWaitInf *LocalSystemConnWaitInfo(System *sys) {
   return 0;
 }
 
-int LocalSystemCANBusGet(System *sys,int CANInst) {
+int LocalSystemCANBusGet(LocalSystem *sys,int CANInst) {
   if (CANInst >= LocalSystemInstanceCount(sys,ClassCAN)) {
     return -1;
   } else {
@@ -333,7 +333,7 @@ static time_t tFromDateTime(char const *time) {
   return mktime(&t);
 }
 
-void LocalSystemBuildInfo(System *sys,BuildInf inf[1]) {
+void LocalSystemBuildInfo(LocalSystem *sys,BuildInf inf[1]) {
   char *str;
   unsigned buildNumber = strtoul(build+7,&str,10);
 
@@ -344,12 +344,12 @@ void LocalSystemBuildInfo(System *sys,BuildInf inf[1]) {
   inf[0].arch = ASCIIZ((char *)archstr+1);
 }
 
-int LocalSystemModelId(System *sys) {
+int LocalSystemModelId(LocalSystem *sys) {
   return TSModelGet();
 }
 
 int BaseBoardIdGet();
-int LocalSystemBaseBoardId(System *sys) {
+int LocalSystemBaseBoardId(LocalSystem *sys) {
   static int bbid = 0;
 
   if (bbid) return bbid;
@@ -359,14 +359,14 @@ int LocalSystemBaseBoardId(System *sys) {
   return bbid;
 }
 
-int LocalSystemMapLength(System *sys) {
+int LocalSystemMapLength(LocalSystem *sys) {
   assert(ThreadLockR(sys->maplock,LOCK_SOD) > 0);
   unsigned len = ArrayLength(sys->map);
   assert(ThreadUnlockR(sys->maplock) > 0);
   return len;
 }
 
-char* LocalSystemMapGet(System *sys,int n,int val[1]) {
+char* LocalSystemMapGet(LocalSystem *sys,int n,int val[1]) {
   assert(ThreadLockR(sys->maplock,LOCK_SOD) > 0);
   unsigned len = ArrayLength(sys->map);
   char* ret;
@@ -380,7 +380,7 @@ char* LocalSystemMapGet(System *sys,int n,int val[1]) {
   return ret;
 }
 
-int LocalSystemMapLookup(System *sys,const char* key) {
+int LocalSystemMapLookup(LocalSystem *sys,const char* key) {
   NameValuePair nvp;
   nvp.name = (char *)key;
   assert(ThreadLockR(sys->maplock,LOCK_SOD) > 0);
@@ -396,14 +396,14 @@ int LocalSystemMapLookup(System *sys,const char* key) {
   return ret;
 }
 
-char* LocalSystemMapLookupPartial(System *sys,const char* stem,int value) {
+char* LocalSystemMapLookupPartial(LocalSystem *sys,const char* stem,int value) {
   assert(ThreadLockR(sys->maplock,LOCK_SOD) > 0);
   char* ret = _MapLookupPartial(sys->map,(char *)stem,value);
   assert(ThreadUnlockR(sys->maplock) > 0);
   return ret;
 }
 
-int LocalSystemMapAdd(System *sys,const char* key,int value) {
+int LocalSystemMapAdd(LocalSystem *sys,const char* key,int value) {
   assert(ThreadLockW(sys->maplock,LOCK_SOD) > 0);
   sys->map = ArrayReplace(sys->map,
 			  A(NameValuePair,Of((char *)ArrayDup(key),value)));
@@ -413,7 +413,7 @@ int LocalSystemMapAdd(System *sys,const char* key,int value) {
   return 1;
 }
 
-int LocalSystemMapDelete(System *sys,const char* key) {
+int LocalSystemMapDelete(LocalSystem *sys,const char* key) {
   assert(ThreadLockW(sys->maplock,LOCK_SOD) > 0);
   unsigned index = ArrayFind(sys->map,A(NameValuePair,Of((char *)key,0)));
   int ret = -1;

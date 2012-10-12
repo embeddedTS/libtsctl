@@ -1,34 +1,57 @@
 #ifndef __LocalSystem_h
 #define __LocalSystem_h
-#include "System.h"
-
-
-void *LocalSystemInit(System *sys);
-void LocalSystemFini(System *sys);
-int LocalSystemClassCount(System *sys);
-int LocalSystemInstanceCount(System *sys,int class);
-int LocalSystemAPICount(System *sys,int class);
-int LocalSystemLockCount(System *sys);
-LockHolderInf* LocalSystemLockHolderInfo(System *);
-ConnectionWaitInf* LocalSystemConnWaitInfo(System *);
-int LocalSystemCANBusGet(System *sys,int CANInst);
-void LocalSystemBuildInfo(System *,BuildInf [1]);
-int LocalSystemModelId(System *sys);
-int LocalSystemBaseBoardId(System *sys);
-int LocalSystemMapLength(System *sys);
-char *LocalSystemMapGet(System *,int n,int [1]);
-int LocalSystemMapLookup(System *,const char *);
-char *LocalSystemMapLookupPartial(System *,const char *stem,int value);
-int LocalSystemMapAdd(System *,const char *key,int value);
-int LocalSystemMapDelete(System *,const char *key);
-
-extern const char copyright[] __attribute__ ((weak)) ;
-extern const char build[] __attribute__ ((weak)) ;
-extern const char compiledate[] __attribute__ ((weak));
-extern const char archstr[] __attribute__ ((weak)) ;
-extern const int compiletime __attribute__ ((weak)) ;
-
+#undef FUNC
+#ifndef SWIGGY
+#define FUNC(x) (*x)
+#else
+#define FUNC(x) x
 #endif
+
+typedef struct LocalSystem LocalSystem;
+struct LocalSystem {
+	void *FUNC(Init)(LocalSystem *me);
+	void FUNC(Fini)(LocalSystem *me);
+	int FUNC(ClassCount)(LocalSystem *me);
+	int FUNC(InstanceCount)(LocalSystem *me,int );
+	int FUNC(APICount)(LocalSystem *me,int );
+	int FUNC(LockCount)(LocalSystem *me);
+	LockHolderInf*FUNC(LockHolderInfo)(LocalSystem *me);
+	ConnectionWaitInf*FUNC(ConnWaitInfo)(LocalSystem *me);
+	int FUNC(CANBusGet)(LocalSystem *me,int );
+	void FUNC(BuildInfo)(LocalSystem *me,BuildInf [1]);
+	int FUNC(ModelId)(LocalSystem *me);
+	int FUNC(BaseBoardId)(LocalSystem *me);
+	int FUNC(MapLength)(LocalSystem *me);
+	char *FUNC(MapGet)(LocalSystem *me,int ,int [1]);
+	int FUNC(MapLookup)(LocalSystem *me,const char *);
+	char *FUNC(MapLookupPartial)(LocalSystem *me,const char *,int );
+	int FUNC(MapAdd)(LocalSystem *me,const char *,int );
+	int FUNC(MapDelete)(LocalSystem *me,const char *);
+	int InitStatus;
+	unsigned maplock;
+	NameValuePair *map;
+};
+
+void *LocalSystemInit(LocalSystem* ob);
+void LocalSystemFini(LocalSystem* ob);
+int LocalSystemClassCount(LocalSystem* ob);
+int LocalSystemInstanceCount(LocalSystem* ob,int );
+int LocalSystemAPICount(LocalSystem* ob,int );
+int LocalSystemLockCount(LocalSystem* ob);
+LockHolderInf *LocalSystemLockHolderInfo(LocalSystem* ob);
+ConnectionWaitInf *LocalSystemConnWaitInfo(LocalSystem* ob);
+int LocalSystemCANBusGet(LocalSystem* ob,int );
+void LocalSystemBuildInfo(LocalSystem* ob,BuildInf [1]);
+int LocalSystemModelId(LocalSystem* ob);
+int LocalSystemBaseBoardId(LocalSystem* ob);
+int LocalSystemMapLength(LocalSystem* ob);
+char *LocalSystemMapGet(LocalSystem* ob,int ,int [1]);
+int LocalSystemMapLookup(LocalSystem* ob,const char *);
+char *LocalSystemMapLookupPartial(LocalSystem* ob,const char *,int );
+int LocalSystemMapAdd(LocalSystem* ob,const char *,int );
+int LocalSystemMapDelete(LocalSystem* ob,const char *);
+#endif
+
 // Author: Michael Schmidt (michael@embeddedARM.com)
 // Copyright (c) 2012, Technologic Systems, All Rights Reserved
 // Refer to the COPYRIGHT file provided with this project for licensing terms.

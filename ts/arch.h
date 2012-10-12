@@ -92,6 +92,23 @@ static inline const char *PinModeString(PinMode mode) {
   }
 }
 
+// LocalSystem
+extern const char copyright[] __attribute__ ((weak)) ;
+extern const char build[] __attribute__ ((weak)) ;
+extern const char compiledate[] __attribute__ ((weak));
+extern const char archstr[] __attribute__ ((weak)) ;
+extern const int compiletime __attribute__ ((weak)) ;
+
+// MMapBus
+void *MMapBusInit2(void *,void *mem,int Pages);
+
+// SJA1000CAN
+#define BUFLEN sizeof(CANMessage)*32
+void *CANStart(void *arg);
+void CANStop();
+
+// ts81x0Pin
+void ts81x0PinPostInit(void *,int CAN_TX1,int CAN_TX2,int CAN_RX1,int CAN_RX2);
 
 enum {
   ClassSystem = 0,
@@ -144,6 +161,6 @@ struct ArchInfo {
 extern ArchInfo *ArchLast, *ArchFirst;
 
 #endif
-#ifdef __AggregateDIO_H
+#ifdef __AggregateDIO_h
 DIO *DIOInit0(AggregateDIO *);
 #endif

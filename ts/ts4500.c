@@ -1,4 +1,5 @@
 #include "Thread.c"
+#include "arch.h"
 #include "MMapBus.c"
 #include "Cavium2132SBus.c"
 #include "Cavium2132SBusWindowBus.c"
@@ -19,7 +20,6 @@
 #include "WBSPI.c"
 #include "baudtab.h"
 #include "ts4500.h"
-#include "arch.h"
 
 extern ArchInfo ts4500_ArchInfo;
 extern ArchInfo ts7552_ArchInfo;
@@ -76,7 +76,7 @@ unsigned char ts4500DIOCapabilities[56];
 CANConn CAN0conn[16];
 SJA1000CAN CAN0;
 WBSPI SPI0;
-System sys;
+LocalSystem sys;
 
 unsigned Cavium2132DIOCacheBus_WO[12];
 unsigned Cavium2132DIOCacheBus_IBit[12];

@@ -11,7 +11,8 @@
 #define LOCK_CLASS MMapBus
 #include "TSLock.h"
 
-void *MMapBusInit2(MMapBus *bus,void *mem,int Pages) {
+void *MMapBusInit2(void *bus0,void *mem,int Pages) {
+  MMapBus *bus = bus0;
   if (bus->InitStatus > 0) return bus;
   MMapBusLockInit(bus,1);
 

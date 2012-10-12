@@ -1,88 +1,108 @@
-#ifndef __CacheBus_H
-#define __CacheBus_H
-#include "Bus.h"
+#ifndef __CacheBus_h
+#define __CacheBus_h
+#undef FUNC
+#ifndef SWIGGY
+#define FUNC(x) (*x)
+#else
+#define FUNC(x) x
+#endif
 
 typedef struct CacheBus CacheBus;
-struct CacheBus {
-  Bus;
-  Bus *sub;
-  unsigned Length; // number of addresses to cache from start (was len)
-  unsigned Width; // bit of bus to cache (was width), must be 8, 16, or 32
-  unsigned Offset; // offset from base address to start caching (was offset)
-  unsigned *icache,*ocache,*ocache0; // caller allocated, sizeof(unsigned) * Length
-  unsigned *WO, *IBit,*OBit; // caller allocated and initialized, sizeof(unsigned) * Length
-};
-
-/*
-CacheBus bus0;
-unsigned wo[16],ibit[16],obit[16];
-unsigned icache[16],ocache[16],ocache0[16];
-...
-CacheBusPreInit(&bus0);
-bus0.sub = &bus1; // or whatever
-bus0.Length = 16;
-bus0.Width=32;
-bus0.Offset=0;
-bus0.WO = wo;
-bus0.Ibit = ibit;
-bus0.Obit = obit;
-bus0.icache = icache;
-bus0.ocache = ocache;
-bus0.ocache0 = ocache0;
-bus0.IBit[6]=0xFFFFFFFF;
-bus0.IBit[15]=0xFFFFFFFF;
-bus0.OBit[0]=0xFFFFFFFF;
-bus0.OBit[4]=0xFFFFFFFF;
-bus0.OBit[5]=0xFFFFFFFF;
-bus0.OBit[12]=0xFFFFFFFF;
-bus0.OBit[13]=0xFFFFFFFF;
-bus0.WO[0]=0xFFFFFFFF;
-bus0.WO[1]=0xFFFFFFFF;
-bus0.WO[4]=0xFFFFFFFF;
-bus0.WO[5]=0xFFFFFFFF;
-bus0.WO[8]=0xFFFFFFFF;
-bus0.WO[9]=0xFFFFFFFF;
-*/
-
-void *CacheBusInit(CacheBus *bus,void *bus1);
-void CacheBusFini(CacheBus *bus);
-unsigned char CacheBusPeek8(CacheBus *,int adrs);
-void CacheBusPoke8(CacheBus *,int adrs,unsigned char val);
-unsigned short CacheBusPeek16(CacheBus *,int adrs);
-void CacheBusPoke16(CacheBus *,int adrs,unsigned short val);
-unsigned CacheBusPeek32(CacheBus *,int adrs);
-void CacheBusPoke32(CacheBus *,int adrs,unsigned val);
-int CacheBusBitGet8(CacheBus *bus,int adrs,int bit);
-void CacheBusBitAssign8(CacheBus *bus,int adrs,int bit,int val);
-void CacheBusBitSet8(CacheBus *bus,int adrs,int bit);
-void CacheBusBitClear8(CacheBus *bus,int adrs,int bit);
-int CacheBusBitGet16(CacheBus *bus,int adrs,int bit);
-void CacheBusBitAssign16(CacheBus *bus,int adrs,int bit,int val);
-void CacheBusBitSet16(CacheBus *bus,int adrs,int bit);
-void CacheBusBitClear16(CacheBus *bus,int adrs,int bit);
-int CacheBusBitGet32(CacheBus *bus,int adrs,int bit);
-void CacheBusBitAssign32(CacheBus *bus,int adrs,int bit,int val);
-void CacheBusBitSet32(CacheBus *bus,int adrs,int bit);
-void CacheBusBitClear32(CacheBus *bus,int adrs,int bit);
-void CacheBusRefresh(CacheBus *bus);
-void CacheBusCommit(CacheBus *bus,int forceall);
-void CacheBusPeekStream(CacheBus *bus,int adr,int dir,char* buf);
-void CacheBusPokeStream(CacheBus *bus,int adr,int dir,const char* buf);
-int CacheBusBitToggle8(CacheBus *bus,int adrs,int bit);
-int CacheBusBitToggle16(CacheBus *bus,int adrs,int bit);
-int CacheBusBitToggle32(CacheBus *bus,int adrs,int bit);
-unsigned char CacheBusAssign8X(CacheBus *,int adrs,int bit1,int bit0,int val);
-unsigned short CacheBusAssign16X(CacheBus *,int adrs,int bit1,int bit0,int val);
-unsigned CacheBusAssign32X(CacheBus *,int adrs,int bit1,int bit0,int val);
-unsigned char CacheBusBitsGet8(CacheBus *,int adrs,int bit1,int bit0);
-unsigned short CacheBusBitsGet16(CacheBus *,int adrs,int bit1,int bit0);
-unsigned CacheBusBitsGet32(CacheBus *,int adrs,int bit1,int bit0);
-
-enum {
+typedef enum CacheBusError{
   CacheBusErrorWidthInvalid=-100
+}CacheBusError;
+
+struct CacheBus {
+	void *FUNC(Init)(CacheBus *me,void *bus1);
+	void FUNC(Fini)(CacheBus *me);
+	int FUNC(Lock)(CacheBus *me,unsigned num,int flags);
+	int FUNC(Unlock)(CacheBus *me,unsigned num,int flags);
+	int FUNC(Preempt)(CacheBus *me);
+	unsigned char FUNC(Peek8)(CacheBus *me,int adrs);
+	void FUNC(Poke8)(CacheBus *me,int adrs,unsigned char val);
+	unsigned short FUNC(Peek16)(CacheBus *me,int adrs);
+	void FUNC(Poke16)(CacheBus *me,int adrs,unsigned short val);
+	unsigned FUNC(Peek32)(CacheBus *me,int adrs);
+	void FUNC(Poke32)(CacheBus *me,int adrs,unsigned val);
+	int FUNC(BitGet8)(CacheBus *me,int adrs,int bit);
+	void FUNC(BitAssign8)(CacheBus *me,int adrs,int bit,int val);
+	void FUNC(BitSet8)(CacheBus *me,int adrs,int bit);
+	void FUNC(BitClear8)(CacheBus *me,int adrs,int bit);
+	int FUNC(BitGet16)(CacheBus *me,int adrs,int bit);
+	void FUNC(BitAssign16)(CacheBus *me,int adrs,int bit,int val);
+	void FUNC(BitSet16)(CacheBus *me,int adrs,int bit);
+	void FUNC(BitClear16)(CacheBus *me,int adrs,int bit);
+	int FUNC(BitGet32)(CacheBus *me,int adrs,int bit);
+	void FUNC(BitAssign32)(CacheBus *me,int adrs,int bit,int val);
+	void FUNC(BitSet32)(CacheBus *me,int adrs,int bit);
+	void FUNC(BitClear32)(CacheBus *me,int adrs,int bit);
+	void FUNC(PeekStream)(CacheBus *me,int address,int direction,char *dest);
+	void FUNC(PokeStream)(CacheBus *me,int address,int direction,const char *data);
+	void FUNC(Refresh)(CacheBus *me);
+	void FUNC(Commit)(CacheBus *me,int forceall);
+	int FUNC(BitToggle8)(CacheBus *me,int adrs,int bit);
+	int FUNC(BitToggle16)(CacheBus *me,int adrs,int bit);
+	int FUNC(BitToggle32)(CacheBus *me,int adrs,int bit);
+	unsigned char FUNC(Assign8X)(CacheBus *me,int adrs,int bit1,int bit0,int val);
+	unsigned short FUNC(Assign16X)(CacheBus *me,int adrs,int bit1,int bit0,int val);
+	unsigned FUNC(Assign32X)(CacheBus *me,int adrs,int bit1,int bit0,int val);
+	unsigned char FUNC(BitsGet8)(CacheBus *me,int adrs,int bit1,int bit0);
+	unsigned short FUNC(BitsGet16)(CacheBus *me,int adrs,int bit1,int bit0);
+	unsigned FUNC(BitsGet32)(CacheBus *me,int adrs,int bit1,int bit0);
+	int InitStatus;
+	unsigned LockBase;
+	int deferlockW;
+	int deferlockR;
+	Bus *sub;
+	unsigned Length;
+	unsigned Width;
+	unsigned Offset;
+	unsigned *icache;
+	unsigned *ocache;
+	unsigned *ocache0;
+	unsigned *WO;
+	unsigned *IBit;
+	unsigned *OBit;
 };
 
+void *CacheBusInit(CacheBus* ob,void *bus1);
+void CacheBusFini(CacheBus* ob);
+int CacheBusLock(CacheBus* ob,unsigned num,int flags);
+int CacheBusUnlock(CacheBus* ob,unsigned num,int flags);
+int CacheBusPreempt(CacheBus* ob);
+unsigned char CacheBusPeek8(CacheBus* ob,int adrs);
+void CacheBusPoke8(CacheBus* ob,int adrs,unsigned char val);
+unsigned short CacheBusPeek16(CacheBus* ob,int adrs);
+void CacheBusPoke16(CacheBus* ob,int adrs,unsigned short val);
+unsigned CacheBusPeek32(CacheBus* ob,int adrs);
+void CacheBusPoke32(CacheBus* ob,int adrs,unsigned val);
+int CacheBusBitGet8(CacheBus* ob,int adrs,int bit);
+void CacheBusBitAssign8(CacheBus* ob,int adrs,int bit,int val);
+void CacheBusBitSet8(CacheBus* ob,int adrs,int bit);
+void CacheBusBitClear8(CacheBus* ob,int adrs,int bit);
+int CacheBusBitGet16(CacheBus* ob,int adrs,int bit);
+void CacheBusBitAssign16(CacheBus* ob,int adrs,int bit,int val);
+void CacheBusBitSet16(CacheBus* ob,int adrs,int bit);
+void CacheBusBitClear16(CacheBus* ob,int adrs,int bit);
+int CacheBusBitGet32(CacheBus* ob,int adrs,int bit);
+void CacheBusBitAssign32(CacheBus* ob,int adrs,int bit,int val);
+void CacheBusBitSet32(CacheBus* ob,int adrs,int bit);
+void CacheBusBitClear32(CacheBus* ob,int adrs,int bit);
+void CacheBusPeekStream(CacheBus* ob,int address,int direction,char *dest);
+void CacheBusPokeStream(CacheBus* ob,int address,int direction,const char *data);
+void CacheBusRefresh(CacheBus* ob);
+void CacheBusCommit(CacheBus* ob,int forceall);
+int CacheBusBitToggle8(CacheBus* ob,int adrs,int bit);
+int CacheBusBitToggle16(CacheBus* ob,int adrs,int bit);
+int CacheBusBitToggle32(CacheBus* ob,int adrs,int bit);
+unsigned char CacheBusAssign8X(CacheBus* ob,int adrs,int bit1,int bit0,int val);
+unsigned short CacheBusAssign16X(CacheBus* ob,int adrs,int bit1,int bit0,int val);
+unsigned CacheBusAssign32X(CacheBus* ob,int adrs,int bit1,int bit0,int val);
+unsigned char CacheBusBitsGet8(CacheBus* ob,int adrs,int bit1,int bit0);
+unsigned short CacheBusBitsGet16(CacheBus* ob,int adrs,int bit1,int bit0);
+unsigned CacheBusBitsGet32(CacheBus* ob,int adrs,int bit1,int bit0);
 #endif
+
 // Author: Michael Schmidt (michael@embeddedARM.com)
-// Copyright (c) 2011, Technologic Systems, All Rights Reserved
+// Copyright (c) 2012, Technologic Systems, All Rights Reserved
 // Refer to the COPYRIGHT file provided with this project for licensing terms.

@@ -1,5 +1,6 @@
 #include "Thread.c"
 #include <string.h>
+#include "arch.h"
 #include "MMapBus.c"
 #include "TSMuxBus.c"
 #include "CacheBus.c"
@@ -14,7 +15,6 @@
 #include "LocalSystem.c"
 #include "SJA1000CAN.c"
 #include "ts4200.h"
-#include "arch.h"
 
 
 extern ArchInfo ts4200_ArchInfo;
@@ -79,7 +79,7 @@ AggregateDIO ts4200DIO0;
 DIOTWI ts4200TWI0;
 AtmelAT91SPI ts4200SPI0;
 SystemTime ts4200Time0;
-System ts4200sys;
+LocalSystem ts4200sys;
 
 unsigned AtmelAT91DIOCacheBus_WO[16];
 unsigned AtmelAT91DIOCacheBus_IBit[16];

@@ -49,9 +49,9 @@ void ts8820DACAIOFini(ts8820DACAIO *aio) {
 int ts8820DACAIOLock(ts8820DACAIO *aio,unsigned num,int flags) {
 }
                            
-int ts8820DACAIOUnlock(void *me,unsigned num,int flags) {
+int ts8820DACAIOUnlock(ts8820DACAIO *me,unsigned num,int flags) {
 }
-int ts8820DACAIOPreempt(void *me) {
+int ts8820DACAIOPreempt(ts8820DACAIO *me) {
 }
 
                            
@@ -202,15 +202,15 @@ int ts8820DACAIOPuts32(ts8820DACAIO *aio,const int* buf){
   return -1;
 }
 
-int ts8820DACAIOReadys8(ts8820DACAIO *aio,char* buf){
+int ts8820DACAIOReadys8(ts8820DACAIO *aio,const char* buf){
   return -1;
 }
 
-int ts8820DACAIOReadys16(ts8820DACAIO *aio,short* buf){
+int ts8820DACAIOReadys16(ts8820DACAIO *aio,const short* buf){
   return -1;
 }
 
-int ts8820DACAIOReadys32(ts8820DACAIO *aio,int* buf){
+int ts8820DACAIOReadys32(ts8820DACAIO *aio,const int* buf){
   return -1;
 }
 

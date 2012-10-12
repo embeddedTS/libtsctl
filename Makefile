@@ -1,7 +1,7 @@
 -include Makefile.config
 CC=$(TOOL_PREFIX)-gcc
 
-CFLAGS+=-fms-extensions -march=armv4 -ffunction-sections -fdata-sections -D$(BOARDSEL)=1
+CFLAGS+=-march=armv4 -ffunction-sections -fdata-sections -D$(BOARDSEL)=1
 LDFLAGS+=-D$(BOARDSEL)=1
 
 CFLAGS_tsctl_wrap=-I/usr/include/python2.5

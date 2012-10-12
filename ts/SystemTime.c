@@ -38,8 +38,8 @@ void *SystemTimeInit(SystemTime *me,...) {
   me->Wait = (void *)SystemTimeWait;
   me->Delay = (void *)SystemTimeDelay;
   me->Tick = (void *)SystemTimeTick;
-  me->usElapsed = (void *)SystemTimeUSElapsed;
-  me->usFuture = (void *)SystemTimeUSFuture;
+  me->usElapsed = (void *)SystemTimeusElapsed;
+  me->usFuture = (void *)SystemTimeusFuture;
   me->TimeoutQ = (void *)SystemTimeTimeoutQ;
   me->TPS = (void *)SystemTimeTPS;
 
@@ -65,7 +65,7 @@ unsigned SystemTimeTick(SystemTime *me) {
   return (unsigned)((unsigned long long)tv.tv_sec * 1000000 + tv.tv_usec);
 }
 
-unsigned SystemTimeUSElapsed(SystemTime *time,unsigned start) {
+unsigned SystemTimeusElapsed(SystemTime *time,unsigned start) {
   unsigned ret,now = SystemTimeTick(time);
   if (now < start) {
     ret = ((unsigned)(-start)+now);
@@ -78,7 +78,7 @@ unsigned SystemTimeUSElapsed(SystemTime *time,unsigned start) {
   }
 }
 
-unsigned SystemTimeUSFuture(SystemTime *time,unsigned start,unsigned us) {
+unsigned SystemTimeusFuture(SystemTime *time,unsigned start,unsigned us) {
   return start + us;
 }
 

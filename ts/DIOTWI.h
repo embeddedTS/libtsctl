@@ -1,30 +1,41 @@
-#ifndef __DIOTWI_H
-#define __DIOTWI_H
-#include "TWI.h"
-#include "DIO.h"
-#include "Time.h"
+#ifndef __DIOTWI_h
+#define __DIOTWI_h
+#undef FUNC
+#ifndef SWIGGY
+#define FUNC(x) (*x)
+#else
+#define FUNC(x) x
+#endif
 
 typedef struct DIOTWI DIOTWI;
 struct DIOTWI {
-  TWI;
-  DIO *dio; // DIO module contain the DIO to use as TW_CLK and TS_DAT
-  Time *Time;
-  int TW_CLK,TW_DAT; // DIO numbers
-  int Speed; // baud rate config
-  int delay; // microseconds per half clock cycle
-  int LockNum;
-  unsigned start;
+	void *FUNC(Init)(DIOTWI *me,void *dio,void *time);
+	void FUNC(Fini)(DIOTWI *me);
+	int FUNC(Lock)(DIOTWI *me,unsigned num,int flags);
+	int FUNC(Unlock)(DIOTWI *me,unsigned num,int flags);
+	int FUNC(Preempt)(DIOTWI *me);
+	int FUNC(Write)(DIOTWI *me,int devadr,int adrslen,int adrs,const char *bytes);
+	int FUNC(Read)(DIOTWI *me,int devadr,int adrslen,int adrs,char *bytes);
+	int InitStatus;
+	DIO *dio;
+	Time *t;
+	int TW_CLK;
+	int TW_DAT;
+	int Speed;
+	int delay;
+	int LockNum;
+	unsigned start;
 };
 
-void *DIOTWIInit(DIOTWI *,void *dio,void *time);
-void DIOTWIFini(DIOTWI *);
-int DIOTWILock(DIOTWI *,unsigned num,int);
-int DIOTWIUnlock(DIOTWI *,unsigned num,int);
-void DIOTWIPreempt(DIOTWI *);
-int DIOTWIWrite(DIOTWI *,int devadr,int adrslen,int adrs,const char* bytes);
-int DIOTWIRead(DIOTWI *,int devadr,int adrslen,int adrs,char* bytes);
-
+void *DIOTWIInit(DIOTWI* ob,void *dio,void *time);
+void DIOTWIFini(DIOTWI* ob);
+int DIOTWILock(DIOTWI* ob,unsigned num,int flags);
+int DIOTWIUnlock(DIOTWI* ob,unsigned num,int flags);
+int DIOTWIPreempt(DIOTWI* ob);
+int DIOTWIWrite(DIOTWI* ob,int devadr,int adrslen,int adrs,const char *bytes);
+int DIOTWIRead(DIOTWI* ob,int devadr,int adrslen,int adrs,char *bytes);
 #endif
+
 // Author: Michael Schmidt (michael@embeddedARM.com)
 // Copyright (c) 2012, Technologic Systems, All Rights Reserved
 // Refer to the COPYRIGHT file provided with this project for licensing terms.

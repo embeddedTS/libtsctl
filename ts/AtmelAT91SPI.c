@@ -146,7 +146,7 @@ int AtmelAT91SPIUnlock(AtmelAT91SPI *spi,unsigned num,int flags) {
   return 1;
 }
 
-void AtmelAT91SPIPreempt(AtmelAT91SPI *spi) {
+int AtmelAT91SPIPreempt(AtmelAT91SPI *spi) {
 }
 
 static inline void AtmelAT91SPICSBegin(AtmelAT91SPI *spi,int adrs) {
@@ -215,7 +215,7 @@ static inline int AtmelAT91PCS(int cs) {
   }
 }
 
-int AtmelAT91SPIWrite(AtmelAT91SPI *spi,int adrs,const char* buf) {
+int AtmelAT91SPIWrite(AtmelAT91SPI *spi,int adrs,const unsigned char* buf) {
   int len = ArrayLength(buf);
   int de_cs = len,tmp;
 
@@ -241,7 +241,7 @@ int AtmelAT91SPIWrite(AtmelAT91SPI *spi,int adrs,const char* buf) {
   return 1;
 }
 
-int AtmelAT91SPIRead(AtmelAT91SPI *spi,int adrs,char* buf) {
+int AtmelAT91SPIRead(AtmelAT91SPI *spi,int adrs,unsigned char* buf) {
   int len = ArrayLength(buf);
   int de_cs = len,tmp;
 

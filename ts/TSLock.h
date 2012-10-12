@@ -103,8 +103,8 @@ static inline unsigned TEMPLATE(LOCK_CLASS,LockInit)(LOCK_CLASS *ob) {
   ob->deferlock = 0;
 }
 
-int TEMPLATE(LOCK_CLASS,Lock)(LOCK_CLASS *ob, unsigned num, int flags,
-			      LockCallback f) {
+int TEMPLATE(LOCK_CLASS,Lock)(LOCK_CLASS *ob, unsigned num, int flags) {
+  //			      LockCallback f) {
   //if (flags & SHARED) return ErrorInvalidArgument;
   ob->deferlock++;
   return 1;    
@@ -140,8 +140,8 @@ static inline unsigned TEMPLATE(LOCK_CLASS,LockInit)(LOCK_CLASS *ob) {
   ob->deferlockR = ob->deferlockW = 0;
 }
 
-int TEMPLATE(LOCK_CLASS,Lock)(LOCK_CLASS *ob, unsigned num, int flags,
-			      LockCallback f) {
+int TEMPLATE(LOCK_CLASS,Lock)(LOCK_CLASS *ob, unsigned num, int flags) {
+//			      LockCallback f) {
   if (flags & SHARED) {
     ob->deferlockR++;
   } else {

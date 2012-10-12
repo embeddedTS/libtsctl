@@ -44,7 +44,7 @@ unsigned DIOCount() {
   return num;
 }
 
-#ifdef __AggregateDIO_H
+#ifdef __AggregateDIO_h
 DIO *DIOInit0(AggregateDIO *DIO0) {
   int i,j,total = 0;
   DIO **pDIO,*dio = DIOInit(1);

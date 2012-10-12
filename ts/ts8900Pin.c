@@ -23,9 +23,9 @@ void *ts8900PinInit(ts8900Pin *pin,void *parent,void *bus,int start) {
   pin->LockBase = ((Pin *)parent)->LockBase;
   pin->Init = (void *)ts8900PinInit;
   pin->Fini = (void *)ts8900PinFini;
-  pin->Lock = ((Pin *)parent)->Lock;
-  pin->Unlock = ((Pin *)parent)->Unlock;
-  pin->Preempt = ((Pin *)parent)->Preempt;
+  pin->Lock = ((ts8900Pin *)parent)->Lock;
+  pin->Unlock = ((ts8900Pin *)parent)->Unlock;
+  pin->Preempt = ((ts8900Pin *)parent)->Preempt;
   //pin->Lock = (void *)ts8900PinLock;
   //pin->Unlock = (void *)ts8900PinUnlock;
   //pin->Preempt = (void *)ts8900PinPreempt;

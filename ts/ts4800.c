@@ -42,7 +42,7 @@ LinuxTWI ts4800TWI0;
 SJA1000CAN ts4800CAN0, ts4800CAN1;
 ts4800Pin ts4800Pin0;
 WBSPI ts4800SPI0;
-System ts4800sys;
+LocalSystem ts4800sys;
 
 CANConn ts4800CAN0conn[16];
 CANConn ts4800CAN1conn[16];

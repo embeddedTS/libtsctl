@@ -1,25 +1,35 @@
-#ifndef __MarvellPXA166TWI_H
-#define __MarvellPXA166TWI_H
-#include "TWI.h"
-#include "Bus.h"
-#include "Lock.h"
+#ifndef __MarvellPXA166TWI_h
+#define __MarvellPXA166TWI_h
+#undef FUNC
+#ifndef SWIGGY
+#define FUNC(x) (*x)
+#else
+#define FUNC(x) x
+#endif
 
 typedef struct MarvellPXA166TWI MarvellPXA166TWI;
 struct MarvellPXA166TWI {
-  TWI;
-  Bus *bus;
-  int LockNum;
+	void *FUNC(Init)(MarvellPXA166TWI *me,void *bus);
+	void FUNC(Fini)(MarvellPXA166TWI *me);
+	int FUNC(Lock)(MarvellPXA166TWI *me,unsigned num,int flags);
+	int FUNC(Unlock)(MarvellPXA166TWI *me,unsigned num,int flags);
+	int FUNC(Preempt)(MarvellPXA166TWI *me);
+	int FUNC(Write)(MarvellPXA166TWI *me,int devadr,int adrslen,int adrs,const char *bytes);
+	int FUNC(Read)(MarvellPXA166TWI *me,int devadr,int adrslen,int adrs,char *bytes);
+	int InitStatus;
+	Bus *bus;
+	int LockNum;
 };
 
-void *MarvellPXA166TWIInit(MarvellPXA166TWI *,void *bus);
-void MarvellPXA166TWIFini(MarvellPXA166TWI *);
-int MarvellPXA166TWILock(MarvellPXA166TWI *,int command,unsigned num);
-int MarvellPXA166TWIWrite(MarvellPXA166TWI *,int devadr,int adrslen,int adrs,
-			  const char* bytes);
-int MarvellPXA166TWIRead(MarvellPXA166TWI *,int devadr,int adrslen,int adrs,
-			 char* bytes);
-
+void *MarvellPXA166TWIInit(MarvellPXA166TWI* ob,void *bus);
+void MarvellPXA166TWIFini(MarvellPXA166TWI* ob);
+int MarvellPXA166TWILock(MarvellPXA166TWI* ob,unsigned num,int flags);
+int MarvellPXA166TWIUnlock(MarvellPXA166TWI* ob,unsigned num,int flags);
+int MarvellPXA166TWIPreempt(MarvellPXA166TWI* ob);
+int MarvellPXA166TWIWrite(MarvellPXA166TWI* ob,int devadr,int adrslen,int adrs,const char *bytes);
+int MarvellPXA166TWIRead(MarvellPXA166TWI* ob,int devadr,int adrslen,int adrs,char *bytes);
 #endif
+
 // Author: Michael Schmidt (michael@embeddedARM.com)
-// Copyright (c) 2011, Technologic Systems, All Rights Reserved
+// Copyright (c) 2012, Technologic Systems, All Rights Reserved
 // Refer to the COPYRIGHT file provided with this project for licensing terms.

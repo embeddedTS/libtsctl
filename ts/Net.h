@@ -20,15 +20,10 @@ enum {
 };
 
 typedef struct Net Net;
-typedef struct NetAPI NetAPI;
-
-struct NetAPI {
-  void *FUNC(Init)(void *me,...);
-  void FUNC(Fini)(void *me);
-};
 
 struct Net {
-  NetAPI;
+  void *FUNC(Init)(void *me,...);
+  void FUNC(Fini)(void *me);
   int InitStatus;
   int inst;
   int socket;

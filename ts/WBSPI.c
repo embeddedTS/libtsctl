@@ -50,7 +50,7 @@ int WBSPIUnlock(WBSPI *spi,unsigned num,int flags) {
   return ThreadMutexUnlock(spi->LockNum);
 }
 
-void WBSPIPreempt(WBSPI *spi) {
+int WBSPIPreempt(WBSPI *spi) {
   /*
     WBSPIUnlock(spi,0,0);
     sched_yield();
@@ -71,7 +71,7 @@ void WBSPIPreempt(WBSPI *spi) {
 *   bit 0: speed[4] (RW)
  */
 
-int WBSPIWrite(WBSPI *ob,int adrs,const char* buf) {
+int WBSPIWrite(WBSPI *ob,int adrs,const unsigned char* buf) {
   int n = ArrayLength(buf),reg;
   int de_cs = 1;
   int maxspeed;
@@ -122,7 +122,7 @@ int WBSPIWrite(WBSPI *ob,int adrs,const char* buf) {
   return 1;
 }
 
-int WBSPIRead(WBSPI *ob,int adrs,char* buf) {
+int WBSPIRead(WBSPI *ob,int adrs,unsigned char* buf) {
   unsigned s;
   int i,n = ArrayLength(buf),reg;
   int de_cs = 1, maxspeed;
@@ -198,7 +198,7 @@ int WBSPIRead(WBSPI *ob,int adrs,char* buf) {
   return 1;
 }
 
-int WBSPIReadWrite(WBSPI *ob,int adrs,unsigned char* wbuf,unsigned char* rbuf) {
+int WBSPIReadWrite(WBSPI *ob,int adrs,const unsigned char* wbuf,unsigned char* rbuf) {
   unsigned s;
   int n, de_cs=1;
 
