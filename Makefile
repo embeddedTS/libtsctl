@@ -22,24 +22,13 @@ endif
 
 BUILD_DIR:=$(BOARDSEL)
 
-PRODUCTS ?= CAN2 CANTx CANDiag CANRx diotoggle spi8200 ts8160ctl DIOTest canctl tsctl spictl _tsctl.so
+PRODUCTS ?= CAN2 CANTx CANDiag CANRx diotoggle spi8200 ts8160ctl DIOTest canctl tsctl spictl 
 
-all: $(BUILD_DIR) $(addprefix $(BUILD_DIR)/,$(PRODUCTS))
+all: $(PRODUCTS)
 
-$(BUILD_DIR)/%: %.c
-	@echo "Compiling $<"; $(CC) $(CFLAGS) $(CFLAGS_$(lastword $(subst /, ,$(patsubst %.c,%,$<)))) $< -o $@ $(LDFLAGS) $(LDFLAGS_$(lastword $(subst /, ,$(patsubst %.c,%,$<))))
-
-%.o: %.c
-	@echo "Compiling $<"; $(CC) -c $(CFLAGS) $(CFLAGS_$(lastword $(subst /, ,$(patsubst %.o,%,$@)))) $< -o  $@
-
-$(BUILD_DIR)/tsctl_wrap.o: tsctl_wrap.c
-	@echo "Compiling $<"; $(CC) -c $(CFLAGS) $(CFLAGS_tsctl_wrap) $< -o  $@
-
-tsctl_wrap.c: tsctl.i
-	swig -python tsctl.i
-
-$(BUILD_DIR)/_tsctl.so: $(BUILD_DIR)/tsctl_wrap.o
-	@echo "Compiling $<"; $(CC) -shared $(CFLAGS) $(CFLAGS_$(lastword $(subst /, ,$(patsubst %.o,%,$@)))) libtsctl.c $< -o  $@ $(LDFLAGS) $(LDFLAGS_$@)
+%: %.c
+	@mkdir -p $(BUILD_DIR)
+	@echo "Compiling $<"; $(CC) -c $(CFLAGS) $(CFLAGS_$(lastword $(subst /, ,$(patsubst %.c,%,$<)))) $< $(LDFLAGS) $(LDFLAGS_$(lastword $(subst /, ,$(patsubst %.c,%,$<)))) -o $(BUILD_DIR)/$@ 
 
 clean:
 	@rm -rf $(BUILD_DIR)
@@ -47,7 +36,5 @@ clean:
 
 .PHONY: clean copy release
 
-$(BUILD_DIR):
-	@mkdir -p $@
 
 
