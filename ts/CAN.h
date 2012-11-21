@@ -12,7 +12,8 @@ typedef struct CAN CAN;
 struct CANMessage {
   unsigned flags;
   unsigned id;
-  struct timeval timestamp;
+  unsigned t_sec;
+  unsigned t_usec;
   unsigned length;
   unsigned char data[8];
 };
@@ -22,7 +23,7 @@ typedef enum CANEvent{
 }CANEvent;
 
 typedef enum CANFlags{
-  FLAG_BUS_ERROR=1,FLAG_ERROR_PASSIVE=2,FLAG_DATA_OVERRUN=4,FLAG_ERROR_WARNING=8,FLAG_RTR=16,FLAG_EXT_ID=32,FLAG_LOCAL=64,FLAG_CONTROL=128,FLAG_CMD_RXEN=1
+  FLAG_BUS_ERROR=1,FLAG_ERROR_PASSIVE=2,FLAG_DATA_OVERRUN=4,FLAG_ERROR_WARNING=8,FLAG_RTR=16,FLAG_EXT_ID=32,FLAG_LOCAL=64,FLAG_CONTROL=128
 }CANFlags;
 
 enum {
@@ -42,7 +43,7 @@ struct CAN {
 	unsigned FUNC(BaudSet)(void *me,unsigned opt_baud);
 	unsigned FUNC(BaudGet)(void *me);
 	void FUNC(Abort)(void *me);
-	int FUNC(RxMulti)(void *me,CANMessage *,int min);
+	int FUNC(RxMulti)(void *me,CANMessage *msg,int min);
 	int InitStatus;
 	unsigned LockBase;
 	int deferlock;

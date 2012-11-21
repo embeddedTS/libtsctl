@@ -13,7 +13,7 @@ typedef enum TWIMode{
 }TWIMode;
 
 typedef enum TWIError{
-  TWIErrorPortInvalid=-1,TWIErrorModeUnsupported=-2,TWIErrorBaudUnconstrained=-3,TWIErrorHardware=-4,TWIErrorHandle=-1,TWIErrorWriteNAck=-2,TWIErrorDataNAck=-3,TWIErrorReadNack=-4,TWIErrorSDALow=-5,TWIErrorSCLLow=-6,TWIErrorAdrsLen=-7,TWIErrorTimeout=-8,TWIErrorOverrun=-9,TWIErrorArbLost=-10,TWIErrorUnknown=-999,TWIErrorOpInvalid=-7
+  TWIErrorPortInvalid=-1,TWIErrorModeUnsupported=-2,TWIErrorBaudUnconstrained=-3,TWIErrorHardware=-4,TWIErrorHandle=-5,TWIErrorWriteNAck=-6,TWIErrorDataNAck=-7,TWIErrorReadNack=-8,TWIErrorSDALow=-9,TWIErrorSCLLow=-10,TWIErrorAdrsLen=-11,TWIErrorTimeout=-12,TWIErrorOverrun=-13,TWIErrorArbLost=-14,TWIErrorUnknown=-999,TWIErrorOpInvalid=-15
 }TWIError;
 
 typedef enum TWIOps{

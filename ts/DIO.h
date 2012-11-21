@@ -13,7 +13,7 @@ typedef enum DIOState{
 }DIOState;
 
 typedef enum DIOCaps{
-  DIO_NOT_PRESENT=0,DIO_CAN_INPUT=1,DIO_CAN_DRIVE_HIGH=2,DIO_CAN_DRIVE_LOW=4,DIO_INPUT_ONLY=1,DIO_OUTPUT_ONLY=6,DIO_NORMAL=7
+  DIO_NOT_PRESENT=0,DIO_CAN_INPUT=1,DIO_CAN_DRIVE_HIGH=2,DIO_HIGH_SIDE=3,DIO_CAN_DRIVE_LOW=4,DIO_LOW_SIDE=5,DIO_OUTPUT_ONLY=6,DIO_NORMAL=7
 }DIOCaps;
 
 enum {
@@ -39,7 +39,7 @@ struct DIO {
 	int FUNC(Unlock)(void *me,unsigned num,int flags);
 	int FUNC(Preempt)(void *me);
 	void FUNC(Refresh)(void *me);
-	void FUNC(Commit)(void *me,int forceall);
+	void FUNC(Commit)(void *me,int ForceAll);
 	void FUNC(Set)(void *me,int DIONum,DIOState State);
 	DIOState FUNC(Get)(void *me,int DIONum);
 	void FUNC(SetAsync)(void *me,int DIONum,DIOState State);

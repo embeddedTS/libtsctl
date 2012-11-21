@@ -128,7 +128,7 @@ DIORaw *ts8900__DIORawInit0(DIORaw *dioraw,int inst) {
 DIO *ts8900__DIOInit0(DIO *dio,int inst) {
   int i;
   for (i=0;i<=7;i++) {
-    ts8900DIOCapabilities[i] = DIO_INPUT_ONLY;
+    ts8900DIOCapabilities[i] = DIO_CAN_INPUT;
   } 
   for (i=8;i<=15;i++) {
     ts8900DIOCapabilities[i] = DIO_OUTPUT_ONLY;

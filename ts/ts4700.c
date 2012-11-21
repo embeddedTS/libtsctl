@@ -226,6 +226,7 @@ DIO *ts4700__DIOInit2(DIO *dio,int inst) {
     for (i=0;i<n;i++) {
       MarvellPXA166DIOCapabilities[i] = DIO_NORMAL;
     }
+    MarvellPXA166DIOCapabilities[51] = 0; // FPGA drives a clock on this pin!
   }
   return PhysicalDIOInit(&MarvellPXA166DIO,ts4700__BusInit6(0,6),raw);
 }

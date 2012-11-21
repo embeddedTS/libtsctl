@@ -170,6 +170,7 @@ NameValuePair* dioctladd(NameValuePair ***map,char **config,diostuff *S) {
   return **map;
 }
 
+#define NUM 130
 char* decode(char *str) {
   unsigned char *s = (unsigned char *)str;
   char* ret;
@@ -181,8 +182,8 @@ char* decode(char *str) {
     char *s;
     int i;
     for (i=0;dict[i];i++);
-    s = malloc(4*(120-10+1));
-    for (n=120;n>9;n--) {
+    s = malloc(4*(NUM-10+1));
+    for (n=NUM;n>9;n--) {
       sprintf(&s[(n-10)*4],"%d",n);
       dict[i++] = &s[(n-10)*4];
     }
@@ -349,8 +350,8 @@ int main(int argc,char *argv[]) {
   char *s;
   int n;
   for (i=0;dict[i];i++);
-  s = malloc(4*(120-10+1));
-  for (n=120;n>9;n--) {
+  s = malloc(4*(NUM-10+1));
+  for (n=NUM;n>9;n--) {
     sprintf(&s[(n-10)*4],"%d",n);
     dict[i++] = &s[(n-10)*4];
   }

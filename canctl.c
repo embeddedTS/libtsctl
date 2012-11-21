@@ -54,10 +54,14 @@ int OptionOctets(char *arg,void *target0,int opt) {
 
 void CANMessageTxInit(CANMessage *msg,unsigned id,int flags,
 		      int length,unsigned char *data) {
+  struct timeval tv;
+
   memset(msg,0,sizeof(*msg));
   msg->flags = flags;
   msg->id = id;
-  gettimeofday(&msg->timestamp,NULL);
+  gettimeofday(&tv,NULL);
+  msg->t_sec = tv.tv_sec;
+  msg->t_usec = tv.tv_usec;
   msg->length = length;
   if (length > 0) {
     memcpy(msg->data,data,length);
@@ -168,9 +172,9 @@ void CANMessagePrint(CANMessage *msg) {
   if (msg->flags & FLAG_ERROR_PASSIVE) printf("*** error passive\n");
   if (msg->flags & FLAG_DATA_OVERRUN) printf("*** data overrun error\n");
   if (msg->flags & FLAG_ERROR_WARNING) printf("*** error warning\n");
-  tm = localtime(&msg->timestamp.tv_sec);
+  tm = localtime((time_t *)&msg->t_sec);
   printf("%02d:%02d:%02d.%06d %c%c ", 
-	 tm->tm_hour, tm->tm_min, tm->tm_sec,msg->timestamp.tv_usec, 
+	 tm->tm_hour, tm->tm_min, tm->tm_sec,msg->t_usec, 
 	 (msg->flags & FLAG_EXT_ID) ? 'E' : 'S', 
 	 (msg->flags & FLAG_RTR)     ? 'R' : '.');
   if (msg->flags & FLAG_CONTROL) {

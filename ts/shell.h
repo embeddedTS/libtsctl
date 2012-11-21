@@ -1,9 +1,11 @@
 #include "Array.h"
+#include <stdarg.h>
 
 //char *strappend(char *str1,char *str2);
 //char **strarrappend(char **arr,char *str);
 //char *strsub(char *str1,int start,int end);
 char *strf(char *format,...);
+char *vstrf(char *format,va_list ap);
 int strlookup(char **arr,char *str);
 
 char *var(char *name);

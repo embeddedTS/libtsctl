@@ -44,7 +44,7 @@ struct SJA1000CAN {
 	unsigned FUNC(BaudSet)(SJA1000CAN *me,unsigned opt_baud);
 	unsigned FUNC(BaudGet)(SJA1000CAN *me);
 	void FUNC(Abort)(SJA1000CAN *me);
-	int FUNC(RxMulti)(SJA1000CAN *me,CANMessage *,int min);
+	int FUNC(RxMulti)(SJA1000CAN *me,CANMessage *msg,int min);
 	int InitStatus;
 	unsigned LockBase;
 	int deferlock;
@@ -70,7 +70,7 @@ int SJA1000CANTx(SJA1000CAN* ob,unsigned flags,unsigned id,const char *data);
 unsigned SJA1000CANBaudSet(SJA1000CAN* ob,unsigned opt_baud);
 unsigned SJA1000CANBaudGet(SJA1000CAN* ob);
 void SJA1000CANAbort(SJA1000CAN* ob);
-int SJA1000CANRxMulti(SJA1000CAN* ob,CANMessage *,int min);
+int SJA1000CANRxMulti(SJA1000CAN* ob,CANMessage *msg,int min);
 #endif
 
 // Author: Michael Schmidt (michael@embeddedARM.com)

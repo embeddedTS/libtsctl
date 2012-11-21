@@ -150,19 +150,21 @@ int ts8820ADCAIOConfiguration(ts8820ADCAIO *aio,float* low,float* high,int* prec
   mask = aio->bus->BitsGet16(aio->bus,0x82,15,8);
   uu = aio->bus->BitsGet16(aio->bus,0x82,7,6);
   aio->bus->Unlock(aio->bus,0,SHARED);
+
   for (i=0;i<16;i++) {
     if (i < 8) {
-      low[i] = r1 ? -10.0 : -5.0;
-      high[i] = r1 ? 10.0 : 5.0;
+      if (ArrayLength(low) > i) low[i] = r1 ? -10.0 : -5.0;
+      if (ArrayLength(high) > i) high[i] = r1 ? 10.0 : 5.0;
     } else {
-      low[i] = r2 ? -10.0 : -5.0;
-      high[i] = r2 ? 10.0 : 5.0;
+      if (ArrayLength(low) > i) low[i] = r2 ? -10.0 : -5.0;
+      if (ArrayLength(high) > i) high[i] = r2 ? 10.0 : 5.0;
     }
-    prec[i] = 16;
-    trigger[i] = 0;
+    if (ArrayLength(prec) > i) prec[i] = 16;
+    if (ArrayLength(trigger) > i) trigger[i] = 0;
     itrig[0] = 0;
   }
   for (i=0;i<8;i++) {
+    if (ArrayLength(t) <= i) break; 
     t[i] = (mask & 1) ? ns : 0;
     t[i+8] = (t[i] && uu) ? ns : 0;
     mask >>= 1;
@@ -201,7 +203,7 @@ int ts8820ADCAIOConfigureTest(ts8820ADCAIO *aio,const float* low,const float* hi
   for (i=1;i<8;i++) { // first 8 channels must be disabled or same period
     if (!n && t[i] != 0) n = t[i];
     if (t[i] != n && t[i] != 0) {
-      return -20-i; // invalid period
+      return -90-i; // invalid period
     }
   }
   for (i=8;i<16;i++) {
@@ -210,7 +212,7 @@ int ts8820ADCAIOConfigureTest(ts8820ADCAIO *aio,const float* low,const float* hi
   if (i < 16) { // all upper channels are not disabled
     for (i=8;i<16;i++) { // top 8 channels must match first 8, respectively
       if (t[i] != t[i-8]) {
-	return -20-i; // invalid period
+	return -90-i; // invalid period
       }
     }
   }
@@ -415,7 +417,7 @@ int ts8820ADCAIOChannelVoltageRange(ts8820ADCAIO *aio,int ch,
 }
 
 int ts8820ADCAIOConfigure(ts8820ADCAIO *aio,const float* low,const float* high,const int* prec,const int* t,const int* trigger,int itrig) {
-  int ret,ns;
+  int i,ret,ns=0;
 
   if ((ret=ts8820ADCAIOConfigureTest(aio,low,high,prec,t,trigger,itrig))<0) {
     return ret;
@@ -448,7 +450,12 @@ int ts8820ADCAIOConfigure(ts8820ADCAIO *aio,const float* low,const float* high,c
   }
   aio->dio->Unlock(aio->dio,aio->CN2_58,0);
 
-  ns = t[0] / 10;
+  for (i=0;i<ArrayLength(t);i++) {
+    if (t[i]) {
+      ns = t[i] / 10;
+      break;
+    }
+  }
   aio->bus->Lock(aio->bus,0,0);
   aio->bus->Poke16(aio->bus,0x88,ns&0xFFFF);
   aio->bus->Poke16(aio->bus,0x8a,ns>>16);
@@ -542,7 +549,8 @@ int ts8820ADCAIOGet(ts8820ADCAIO *aio,int ch) {
   // complete.
   aio->bus->Lock(aio->bus,0,0);
   oldmask = aio->bus->BitsGet16(aio->bus,0x82,15,6);
-  if (aio->bus->BitGet16(aio->bus,0x82,1)) { // currently acquiring
+  if (aio->bus->BitGet16(aio->bus,0x82,1)
+      || aio->bus->Peek16(aio->bus,0x84)) { // currently acquiring or samples 
     aio->bus->BitClear16(aio->bus,0x82,1); // stop
     aio->bus->BitSet16(aio->bus,0x82,0); // reset ADC/FIFO
     aio->bus->BitClear16(aio->bus,0x82,0); // take ADC/FIFO out of reset
