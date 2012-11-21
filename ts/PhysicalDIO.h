@@ -15,7 +15,7 @@ struct PhysicalDIO {
 	int FUNC(Unlock)(PhysicalDIO *me,unsigned num,int flags);
 	int FUNC(Preempt)(PhysicalDIO *me);
 	void FUNC(Refresh)(PhysicalDIO *me);
-	void FUNC(Commit)(PhysicalDIO *me,int forceall);
+	void FUNC(Commit)(PhysicalDIO *me,int ForceAll);
 	void FUNC(Set)(PhysicalDIO *me,int DIONum,DIOState State);
 	DIOState FUNC(Get)(PhysicalDIO *me,int DIONum);
 	void FUNC(SetAsync)(PhysicalDIO *me,int DIONum,DIOState State);
@@ -38,7 +38,7 @@ int PhysicalDIOLock(PhysicalDIO* ob,unsigned num,int flags);
 int PhysicalDIOUnlock(PhysicalDIO* ob,unsigned num,int flags);
 int PhysicalDIOPreempt(PhysicalDIO* ob);
 void PhysicalDIORefresh(PhysicalDIO* ob);
-void PhysicalDIOCommit(PhysicalDIO* ob,int forceall);
+void PhysicalDIOCommit(PhysicalDIO* ob,int ForceAll);
 void PhysicalDIOSet(PhysicalDIO* ob,int DIONum,DIOState State);
 DIOState PhysicalDIOGet(PhysicalDIO* ob,int DIONum);
 void PhysicalDIOSetAsync(PhysicalDIO* ob,int DIONum,DIOState State);

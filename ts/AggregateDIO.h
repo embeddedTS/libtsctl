@@ -15,7 +15,7 @@ struct AggregateDIO {
 	int FUNC(Unlock)(AggregateDIO *me,unsigned num,int flags);
 	int FUNC(Preempt)(AggregateDIO *me);
 	void FUNC(Refresh)(AggregateDIO *me);
-	void FUNC(Commit)(AggregateDIO *me,int forceall);
+	void FUNC(Commit)(AggregateDIO *me,int ForceAll);
 	void FUNC(Set)(AggregateDIO *me,int DIONum,DIOState State);
 	DIOState FUNC(Get)(AggregateDIO *me,int DIONum);
 	void FUNC(SetAsync)(AggregateDIO *me,int DIONum,DIOState State);
@@ -37,7 +37,7 @@ int AggregateDIOLock(AggregateDIO* ob,unsigned num,int flags);
 int AggregateDIOUnlock(AggregateDIO* ob,unsigned num,int flags);
 int AggregateDIOPreempt(AggregateDIO* ob);
 void AggregateDIORefresh(AggregateDIO* ob);
-void AggregateDIOCommit(AggregateDIO* ob,int forceall);
+void AggregateDIOCommit(AggregateDIO* ob,int ForceAll);
 void AggregateDIOSet(AggregateDIO* ob,int DIONum,DIOState State);
 DIOState AggregateDIOGet(AggregateDIO* ob,int DIONum);
 void AggregateDIOSetAsync(AggregateDIO* ob,int DIONum,DIOState State);

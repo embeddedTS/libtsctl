@@ -30,8 +30,8 @@ struct Pin {
 	int FUNC(Lock)(void *me,unsigned num,int flags);
 	int FUNC(Unlock)(void *me,unsigned num,int flags);
 	int FUNC(Preempt)(void *me);
-	PinMode FUNC(ModeGet)(void *me,int pin);
-	int FUNC(ModeSet)(void *me,int pin,PinMode mode);
+	PinMode FUNC(ModeGet)(void *me,int PinNumber);
+	int FUNC(ModeSet)(void *me,int PinNumber,PinMode Mode);
 	int InitStatus;
 	unsigned LockBase;
 	int deferlock;

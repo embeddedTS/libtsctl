@@ -15,7 +15,7 @@ struct DummyDIO {
 	int FUNC(Unlock)(DummyDIO *me,unsigned num,int flags);
 	int FUNC(Preempt)(DummyDIO *me);
 	void FUNC(Refresh)(DummyDIO *me);
-	void FUNC(Commit)(DummyDIO *me,int forceall);
+	void FUNC(Commit)(DummyDIO *me,int ForceAll);
 	void FUNC(Set)(DummyDIO *me,int DIONum,DIOState State);
 	DIOState FUNC(Get)(DummyDIO *me,int DIONum);
 	void FUNC(SetAsync)(DummyDIO *me,int DIONum,DIOState State);
@@ -34,7 +34,7 @@ int DummyDIOLock(DummyDIO* ob,unsigned num,int flags);
 int DummyDIOUnlock(DummyDIO* ob,unsigned num,int flags);
 int DummyDIOPreempt(DummyDIO* ob);
 void DummyDIORefresh(DummyDIO* ob);
-void DummyDIOCommit(DummyDIO* ob,int forceall);
+void DummyDIOCommit(DummyDIO* ob,int ForceAll);
 void DummyDIOSet(DummyDIO* ob,int DIONum,DIOState State);
 DIOState DummyDIOGet(DummyDIO* ob,int DIONum);
 void DummyDIOSetAsync(DummyDIO* ob,int DIONum,DIOState State);

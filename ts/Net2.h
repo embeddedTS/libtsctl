@@ -10,5 +10,6 @@ enum {
 	NetSPIClass = 8,
 	NetAIOClass = 9,
 	NetEDIOClass = 10,
-	Net_ClassCount=11
+	NetModeClass = 11,
+	Net_ClassCount=12
 };

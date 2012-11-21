@@ -35,6 +35,16 @@ char *strappend(char *str1,char *str2) {
   return str;
 }
 
+char *vstrf(char *format,va_list ap) {
+  int len;
+  char *str,dummy[1];
+
+  len = vsnprintf(dummy,0,format,ap);
+  str = ArrayAlloc(len,sizeof(char));
+  vsprintf(str,format,ap);
+  return str;
+}
+
 char *strf(char *format,...) {
   va_list ap;
   int len;

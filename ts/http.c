@@ -21,31 +21,20 @@ struct OutInfo {
 int tsctlInterpret(OutInfo *oi,char** argv);
 extern Thread *head_thread;
 
-typedef struct {
-  OutInfo oi;
-  FILE *f;
-} httpServerData;
+#include "../Stream.h"
 
 void *httpServerConstor(int socket) {
-  httpServerData *data = malloc(sizeof(httpServerData));
-  data->oi.ht = HashTableNewASCIIZ();
-  data->oi.tsctl_o = socket;
-  data->oi.fAssign = 2;
-  data->oi.oMode = MODE_DEC;
-  data->oi.aMode = MODE_STR;
-  fcntl(socket,F_SETFL,fcntl(socket,F_GETFL,0)&~O_NONBLOCK);
-  data->f = fdopen(socket,"w+");
-  return data;
+  if (socket < 0) return 0;
+  return DescriptorStreamInit(socket,socket);
 }
 
 void httpServerDester(void *arg) {
   Thread *th = arg;
-  httpServerData *data = th->data;
+  Stream *st = th->data;
 
-  HashTableDestroy(data->oi.ht,0);
+  st->Fini(st);
+  close(th->socket);
   th->socket = -1;
-  fclose(data->f);
-  free(data);
 }
 
 void *httpServer(void *arg) {
@@ -54,75 +43,29 @@ void *httpServer(void *arg) {
   int i,ret=0,last,next,cmdcount=0;
   char *cstr,cmd[1024],tmp[256],*s;
   time_t t;
-  httpServerData *data = th->data;
+  Stream *st = th->data;
  
-  //fprintf(mf,"Nexty[];\n"); fflush(mf);
-
-  //fprintf(stderr,"httpServer @%p/%d started on socket %d\n",th,th->pid,socket);
-#if 0
-  {
-    Thread *cur = head_thread;
-
-    while (cur) {
-      fprintf(stderr,"%p:%s.%d ",cur,cur->name,cur->instance);
-      cur = cur->next;
-    }
-    fprintf(stderr,"\n");
-  }
-#endif
-  if (data->f == 0) goto httpServerDone;
+  if (!st) goto httpServerDone;
 
   // Assume POST, as that is all we support
   // ignore headers, because the format of our data and return is fixed
   // look for POST data, which follows headers.
   do {
-    last = fgetc(data->f);
-  } while (!feof(data->f) && last != '\r');
-  while (!feof(data->f)) {
-    next = fgetc(data->f);
+    last = st->ReadChar(st);
+  } while (st->InputReady(st) && last != '\r');
+  while (st->InputReady(st)) {
+    next = st->ReadChar(st);
     if (next == '\r') continue;
     if (last == '\n' && next == '\n') break;
     last = next;
   }
   t = time(0);
-  //fprintf(stderr,"httpServer %d/%d sending header\n",socket,th->pid);
-  sprintf(cmd,"HTTP/1.1 200 OK\r\nExpires: Sun, 1 Apr 2012 00:00:00 GMT\r\nServer: tsctl\r\nAccess-Control-Allow-Origin: *\r\nContent-Type: text/plain; charset=UTF-8\r\nConnection: close\r\n\r\n");
-  write(socket,cmd,strlen(cmd));
-  write(socket,"{",1);
-  while (!feof(data->f)) {
-    ThreadEnterBlock();
-    cmd[0] = 0;
-    fgets(cmd,1023,data->f);
-    ThreadLeaveBlock();
-    //fprintf(stderr,"httpServer %d read:%s\n",socket,cmd);
-    cstr = cmd;
-    while (*cstr == '\r') cstr++;
-    if (*cstr == 0) continue;
-    if (!strncmp(cstr,"end",3) && (cstr[3] == '\r' || cstr[3] == '\n')) break;
-    //if (cmdcount++ > 0 && ret) write(socket,",",1);
-    s = cstr;
-    while (*s) s++; s--;
-    while ((*s == '\n' || *s == '\r') && s > cstr) s--;
-    s[1] = 0;
+  WriteASCIIZ(st,"HTTP/1.1 200 OK\r\nExpires: Sun, 1 Apr 2012 00:00:00 GMT\r\nServer: tsctl\r\nAccess-Control-Allow-Origin: *\r\nContent-Type: text/plain; charset=UTF-8\r\nConnection: close\r\n\r\n{");
 
-    char **argv;
-    argv = split(cmd,' ');
-    if (!argv) continue;
-    //fprintf(stderr,"httpServer %d command:",socket);
-    //for (i=0;i<ArrayLength(argv);i++) {
-    //  fprintf(stderr,"%s ",argv[i]);
-    //}
-    //fprintf(stderr,"\n");
-    ret = tsctlInterpret(&data->oi,argv);
-    //fprintf(stderr,"httpServer %d command done\n");
-
-    // TO DO: ArrayFree elements
-    for (i=0;i<ArrayLength(argv);i++) {
-      ArrayFree(argv[i]);
-    }
-    ArrayFree(argv);
+  while (st->InputReady(st)) {
+    tsctl_shell(st,st);
   }
-  write(socket,"\"end\":1\n}",9);
+  WriteASCIIZ(st,"\"end\":1\n}");
 
  httpServerDone:
   //fprintf(stderr,"httpServer @%p/%d finished on socket %d\n",th,th->pid,socket);

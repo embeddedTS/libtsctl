@@ -38,7 +38,7 @@ int NetCANctlTx(NetCANctl *can,unsigned flags,unsigned id,const char* data) {
   if (can->InitStatus < 0) return -1;
   msg.flags = flags;
   msg.id = id;
-  msg.timestamp.tv_sec = msg.timestamp.tv_usec = 0;
+  msg.t_sec = msg.t_usec = 0;
   msg.length = ArrayLength(data);
   memcpy(msg.data,data,msg.length);
   return PacketSend0(can->socket,&msg,sizeof(CANMessage));

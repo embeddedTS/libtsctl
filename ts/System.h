@@ -52,27 +52,29 @@ enum {
 	NetSystem_MapLookupPartial=13,
 	NetSystem_MapAdd=14,
 	NetSystem_MapDelete=15,
-	XSystem_APICount=16
+	NetSystem_Note=16,
+	XSystem_APICount=17
 };
 struct System {
 	void *FUNC(Init)(void *me,...);
 	void FUNC(Fini)(void *me);
 	int FUNC(ClassCount)(void *me);
-	int FUNC(InstanceCount)(void *me,int );
-	int FUNC(APICount)(void *me,int );
+	int FUNC(InstanceCount)(void *me,int ClassNumber);
+	int FUNC(APICount)(void *me,int ClassNumber);
 	int FUNC(LockCount)(void *me);
 	LockHolderInf*FUNC(LockHolderInfo)(void *me);
 	ConnectionWaitInf*FUNC(ConnWaitInfo)(void *me);
-	int FUNC(CANBusGet)(void *me,int );
+	int FUNC(CANBusGet)(void *me,int CANInstance);
 	void FUNC(BuildInfo)(void *me,BuildInf [1]);
 	int FUNC(ModelId)(void *me);
 	int FUNC(BaseBoardId)(void *me);
 	int FUNC(MapLength)(void *me);
-	char *FUNC(MapGet)(void *me,int ,int [1]);
-	int FUNC(MapLookup)(void *me,const char *);
-	char *FUNC(MapLookupPartial)(void *me,const char *,int );
-	int FUNC(MapAdd)(void *me,const char *,int );
-	int FUNC(MapDelete)(void *me,const char *);
+	char *FUNC(MapGet)(void *me,int MapIndex,int Value[1]);
+	int FUNC(MapLookup)(void *me,const char *String);
+	char *FUNC(MapLookupPartial)(void *me,const char *StringPrefix,int Value);
+	int FUNC(MapAdd)(void *me,const char *String,int Value);
+	int FUNC(MapDelete)(void *me,const char *String);
+	char *FUNC(Note)(void *me,const char *Message);
 	int InitStatus;
 	unsigned maplock;
 	NameValuePair *map;

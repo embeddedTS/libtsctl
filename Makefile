@@ -1,5 +1,5 @@
 -include Makefile.config
-CC=$(TOOL_PREFIX)-gcc
+CC=$(TOOL_PREFIX)gcc
 
 CFLAGS+=-march=armv4 -ffunction-sections -fdata-sections -D$(BOARDSEL)=1
 LDFLAGS+=-D$(BOARDSEL)=1
@@ -10,7 +10,7 @@ LDFLAGS_CANRx=-lpthread
 CFLAGS_CANRx=-DTHREAD_USE_POSIX
 LDFLAGS_canctl=-lpthread
 #CFLAGS_tsctl=-DLOGGING
-LDFLAGS_tsctl=-lpthread 
+LDFLAGS_tsctl=-lpthread -lreadline
 #-lefence
 LDFLAGS_ptest=-lpthread
 

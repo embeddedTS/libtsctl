@@ -25,7 +25,7 @@ struct Time {
 	void FUNC(Delay)(void *me,unsigned microseconds);
 	unsigned FUNC(Tick)(void *me);
 	unsigned FUNC(usElapsed)(void *me,unsigned start);
-	unsigned FUNC(usFuture)(void *me,unsigned start,unsigned us);
+	unsigned FUNC(usFuture)(void *me,unsigned start,unsigned microseconds);
 	int FUNC(TimeoutQ)(void *me,unsigned start,unsigned end);
 	unsigned FUNC(TPS)(void *me);
 	int InitStatus;

@@ -16,6 +16,7 @@ static inline void ArrayFree(const void *arr) {
   unsigned *ptr = (unsigned *)arr;
   free(ptr-3);
 }
+
 static inline void *ArraySize(void *arr,unsigned count) {
   unsigned *ptr = arr;
   ptr -= 3;
@@ -98,6 +99,27 @@ static inline unsigned ArrayElementSize(const void *array) {
 static inline unsigned ArrayLength(const void *array) {
   const unsigned *ptr = array;
   return ptr[-1];
+}
+static inline void ArrayFreeFree(const void *arr0) {
+  const void * const *arr = arr0;
+  int i;
+  for (i=0;i<ArrayLength(arr);i++) {
+    if (arr[i]) ArrayFree(arr[i]);
+  }
+  ArrayFree(arr);
+}
+static inline void ArrayFreeFreeFree(const void *arr0) {
+  const void ** const *arr = arr0;
+  int i,j;
+  for (i=0;i<ArrayLength(arr);i++) {
+    if (arr[i]) {
+      for (j=0;j<ArrayLength(arr[i]);j++) {
+	if (arr[i][j]) ArrayFree(arr[i][j]);
+      }
+      ArrayFree(arr[i]);
+    }
+  }
+  ArrayFree(arr);
 }
 static inline void *ArrayCompareFunction(const void *array) {
   const unsigned *ptr = array;

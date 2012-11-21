@@ -2,7 +2,15 @@
 %{
 
 #include "ts/libtsctl.h"
-
+  /*
+  typedef struct {
+    unsigned c,size,len;
+    char arr[0];
+  } ArrayForPython;
+  char* ArrayFromStruct(ArrayForPython *st) {
+    return st->arr;
+  }
+  */
 %}
 
 %typemap(in,numinputs=0) void *me "$1=NULL;"
@@ -33,4 +41,12 @@ DIO *DIOInit(int inst);
 TWI *TWIInit(int inst);
 SPI *SPIInit(int inst);
 AIO *AIOInit(int inst);
-
+/*
+  typedef struct {
+    unsigned c,size,len;
+    char arr[0];
+  } ArrayForPython;
+  char* ArrayFromStruct(ArrayForPython *st) {
+    return st->arr;
+  }
+*/

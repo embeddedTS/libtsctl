@@ -200,6 +200,7 @@ void *LocalSystemInit(LocalSystem *sys) {
   sys->MapLookupPartial = (void *)LocalSystemMapLookupPartial;
   sys->MapAdd = (void *)LocalSystemMapAdd;
   sys->MapDelete = (void *)LocalSystemMapDelete;
+  sys->Note = (void *)LocalSystemNote;
 
   sys->maplock = ThreadLockAllocate(1);
   sys->map = archmap; // ArrayAlloc(0,sizeof(NameValuePair));
@@ -383,6 +384,11 @@ char* LocalSystemMapGet(LocalSystem *sys,int n,int val[1]) {
 int LocalSystemMapLookup(LocalSystem *sys,const char* key) {
   NameValuePair nvp;
   nvp.name = (char *)key;
+  int ignoresharp=0;
+  if (key[ArrayLength(key)-1] == '#') {
+    ignoresharp = 1;
+    ArraySizeAuto((char*)key,ArrayLength(key)-1);
+  }
   assert(ThreadLockR(sys->maplock,LOCK_SOD) > 0);
   unsigned index = ArrayFind(sys->map,&nvp);
   int ret;
@@ -393,6 +399,9 @@ int LocalSystemMapLookup(LocalSystem *sys,const char* key) {
     ret = -1;
   }
   assert(ThreadUnlockR(sys->maplock) > 0);
+  if (ignoresharp) {
+    ArraySizeAuto((char*)key,ArrayLength(key)+1);
+  }
   return ret;
 }
 
@@ -426,6 +435,10 @@ int LocalSystemMapDelete(LocalSystem *sys,const char* key) {
   //sys->map = ArrayFindDelete(sys->map,NameValuePair,Of((char *)key,0));
   assert(ThreadUnlockW(sys->maplock) > 0);
   return ret;
+}
+
+char* LocalSystemNote(LocalSystem* ob,const char* msg) {
+  return ArrayDup(msg);
 }
 
 #endif
