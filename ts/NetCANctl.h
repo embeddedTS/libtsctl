@@ -11,7 +11,7 @@ typedef struct NetCANctl NetCANctl;
 struct NetCANctl {
 	void *FUNC(Init)(NetCANctl *me,int socket);
 	void FUNC(Fini)(NetCANctl *me);
-	int FUNC(Rx)(NetCANctl *me,CANMessage [1]);
+	int FUNC(Rx)(NetCANctl *me,CANMessage message[1]);
 	int FUNC(Tx)(NetCANctl *me,unsigned flags,unsigned id,const char *data);
 	unsigned FUNC(BaudSet)(NetCANctl *me,unsigned opt_baud);
 	unsigned FUNC(BaudGet)(NetCANctl *me);
@@ -28,7 +28,7 @@ struct NetCANctl {
 
 void *NetCANctlInit(NetCANctl* ob,int socket);
 void NetCANctlFini(NetCANctl* ob);
-int NetCANctlRx(NetCANctl* ob,CANMessage [1]);
+int NetCANctlRx(NetCANctl* ob,CANMessage message[1]);
 int NetCANctlTx(NetCANctl* ob,unsigned flags,unsigned id,const char *data);
 unsigned NetCANctlBaudSet(NetCANctl* ob,unsigned opt_baud);
 unsigned NetCANctlBaudGet(NetCANctl* ob);

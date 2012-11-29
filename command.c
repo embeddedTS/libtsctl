@@ -1400,7 +1400,7 @@ ArrayAuto(char*,DIOGetAsyncArgNames,ARR("DIONum",));
 ArrayAuto(char*,DIOWaitArgNames,ARR("match_length","min","max","nh","nl",));
 ArrayAuto(char*,DIOCountArgNames,ARR());
 ArrayAuto(char*,DIOCapabilitiesArgNames,ARR("num",));
-ArrayAuto(char*,DIOGetMultiArgNames,ARR("_length","offset",));
+ArrayAuto(char*,DIOGetMultiArgNames,ARR("state_length","offset",));
 ArrayAuto(char**,DIOArgNames,ARR(ArrayL(DIOLockArgNames),ArrayL(DIOUnlockArgNames),ArrayL(DIOPreemptArgNames),ArrayL(DIORefreshArgNames),ArrayL(DIOCommitArgNames),ArrayL(DIOSetArgNames),ArrayL(DIOGetArgNames),ArrayL(DIOSetAsyncArgNames),ArrayL(DIOGetAsyncArgNames),ArrayL(DIOWaitArgNames),ArrayL(DIOCountArgNames),ArrayL(DIOCapabilitiesArgNames),ArrayL(DIOGetMultiArgNames),));
 
 ArrayAuto(char*,TWILockArgNames,ARR("num","flags",));
@@ -3649,7 +3649,7 @@ ArrayAuto(char*,DIOGetAsyncRetNames,ARR("",));
 ArrayAuto(char*,DIOWaitRetNames,ARR("","match",));
 ArrayAuto(char*,DIOCountRetNames,ARR("",));
 ArrayAuto(char*,DIOCapabilitiesRetNames,ARR("",));
-ArrayAuto(char*,DIOGetMultiRetNames,ARR("","",));
+ArrayAuto(char*,DIOGetMultiRetNames,ARR("","state",));
 ArrayAuto(char**,DIORetNames,ARR(ArrayL(DIOLockRetNames),ArrayL(DIOUnlockRetNames),ArrayL(DIOPreemptRetNames),ArrayL(DIORefreshRetNames),ArrayL(DIOCommitRetNames),ArrayL(DIOSetRetNames),ArrayL(DIOGetRetNames),ArrayL(DIOSetAsyncRetNames),ArrayL(DIOGetAsyncRetNames),ArrayL(DIOWaitRetNames),ArrayL(DIOCountRetNames),ArrayL(DIOCapabilitiesRetNames),ArrayL(DIOGetMultiRetNames),));
 
 ArrayAuto(char*,TWILockRetNames,ARR("",));
@@ -3659,7 +3659,7 @@ ArrayAuto(char*,TWIWriteRetNames,ARR("",));
 ArrayAuto(char*,TWIReadRetNames,ARR("","bytes",));
 ArrayAuto(char**,TWIRetNames,ARR(ArrayL(TWILockRetNames),ArrayL(TWIUnlockRetNames),ArrayL(TWIPreemptRetNames),ArrayL(TWIWriteRetNames),ArrayL(TWIReadRetNames),));
 
-ArrayAuto(char*,CANRxRetNames,ARR("","flags","id","t_sec","t_usec","length","data","data",));
+ArrayAuto(char*,CANRxRetNames,ARR("","message_%d_flags","message_%d_id","message_%d_t_sec","message_%d_t_usec","message_%d_length","message_%d_data","message_%d_data",));
 ArrayAuto(char*,CANTxRetNames,ARR("",));
 ArrayAuto(char*,CANBaudSetRetNames,ARR("",));
 ArrayAuto(char*,CANBaudGetRetNames,ARR("",));

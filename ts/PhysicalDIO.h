@@ -23,7 +23,7 @@ struct PhysicalDIO {
 	void FUNC(Wait)(PhysicalDIO *me,int *match,int min,int max,const int *nh,const int *nl);
 	unsigned FUNC(Count)(PhysicalDIO *me);
 	DIOCaps FUNC(Capabilities)(PhysicalDIO *me,unsigned num);
-	int FUNC(GetMulti)(PhysicalDIO *me,char *,int offset);
+	int FUNC(GetMulti)(PhysicalDIO *me,char *state,int offset);
 	int InitStatus;
 	unsigned NumLocks;
 	Bus *bus;
@@ -46,7 +46,7 @@ DIOState PhysicalDIOGetAsync(PhysicalDIO* ob,int DIONum);
 void PhysicalDIOWait(PhysicalDIO* ob,int *match,int min,int max,const int *nh,const int *nl);
 unsigned PhysicalDIOCount(PhysicalDIO* ob);
 DIOCaps PhysicalDIOCapabilities(PhysicalDIO* ob,unsigned num);
-int PhysicalDIOGetMulti(PhysicalDIO* ob,char *,int offset);
+int PhysicalDIOGetMulti(PhysicalDIO* ob,char *state,int offset);
 #endif
 
 // Author: Michael Schmidt (michael@embeddedARM.com)

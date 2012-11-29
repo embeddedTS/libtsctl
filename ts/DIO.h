@@ -47,7 +47,7 @@ struct DIO {
 	void FUNC(Wait)(void *me,int *match,int min,int max,const int *nh,const int *nl);
 	unsigned FUNC(Count)(void *me);
 	DIOCaps FUNC(Capabilities)(void *me,unsigned num);
-	int FUNC(GetMulti)(void *me,char *,int offset);
+	int FUNC(GetMulti)(void *me,char *state,int offset);
 	int InitStatus;
 };
 #endif

@@ -38,7 +38,7 @@ enum {
 struct CAN {
 	void *FUNC(Init)(void *me,...);
 	void FUNC(Fini)(void *me);
-	int FUNC(Rx)(void *me,CANMessage [1]);
+	int FUNC(Rx)(void *me,CANMessage message[1]);
 	int FUNC(Tx)(void *me,unsigned flags,unsigned id,const char *data);
 	unsigned FUNC(BaudSet)(void *me,unsigned opt_baud);
 	unsigned FUNC(BaudGet)(void *me);

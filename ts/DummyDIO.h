@@ -23,7 +23,7 @@ struct DummyDIO {
 	void FUNC(Wait)(DummyDIO *me,int *match,int min,int max,const int *nh,const int *nl);
 	unsigned FUNC(Count)(DummyDIO *me);
 	DIOCaps FUNC(Capabilities)(DummyDIO *me,unsigned num);
-	int FUNC(GetMulti)(DummyDIO *me,char *,int offset);
+	int FUNC(GetMulti)(DummyDIO *me,char *state,int offset);
 	int InitStatus;
 	unsigned NumLocks;
 };
@@ -42,7 +42,7 @@ DIOState DummyDIOGetAsync(DummyDIO* ob,int DIONum);
 void DummyDIOWait(DummyDIO* ob,int *match,int min,int max,const int *nh,const int *nl);
 unsigned DummyDIOCount(DummyDIO* ob);
 DIOCaps DummyDIOCapabilities(DummyDIO* ob,unsigned num);
-int DummyDIOGetMulti(DummyDIO* ob,char *,int offset);
+int DummyDIOGetMulti(DummyDIO* ob,char *state,int offset);
 #endif
 
 // Author: Michael Schmidt (michael@embeddedARM.com)

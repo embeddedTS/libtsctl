@@ -28,7 +28,7 @@ all: $(PRODUCTS)
 
 %: %.c
 	@mkdir -p $(BUILD_DIR)
-	@echo "Compiling $<"; $(CC) -c $(CFLAGS) $(CFLAGS_$(lastword $(subst /, ,$(patsubst %.c,%,$<)))) $< $(LDFLAGS) $(LDFLAGS_$(lastword $(subst /, ,$(patsubst %.c,%,$<)))) -o $(BUILD_DIR)/$@ 
+	@echo "Compiling $<"; $(CC) $(CFLAGS) $(CFLAGS_$(lastword $(subst /, ,$(patsubst %.c,%,$<)))) $< $(LDFLAGS) $(LDFLAGS_$(lastword $(subst /, ,$(patsubst %.c,%,$<)))) -o $(BUILD_DIR)/$@ 
 
 clean:
 	@rm -rf $(BUILD_DIR)

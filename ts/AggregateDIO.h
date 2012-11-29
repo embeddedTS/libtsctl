@@ -23,7 +23,7 @@ struct AggregateDIO {
 	void FUNC(Wait)(AggregateDIO *me,int *match,int min,int max,const int *nh,const int *nl);
 	unsigned FUNC(Count)(AggregateDIO *me);
 	DIOCaps FUNC(Capabilities)(AggregateDIO *me,unsigned num);
-	int FUNC(GetMulti)(AggregateDIO *me,char *,int offset);
+	int FUNC(GetMulti)(AggregateDIO *me,char *state,int offset);
 	int InitStatus;
 	DIO **dio;
 	Pin *pin;
@@ -45,7 +45,7 @@ DIOState AggregateDIOGetAsync(AggregateDIO* ob,int DIONum);
 void AggregateDIOWait(AggregateDIO* ob,int *match,int min,int max,const int *nh,const int *nl);
 unsigned AggregateDIOCount(AggregateDIO* ob);
 DIOCaps AggregateDIOCapabilities(AggregateDIO* ob,unsigned num);
-int AggregateDIOGetMulti(AggregateDIO* ob,char *,int offset);
+int AggregateDIOGetMulti(AggregateDIO* ob,char *state,int offset);
 #endif
 
 // Author: Michael Schmidt (michael@embeddedARM.com)
