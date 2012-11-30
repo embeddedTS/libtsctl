@@ -124,6 +124,33 @@ int tsctlSystemCommandTextToBin(char *str) {
     }
     break;
   case 'N':case 'n': return 18;
+  case 'U':case 'u':
+    switch (*str++) {
+    case 'P':case 'p':
+      switch (*str++) {
+      case 'T':case 't':
+        switch (*str++) {
+        case 'I':case 'i':
+          switch (*str++) {
+          case 'M':case 'm':
+            switch (*str++) {
+            case 'E':case 'e':
+              switch (*str++) {
+              case 'H':case 'h': return 21;
+              case 'S':case 's': return 20;
+              }
+              break;
+            }
+            break;
+          }
+          break;
+        }
+        break;
+      }
+      break;
+    }
+    break;
+  case 'V':case 'v': return 19;
   }
   return -1;
 }
@@ -1134,7 +1161,7 @@ ArrayAuto(void *,SystemLockCountArgs,ARR());
 ArrayAuto(void *,SystemLockHolderInfoArgs,ARR());
 ArrayAuto(void *,SystemConnWaitInfoArgs,ARR());
 ArrayAuto(void *,SystemCANBusGetArgs,ARR(tsctlArgParseInt32,));
-ArrayAuto(void *,SystemBuildInfoArgs,ARR());
+ArrayAuto(void *,SystemBuildTimeArgs,ARR());
 ArrayAuto(void *,SystemModelIdArgs,ARR());
 ArrayAuto(void *,SystemBaseBoardIdArgs,ARR());
 ArrayAuto(void *,SystemMapLengthArgs,ARR());
@@ -1144,7 +1171,10 @@ ArrayAuto(void *,SystemMapLookupPartialArgs,ARR(tsctlArgParseArrayInt8,tsctlArgP
 ArrayAuto(void *,SystemMapAddArgs,ARR(tsctlArgParseArrayInt8,tsctlArgParseInt32,));
 ArrayAuto(void *,SystemMapDeleteArgs,ARR(tsctlArgParseArrayInt8,));
 ArrayAuto(void *,SystemNoteArgs,ARR(tsctlArgParseArrayInt8,));
-ArrayAuto(void **,SystemArgs,ARR(ArrayL(SystemClassCountArgs),ArrayL(SystemInstanceCountArgs),ArrayL(SystemAPICountArgs),ArrayL(SystemLockCountArgs),ArrayL(SystemLockHolderInfoArgs),ArrayL(SystemConnWaitInfoArgs),ArrayL(SystemCANBusGetArgs),ArrayL(SystemBuildInfoArgs),ArrayL(SystemModelIdArgs),ArrayL(SystemBaseBoardIdArgs),ArrayL(SystemMapLengthArgs),ArrayL(SystemMapGetArgs),ArrayL(SystemMapLookupArgs),ArrayL(SystemMapLookupPartialArgs),ArrayL(SystemMapAddArgs),ArrayL(SystemMapDeleteArgs),ArrayL(SystemNoteArgs),));
+ArrayAuto(void *,SystemVersionArgs,ARR());
+ArrayAuto(void *,SystemUptimeServerArgs,ARR());
+ArrayAuto(void *,SystemUptimeHostArgs,ARR());
+ArrayAuto(void **,SystemArgs,ARR(ArrayL(SystemClassCountArgs),ArrayL(SystemInstanceCountArgs),ArrayL(SystemAPICountArgs),ArrayL(SystemLockCountArgs),ArrayL(SystemLockHolderInfoArgs),ArrayL(SystemConnWaitInfoArgs),ArrayL(SystemCANBusGetArgs),ArrayL(SystemBuildTimeArgs),ArrayL(SystemModelIdArgs),ArrayL(SystemBaseBoardIdArgs),ArrayL(SystemMapLengthArgs),ArrayL(SystemMapGetArgs),ArrayL(SystemMapLookupArgs),ArrayL(SystemMapLookupPartialArgs),ArrayL(SystemMapAddArgs),ArrayL(SystemMapDeleteArgs),ArrayL(SystemNoteArgs),ArrayL(SystemVersionArgs),ArrayL(SystemUptimeServerArgs),ArrayL(SystemUptimeHostArgs),));
 
 ArrayAuto(void *,BusLockArgs,ARR(tsctlArgParseUInt32,tsctlArgParseInt32,));
 ArrayAuto(void *,BusUnlockArgs,ARR(tsctlArgParseUInt32,tsctlArgParseInt32,));
@@ -1318,7 +1348,7 @@ ArrayAuto(char*,SystemLockCountArgNames,ARR());
 ArrayAuto(char*,SystemLockHolderInfoArgNames,ARR());
 ArrayAuto(char*,SystemConnWaitInfoArgNames,ARR());
 ArrayAuto(char*,SystemCANBusGetArgNames,ARR("CANInstance",));
-ArrayAuto(char*,SystemBuildInfoArgNames,ARR());
+ArrayAuto(char*,SystemBuildTimeArgNames,ARR());
 ArrayAuto(char*,SystemModelIdArgNames,ARR());
 ArrayAuto(char*,SystemBaseBoardIdArgNames,ARR());
 ArrayAuto(char*,SystemMapLengthArgNames,ARR());
@@ -1328,7 +1358,10 @@ ArrayAuto(char*,SystemMapLookupPartialArgNames,ARR("StringPrefix","Value",));
 ArrayAuto(char*,SystemMapAddArgNames,ARR("String","Value",));
 ArrayAuto(char*,SystemMapDeleteArgNames,ARR("String",));
 ArrayAuto(char*,SystemNoteArgNames,ARR("Message",));
-ArrayAuto(char**,SystemArgNames,ARR(ArrayL(SystemClassCountArgNames),ArrayL(SystemInstanceCountArgNames),ArrayL(SystemAPICountArgNames),ArrayL(SystemLockCountArgNames),ArrayL(SystemLockHolderInfoArgNames),ArrayL(SystemConnWaitInfoArgNames),ArrayL(SystemCANBusGetArgNames),ArrayL(SystemBuildInfoArgNames),ArrayL(SystemModelIdArgNames),ArrayL(SystemBaseBoardIdArgNames),ArrayL(SystemMapLengthArgNames),ArrayL(SystemMapGetArgNames),ArrayL(SystemMapLookupArgNames),ArrayL(SystemMapLookupPartialArgNames),ArrayL(SystemMapAddArgNames),ArrayL(SystemMapDeleteArgNames),ArrayL(SystemNoteArgNames),));
+ArrayAuto(char*,SystemVersionArgNames,ARR());
+ArrayAuto(char*,SystemUptimeServerArgNames,ARR());
+ArrayAuto(char*,SystemUptimeHostArgNames,ARR());
+ArrayAuto(char**,SystemArgNames,ARR(ArrayL(SystemClassCountArgNames),ArrayL(SystemInstanceCountArgNames),ArrayL(SystemAPICountArgNames),ArrayL(SystemLockCountArgNames),ArrayL(SystemLockHolderInfoArgNames),ArrayL(SystemConnWaitInfoArgNames),ArrayL(SystemCANBusGetArgNames),ArrayL(SystemBuildTimeArgNames),ArrayL(SystemModelIdArgNames),ArrayL(SystemBaseBoardIdArgNames),ArrayL(SystemMapLengthArgNames),ArrayL(SystemMapGetArgNames),ArrayL(SystemMapLookupArgNames),ArrayL(SystemMapLookupPartialArgNames),ArrayL(SystemMapAddArgNames),ArrayL(SystemMapDeleteArgNames),ArrayL(SystemNoteArgNames),ArrayL(SystemVersionArgNames),ArrayL(SystemUptimeServerArgNames),ArrayL(SystemUptimeHostArgNames),));
 
 ArrayAuto(char*,BusLockArgNames,ARR("num","flags",));
 ArrayAuto(char*,BusUnlockArgNames,ARR("num","flags",));
@@ -1586,40 +1619,13 @@ int tsctlSystemCANBusGet(System *ob,Stream *out,Stream *in) {
   WriteInt8LE(out,0x80);
   return 1;
 }
-int tsctlSystemBuildInfo(System *ob,Stream *out,Stream *in) {
+int tsctlSystemBuildTime(System *ob,Stream *out,Stream *in) {
   WriteInt16LE(out,0);
   WriteInt8LE(out,7);
-  BuildInf arg1[1];
-  ob->BuildInfo(ob,arg1);
-  WriteInt8LE(out,0x73);
-  WriteInt32LE(out,1);
-  {
-    int i;
-    for(i=0;i<1;i++) {
-      WriteInt8LE(out,0x03);
-      WriteUInt32LE(out,arg1[i].buildNumber);
-      WriteInt8LE(out,0x13);
-      WriteInt32LE(out,arg1[i].buildTime);
-      WriteInt8LE(out,0x03);
-      WriteUInt32LE(out,arg1[i].uptime);
-      WriteInt8LE(out,0x50);
-      WriteInt32LE(out,ArrayLength(arg1[i].hostname));
-      {
-        int k;
-        for(k=0;k<ArrayLength(arg1[i].hostname);k++) {
-          WriteInt8LE(out,arg1[i].hostname[k]);
-        }
-      }
-      WriteInt8LE(out,0x50);
-      WriteInt32LE(out,ArrayLength(arg1[i].arch));
-      {
-        int k;
-        for(k=0;k<ArrayLength(arg1[i].arch);k++) {
-          WriteInt8LE(out,arg1[i].arch[k]);
-        }
-      }
-    }
-  }
+  uint32 ret;
+  ret = ob->BuildTime(ob);
+  WriteInt8LE(out,0x03);
+  WriteUInt32LE(out,ret);
   WriteInt8LE(out,0x80);
   return 1;
 }
@@ -1748,7 +1754,43 @@ int tsctlSystemNote(System *ob,Stream *out,Stream *in) {
   WriteInt8LE(out,0x80);
   return 1;
 }
-ArrayAuto(void **,tsctlSystem,ARR((void *)tsctlSystemClassCount,(void *)tsctlSystemInstanceCount,(void *)tsctlSystemAPICount,(void *)tsctlSystemLockCount,(void *)tsctlSystemLockHolderInfo,(void *)tsctlSystemConnWaitInfo,(void *)tsctlSystemCANBusGet,(void *)tsctlSystemBuildInfo,(void *)tsctlSystemModelId,(void *)tsctlSystemBaseBoardId,(void *)tsctlSystemMapLength,(void *)tsctlSystemMapGet,(void *)tsctlSystemMapLookup,(void *)tsctlSystemMapLookupPartial,(void *)tsctlSystemMapAdd,(void *)tsctlSystemMapDelete,(void *)tsctlSystemNote,));
+int tsctlSystemVersion(System *ob,Stream *out,Stream *in) {
+  WriteInt16LE(out,0);
+  WriteInt8LE(out,17);
+  int8* ret;
+  ret = ob->Version(ob);
+  WriteInt8LE(out,0x50);
+  WriteInt32LE(out,ArrayLength(ret));
+  {
+    int i;
+    for(i=0;i<ArrayLength(ret);i++) {
+      WriteInt8LE(out,ret[i]);
+    }
+  }
+  WriteInt8LE(out,0x80);
+  return 1;
+}
+int tsctlSystemUptimeServer(System *ob,Stream *out,Stream *in) {
+  WriteInt16LE(out,0);
+  WriteInt8LE(out,18);
+  uint32 ret;
+  ret = ob->UptimeServer(ob);
+  WriteInt8LE(out,0x03);
+  WriteUInt32LE(out,ret);
+  WriteInt8LE(out,0x80);
+  return 1;
+}
+int tsctlSystemUptimeHost(System *ob,Stream *out,Stream *in) {
+  WriteInt16LE(out,0);
+  WriteInt8LE(out,19);
+  uint32 ret;
+  ret = ob->UptimeHost(ob);
+  WriteInt8LE(out,0x03);
+  WriteUInt32LE(out,ret);
+  WriteInt8LE(out,0x80);
+  return 1;
+}
+ArrayAuto(void **,tsctlSystem,ARR((void *)tsctlSystemClassCount,(void *)tsctlSystemInstanceCount,(void *)tsctlSystemAPICount,(void *)tsctlSystemLockCount,(void *)tsctlSystemLockHolderInfo,(void *)tsctlSystemConnWaitInfo,(void *)tsctlSystemCANBusGet,(void *)tsctlSystemBuildTime,(void *)tsctlSystemModelId,(void *)tsctlSystemBaseBoardId,(void *)tsctlSystemMapLength,(void *)tsctlSystemMapGet,(void *)tsctlSystemMapLookup,(void *)tsctlSystemMapLookupPartial,(void *)tsctlSystemMapAdd,(void *)tsctlSystemMapDelete,(void *)tsctlSystemNote,(void *)tsctlSystemVersion,(void *)tsctlSystemUptimeServer,(void *)tsctlSystemUptimeHost,));
 
 int tsctlBusLock(Bus *ob,Stream *out,Stream *in) {
   WriteInt16LE(out,1);
@@ -3543,7 +3585,7 @@ ArrayAuto(void **,tsctlMode,ARR((void *)tsctlModeJSON,(void *)tsctlModeAssign,(v
 
 ArrayAuto(void***,docmd,ARR(ArrayL(tsctlSystem),ArrayL(tsctlBus),ArrayL(tsctlTime),ArrayL(tsctlPin),ArrayL(tsctlDIORaw),ArrayL(tsctlDIO),ArrayL(tsctlTWI),ArrayL(tsctlCAN),ArrayL(tsctlSPI),ArrayL(tsctlAIO),ArrayL(tsctlEDIO),ArrayL(tsctlMode),));
 
-ArrayAuto(char*,SystemCmdName,ARR("ClassCount","InstanceCount","APICount","LockCount","LockHolderInfo","ConnWaitInfo","CANBusGet","BuildInfo","ModelId","BaseBoardId","MapLength","MapGet","MapLookup","MapLookupPartial","MapAdd","MapDelete","Note",));
+ArrayAuto(char*,SystemCmdName,ARR("ClassCount","InstanceCount","APICount","LockCount","LockHolderInfo","ConnWaitInfo","CANBusGet","BuildTime","ModelId","BaseBoardId","MapLength","MapGet","MapLookup","MapLookupPartial","MapAdd","MapDelete","Note","Version","UptimeServer","UptimeHost",));
 ArrayAuto(char*,BusCmdName,ARR("Lock","Unlock","Preempt","Peek8","Poke8","Peek16","Poke16","Peek32","Poke32","BitGet8","BitAssign8","BitSet8","BitClear8","BitGet16","BitAssign16","BitSet16","BitClear16","BitGet32","BitAssign32","BitSet32","BitClear32","PeekStream","PokeStream","Refresh","Commit","BitToggle8","BitToggle16","BitToggle32","Assign8X","Assign16X","Assign32X","BitsGet8","BitsGet16","BitsGet32",));
 ArrayAuto(char*,TimeCmdName,ARR("Wait","Delay","Tick","usElapsed","usFuture","TimeoutQ","TPS",));
 ArrayAuto(char*,PinCmdName,ARR("Lock","Unlock","Preempt","ModeGet","ModeSet",));
@@ -3567,7 +3609,7 @@ ArrayAuto(char*,SystemLockCountRetNames,ARR("",));
 ArrayAuto(char*,SystemLockHolderInfoRetNames,ARR("pid","count",));
 ArrayAuto(char*,SystemConnWaitInfoRetNames,ARR("pid","wait",));
 ArrayAuto(char*,SystemCANBusGetRetNames,ARR("",));
-ArrayAuto(char*,SystemBuildInfoRetNames,ARR("","info_%d_buildNumber","info_%d_buildTime","info_%d_uptime","info_%d_hostname","info_%d_hostname","info_%d_arch","info_%d_arch",));
+ArrayAuto(char*,SystemBuildTimeRetNames,ARR("",));
 ArrayAuto(char*,SystemModelIdRetNames,ARR("",));
 ArrayAuto(char*,SystemBaseBoardIdRetNames,ARR("",));
 ArrayAuto(char*,SystemMapLengthRetNames,ARR("",));
@@ -3577,7 +3619,10 @@ ArrayAuto(char*,SystemMapLookupPartialRetNames,ARR("",));
 ArrayAuto(char*,SystemMapAddRetNames,ARR("",));
 ArrayAuto(char*,SystemMapDeleteRetNames,ARR("",));
 ArrayAuto(char*,SystemNoteRetNames,ARR("",));
-ArrayAuto(char**,SystemRetNames,ARR(ArrayL(SystemClassCountRetNames),ArrayL(SystemInstanceCountRetNames),ArrayL(SystemAPICountRetNames),ArrayL(SystemLockCountRetNames),ArrayL(SystemLockHolderInfoRetNames),ArrayL(SystemConnWaitInfoRetNames),ArrayL(SystemCANBusGetRetNames),ArrayL(SystemBuildInfoRetNames),ArrayL(SystemModelIdRetNames),ArrayL(SystemBaseBoardIdRetNames),ArrayL(SystemMapLengthRetNames),ArrayL(SystemMapGetRetNames),ArrayL(SystemMapLookupRetNames),ArrayL(SystemMapLookupPartialRetNames),ArrayL(SystemMapAddRetNames),ArrayL(SystemMapDeleteRetNames),ArrayL(SystemNoteRetNames),));
+ArrayAuto(char*,SystemVersionRetNames,ARR("",));
+ArrayAuto(char*,SystemUptimeServerRetNames,ARR("",));
+ArrayAuto(char*,SystemUptimeHostRetNames,ARR("",));
+ArrayAuto(char**,SystemRetNames,ARR(ArrayL(SystemClassCountRetNames),ArrayL(SystemInstanceCountRetNames),ArrayL(SystemAPICountRetNames),ArrayL(SystemLockCountRetNames),ArrayL(SystemLockHolderInfoRetNames),ArrayL(SystemConnWaitInfoRetNames),ArrayL(SystemCANBusGetRetNames),ArrayL(SystemBuildTimeRetNames),ArrayL(SystemModelIdRetNames),ArrayL(SystemBaseBoardIdRetNames),ArrayL(SystemMapLengthRetNames),ArrayL(SystemMapGetRetNames),ArrayL(SystemMapLookupRetNames),ArrayL(SystemMapLookupPartialRetNames),ArrayL(SystemMapAddRetNames),ArrayL(SystemMapDeleteRetNames),ArrayL(SystemNoteRetNames),ArrayL(SystemVersionRetNames),ArrayL(SystemUptimeServerRetNames),ArrayL(SystemUptimeHostRetNames),));
 
 ArrayAuto(char*,BusLockRetNames,ARR("",));
 ArrayAuto(char*,BusUnlockRetNames,ARR("",));

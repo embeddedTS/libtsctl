@@ -1,5 +1,14 @@
+#ifndef LIBTSCTL_VERSION
+#define LIBTSCTL_VERSION "0.91"
+#endif
+#ifndef LIBTSCTL_ORGANIZATION
+#define LIBTSCTL_ORGANIZATION "customer"
+#endif
+#include "cpp.h"
+#define LIBTSCTL_FULL_VERSION LIBTSCTL_VERSION "-" STRINGIFY(LIBTSCTL_ORGANIZATION)
 #ifndef LocalSystem_c
 #define LocalSystem_c
+#include <sys/sysinfo.h> 
 #include <assert.h>
 #include <time.h>
 #include "arch.h"
@@ -206,7 +215,7 @@ void *LocalSystemInit(LocalSystem *sys) {
   sys->LockHolderInfo = (void *)LocalSystemLockHolderInfo;
   sys->ConnWaitInfo = (void *)LocalSystemConnWaitInfo;
   sys->CANBusGet = (void *)LocalSystemCANBusGet;
-  sys->BuildInfo = (void *)LocalSystemBuildInfo;
+  sys->BuildTime = (void *)LocalSystemBuildTime;
   sys->ModelId = (void *)LocalSystemModelId;
   sys->BaseBoardId = (void *)LocalSystemBaseBoardId;
   sys->MapLength = (void *)LocalSystemMapLength;
@@ -216,6 +225,9 @@ void *LocalSystemInit(LocalSystem *sys) {
   sys->MapAdd = (void *)LocalSystemMapAdd;
   sys->MapDelete = (void *)LocalSystemMapDelete;
   sys->Note = (void *)LocalSystemNote;
+  sys->Version = (void *)LocalSystemVersion;
+  sys->UptimeServer = (void *)LocalSystemUptimeServer;
+  sys->UptimeHost = (void *)LocalSystemUptimeHost;
 
   sys->maplock = ThreadLockAllocate(1);
   sys->map = archmap; // ArrayAlloc(0,sizeof(NameValuePair));
@@ -349,13 +361,30 @@ static time_t tFromDateTime(char const *time) {
   return mktime(&t);
 }
 
+unsigned LocalSystemBuildTime(LocalSystem* ob) {
+  return tFromDateTime(compiledate+7);
+}
+
+unsigned LocalSystemUptimeServer(LocalSystem* ob) {
+  return time(0) - startuptime;
+}
+
+unsigned LocalSystemUptimeHost(LocalSystem* ob) {
+  struct sysinfo info;
+  sysinfo(&info);
+  return info.uptime;
+}
+
+char *LocalSystemVersion(LocalSystem* ob) {
+  return ASCIIZ(LIBTSCTL_FULL_VERSION);
+}
+
 void LocalSystemBuildInfo(LocalSystem *sys,BuildInf inf[1]) {
   char *str;
   unsigned buildNumber = strtoul(build+7,&str,10);
 
   inf[0].buildNumber = buildNumber;
   inf[0].buildTime = tFromDateTime(compiledate+7);
-  inf[0].uptime = time(0) - startuptime;
   inf[0].hostname = ASCIIZ(str+1);
   inf[0].arch = ASCIIZ((char *)archstr+1);
 }

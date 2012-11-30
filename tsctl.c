@@ -297,7 +297,7 @@ int tsctl_shell(Stream *in,Stream *out) {
   }
 
   if (!in) {
-    printf("tsctl 0.95 (<compile date>/<compile host>)\n");
+    printf("tsctl " LIBTSCTL_FULL_VERSION " (%s)\n",compiledate+7);
     printf("Type \"?\" to get context-sensitive help.\n");
     mode1 = &ModeNL;
     mode1->base = 10;

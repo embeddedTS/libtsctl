@@ -18,7 +18,7 @@ struct LocalSystem {
 	LockHolderInf*FUNC(LockHolderInfo)(LocalSystem *me);
 	ConnectionWaitInf*FUNC(ConnWaitInfo)(LocalSystem *me);
 	int FUNC(CANBusGet)(LocalSystem *me,int CANInstance);
-	void FUNC(BuildInfo)(LocalSystem *me,BuildInf info[1]);
+	unsigned FUNC(BuildTime)(LocalSystem *me);
 	int FUNC(ModelId)(LocalSystem *me);
 	int FUNC(BaseBoardId)(LocalSystem *me);
 	int FUNC(MapLength)(LocalSystem *me);
@@ -28,6 +28,9 @@ struct LocalSystem {
 	int FUNC(MapAdd)(LocalSystem *me,const char *String,int Value);
 	int FUNC(MapDelete)(LocalSystem *me,const char *String);
 	char *FUNC(Note)(LocalSystem *me,const char *Message);
+	char *FUNC(Version)(LocalSystem *me);
+	unsigned FUNC(UptimeServer)(LocalSystem *me);
+	unsigned FUNC(UptimeHost)(LocalSystem *me);
 	int InitStatus;
 	unsigned maplock;
 	NameValuePair *map;
@@ -42,7 +45,7 @@ int LocalSystemLockCount(LocalSystem* ob);
 LockHolderInf *LocalSystemLockHolderInfo(LocalSystem* ob);
 ConnectionWaitInf *LocalSystemConnWaitInfo(LocalSystem* ob);
 int LocalSystemCANBusGet(LocalSystem* ob,int CANInstance);
-void LocalSystemBuildInfo(LocalSystem* ob,BuildInf info[1]);
+unsigned LocalSystemBuildTime(LocalSystem* ob);
 int LocalSystemModelId(LocalSystem* ob);
 int LocalSystemBaseBoardId(LocalSystem* ob);
 int LocalSystemMapLength(LocalSystem* ob);
@@ -52,6 +55,9 @@ char *LocalSystemMapLookupPartial(LocalSystem* ob,const char *StringPrefix,int V
 int LocalSystemMapAdd(LocalSystem* ob,const char *String,int Value);
 int LocalSystemMapDelete(LocalSystem* ob,const char *String);
 char *LocalSystemNote(LocalSystem* ob,const char *Message);
+char *LocalSystemVersion(LocalSystem* ob);
+unsigned LocalSystemUptimeServer(LocalSystem* ob);
+unsigned LocalSystemUptimeHost(LocalSystem* ob);
 #endif
 
 // Author: Michael Schmidt (michael@embeddedARM.com)

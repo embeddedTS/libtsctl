@@ -43,7 +43,7 @@ enum {
 	NetSystem_LockHolderInfo=4,
 	NetSystem_ConnWaitInfo=5,
 	NetSystem_CANBusGet=6,
-	NetSystem_BuildInfo=7,
+	NetSystem_BuildTime=7,
 	NetSystem_ModelId=8,
 	NetSystem_BaseBoardId=9,
 	NetSystem_MapLength=10,
@@ -53,7 +53,10 @@ enum {
 	NetSystem_MapAdd=14,
 	NetSystem_MapDelete=15,
 	NetSystem_Note=16,
-	XSystem_APICount=17
+	NetSystem_Version=17,
+	NetSystem_UptimeServer=18,
+	NetSystem_UptimeHost=19,
+	XSystem_APICount=20
 };
 struct System {
 	void *FUNC(Init)(void *me,...);
@@ -65,7 +68,7 @@ struct System {
 	LockHolderInf*FUNC(LockHolderInfo)(void *me);
 	ConnectionWaitInf*FUNC(ConnWaitInfo)(void *me);
 	int FUNC(CANBusGet)(void *me,int CANInstance);
-	void FUNC(BuildInfo)(void *me,BuildInf info[1]);
+	unsigned FUNC(BuildTime)(void *me);
 	int FUNC(ModelId)(void *me);
 	int FUNC(BaseBoardId)(void *me);
 	int FUNC(MapLength)(void *me);
@@ -75,6 +78,9 @@ struct System {
 	int FUNC(MapAdd)(void *me,const char *String,int Value);
 	int FUNC(MapDelete)(void *me,const char *String);
 	char *FUNC(Note)(void *me,const char *Message);
+	char *FUNC(Version)(void *me);
+	unsigned FUNC(UptimeServer)(void *me);
+	unsigned FUNC(UptimeHost)(void *me);
 	int InitStatus;
 	unsigned maplock;
 	NameValuePair *map;
