@@ -219,6 +219,7 @@ int AtmelAT91SPIWrite(AtmelAT91SPI *spi,int adrs,const unsigned char* buf) {
   int len = ArrayLength(buf);
   int de_cs = len,tmp;
 
+  if (adrs == 0 || adrs > 3 || adrs < -3) return -999;
   if (adrs < 0) {
     adrs = -adrs;
     de_cs = len+1;
@@ -245,6 +246,7 @@ int AtmelAT91SPIRead(AtmelAT91SPI *spi,int adrs,unsigned char* buf) {
   int len = ArrayLength(buf);
   int de_cs = len,tmp;
 
+  if (adrs == 0 || adrs > 3 || adrs < -3) return -999;
   if (adrs < 0) {
     adrs = -adrs;
     de_cs = len+1;
@@ -271,6 +273,8 @@ int AtmelAT91SPIRead(AtmelAT91SPI *spi,int adrs,unsigned char* buf) {
 int AtmelAT91SPIReadWrite(AtmelAT91SPI *spi,int adrs,const unsigned char* wbuf,unsigned char* rbuf) {
   int len = ArrayLength(rbuf) > ArrayLength(wbuf) ? ArrayLength(wbuf):ArrayLength(rbuf);;
   int de_cs = len,got,tmp;
+
+  if (adrs == 0 || adrs > 3 || adrs < -3) return -999;
 
   //log9(LOG_SPI,"SPI RW@%d for %d\n",adrs,len);
   if (adrs < 0) {

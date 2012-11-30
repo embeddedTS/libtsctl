@@ -548,7 +548,13 @@ char* ListClasses() {
   Stream *st = StringStreamInit(0,&ret);
   WriteASCIIZ(st,"\
 tsctl expects commands separated by semi-colons or newlines.\n\
-The format of each command is: <Class> <Function> <Args...>\n\n");
+The format of each command is: [<@Host>] <Class> <Function> <Args...>\n\n\
+Host is optional and must be preceded by the '@' character. If the\n\
+Host is not specified, direct access to the hardware is performed unless\n\
+tsctl server is already running, in which case the host 'localhost' is used.\n\n\
+If you type a partial command, that command will be added to the\n\
+'command stack', which is automatically prefixed to all subsequent commands.\n\
+To pop the top element from the stack, enter an empty line.\n\n");
   ListClassesHelper(st);
   WriteASCIIZ(st,"\n\
 To see a list of functions available for a given class, use the command:\n\

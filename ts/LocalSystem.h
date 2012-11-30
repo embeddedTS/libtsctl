@@ -18,7 +18,7 @@ struct LocalSystem {
 	LockHolderInf*FUNC(LockHolderInfo)(LocalSystem *me);
 	ConnectionWaitInf*FUNC(ConnWaitInfo)(LocalSystem *me);
 	int FUNC(CANBusGet)(LocalSystem *me,int CANInstance);
-	void FUNC(BuildInfo)(LocalSystem *me,BuildInf [1]);
+	void FUNC(BuildInfo)(LocalSystem *me,BuildInf info[1]);
 	int FUNC(ModelId)(LocalSystem *me);
 	int FUNC(BaseBoardId)(LocalSystem *me);
 	int FUNC(MapLength)(LocalSystem *me);
@@ -42,7 +42,7 @@ int LocalSystemLockCount(LocalSystem* ob);
 LockHolderInf *LocalSystemLockHolderInfo(LocalSystem* ob);
 ConnectionWaitInf *LocalSystemConnWaitInfo(LocalSystem* ob);
 int LocalSystemCANBusGet(LocalSystem* ob,int CANInstance);
-void LocalSystemBuildInfo(LocalSystem* ob,BuildInf [1]);
+void LocalSystemBuildInfo(LocalSystem* ob,BuildInf info[1]);
 int LocalSystemModelId(LocalSystem* ob);
 int LocalSystemBaseBoardId(LocalSystem* ob);
 int LocalSystemMapLength(LocalSystem* ob);

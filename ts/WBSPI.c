@@ -76,6 +76,7 @@ int WBSPIWrite(WBSPI *ob,int adrs,const unsigned char* buf) {
   int de_cs = 1;
   int maxspeed;
 
+  if (adrs == 0 || adrs > 3 || adrs < -3) return -999;
   if (adrs < 0) {
     adrs = -adrs;
     de_cs = 0;
@@ -127,6 +128,7 @@ int WBSPIRead(WBSPI *ob,int adrs,unsigned char* buf) {
   int i,n = ArrayLength(buf),reg;
   int de_cs = 1, maxspeed;
 
+  if (adrs == 0 || adrs > 3 || adrs < -3) return -999;
   if (adrs < 0) {
     adrs = -adrs;
     de_cs = 0;
@@ -202,6 +204,7 @@ int WBSPIReadWrite(WBSPI *ob,int adrs,const unsigned char* wbuf,unsigned char* r
   unsigned s;
   int n, de_cs=1;
 
+  if (adrs == 0 || adrs > 3 || adrs < -3) return -999;
   if (ArrayLength(wbuf) > ArrayLength(rbuf)) {
     n = ArrayLength(wbuf);
   } else {

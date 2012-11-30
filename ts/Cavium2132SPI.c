@@ -104,6 +104,7 @@ int Cavium2132SPIWrite(Cavium2132SPI *ob,int adrs,char *buf,int len) {
   int de_cs = 1;
   int maxspeed;
 
+  if (adrs == 0 || adrs > 3 || adrs < -3) return -999;
   if (adrs < 0) {
     adrs = -adrs;
     de_cs = 0;
@@ -149,6 +150,7 @@ int Cavium2132SPIRead(Cavium2132SPI *ob,int adrs,char *buf,int len) {
   int i,n = len,reg;
   int de_cs = 1, maxspeed;
 
+  if (adrs == 0 || adrs > 3 || adrs < -3) return -999;
   if (adrs < 0) {
     adrs = -adrs;
     de_cs = 0;
@@ -214,6 +216,7 @@ int Cavium2132SPIReadWrite(Cavium2132SPI *ob,int adrs,unsigned char *wbuf,unsign
   unsigned s;
   int n = len, de_cs=1;
 
+  if (adrs == 0 || adrs > 3 || adrs < -3) return -999;
   if (adrs < 0) {
     adrs = -adrs;
     de_cs = 0;

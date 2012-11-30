@@ -65,7 +65,7 @@ struct System {
 	LockHolderInf*FUNC(LockHolderInfo)(void *me);
 	ConnectionWaitInf*FUNC(ConnWaitInfo)(void *me);
 	int FUNC(CANBusGet)(void *me,int CANInstance);
-	void FUNC(BuildInfo)(void *me,BuildInf [1]);
+	void FUNC(BuildInfo)(void *me,BuildInf info[1]);
 	int FUNC(ModelId)(void *me);
 	int FUNC(BaseBoardId)(void *me);
 	int FUNC(MapLength)(void *me);

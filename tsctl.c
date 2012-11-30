@@ -287,7 +287,7 @@ int tsctl_shell(Stream *in,Stream *out) {
       HostStream->Fini(HostStream);
       socket = -1;
     }
-    socket = ClientSocketNew(host,5001);
+    socket = ClientSocketNew(host[0] == '@' ? host+1:host,5001);
     if (socket < 0) {
       fprintf(stderr,"Server error on %s: %m\n",host);
       exit(1);
@@ -296,6 +296,12 @@ int tsctl_shell(Stream *in,Stream *out) {
     }
   }
 
+  if (!in) {
+    printf("tsctl 0.95 (<compile date>/<compile host>)\n");
+    printf("Type \"?\" to get context-sensitive help.\n");
+    mode1 = &ModeNL;
+    mode1->base = 10;
+  }
   while (!exception) {
     if (!in) { // interactive, display prompt
       char* cmd0 = readline1(host,stack);
@@ -343,7 +349,7 @@ int tsctl_shell(Stream *in,Stream *out) {
 	return 1;
       } else {
 	if (ArrayLength(stack) == 0 && !host) { // first command might be host
-	  if (cmds[i][0][0] == '?' || isupper(cmds[i][0][0])) {
+	  if (cmds[i][0][0] != '@' && !isdigit(cmds[i][0][0])) {
 	    host = 0;
 	  } else {
 	    setHost(ArrayDup(cmds[i][0]));
@@ -401,7 +407,7 @@ int tsctl_shell(Stream *in,Stream *out) {
     // all our current requests have been satisfied
 
     if (!host && serverRunning()) {
-      setHost(ASCIIZ("127.0.0.1"));
+      setHost(ASCIIZ("@127.0.0.1"));
     }
 
     if (host) {

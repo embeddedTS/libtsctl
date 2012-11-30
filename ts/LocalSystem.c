@@ -9,10 +9,25 @@
 #include "shell.c"
 #include "dioctlConfig.c"
 
+int CompareNameValuePair0(const char *a,const char *b) {
+  int ret = strncasecmp(a,b,ArrayElementSize(a)*ArrayLength(a));
+  if (ret == 0 && (ArrayLength(a) != ArrayLength(b))) {
+    return (ArrayLength(a) > ArrayLength(b)) ? 1 : -1;
+  } else {
+    return ret;
+  }
+}
+
 int CompareNameValuePair(const void *a1,const void *b1) {
   const NameValuePair *a = a1, *b = b1;
 
-  return ArrayCompare(a->name,b->name);
+  int ret = strncasecmp(a->name,b->name,
+			ArrayElementSize(a->name)*ArrayLength(a->name));
+  if (ret == 0 && (ArrayLength(a->name) != ArrayLength(b->name))) {
+    return (ArrayLength(a->name) > ArrayLength(b->name)) ? 1 : -1;
+  } else {
+    return ret;
+  }
 }
 
 int CompareNVPP2(const void *a1,const void *b1) {
@@ -392,7 +407,7 @@ int LocalSystemMapLookup(LocalSystem *sys,const char* key) {
   assert(ThreadLockR(sys->maplock,LOCK_SOD) > 0);
   unsigned index = ArrayFind(sys->map,&nvp);
   int ret;
-  if (sys->map[index].name && !ArrayCompare(sys->map[index].name,nvp.name)) {
+  if (sys->map[index].name && !CompareNameValuePair0(sys->map[index].name,nvp.name)) {
     //printf("%s=%d\n",sys->map[index].name,sys->map[index].value);
     ret = sys->map[index].value;
   } else {
