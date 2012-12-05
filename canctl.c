@@ -431,7 +431,7 @@ int canctl(int argc,char *argv[]) {
     BusPrep();
     bus->Lock(bus,0,0);
     bus->Poke8(bus,0, 0x1); // Enter reset mode
-    bus->Poke8(bus,6, OptBTR1);
+    bus->Poke8(bus,7, OptBTR1);
     bus->Poke8(bus,0, 0); // Leave reset mode
     bus->Unlock(bus,0,0);
     return 1;
