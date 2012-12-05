@@ -88,10 +88,12 @@ int TSModelGet() {
     Bus *sbus = BusInit(0);
     int ret;
     if (sbus->InitStatus <= 0) return (modelId=0);
-    ret = ThreadMutexLock(0,0);
-    if (ret <= 0) fprintf(stderr,"SNAKE! %d\n",ret);
+    //ret = ThreadMutexLock(0,0);
+    //if (ret <= 0) fprintf(stderr,"SNAKE! %d\n",ret);
+    sbus->Lock(sbus,0,0);
     id = sbus->Peek16(sbus,0x60);
-    ThreadMutexUnlock(0);
+    sbus->Unlock(sbus,0,0);
+    //ThreadMutexUnlock(0);
     break;
     }
   case CPU_MARVELL_MV88F5182:
