@@ -27,6 +27,10 @@ int CompareNameValuePair0(const char *a,const char *b) {
   }
 }
 
+int CompareNameValuePair1(const char *a,const char *b) {
+  return strncasecmp(a,b,ArrayElementSize(a)*ArrayLength(a));
+}
+
 int CompareNameValuePair(const void *a1,const void *b1) {
   const NameValuePair *a = a1, *b = b1;
 
@@ -41,7 +45,8 @@ int CompareNameValuePair(const void *a1,const void *b1) {
 
 int CompareNVPP2(const void *a1,const void *b1) {
   const NameValuePair *a = a1, *b = b1;
-  int strmatch = ArrayCompare1(b->name,a->name);
+  int strmatch = CompareNameValuePair1(b->name,a->name);
+  //ArrayCompare1(b->name,a->name);
 
   //printf("1. %s vs. %s = %d (%d-%d)\n",b->name,a->name,strmatch,ArrayLength(b),ArrayLength(a));
   if (!strmatch) {
@@ -54,7 +59,8 @@ int CompareNVPP2(const void *a1,const void *b1) {
 
 int CompareNVPP3(const void *a1,const void *b1) {
   const NameValuePair *a = a1, *b = b1;
-  int strmatch = ArrayCompare1(b->name,a->name);
+  int strmatch = CompareNameValuePair1(b->name,a->name);
+  //ArrayCompare1(b->name,a->name);
 
   //printf("2. %s vs. %s = %d (%d)\n",b->name,a->name,strmatch,b->value-a->value);
   if (!strmatch) {
@@ -67,7 +73,8 @@ int CompareNVPP3(const void *a1,const void *b1) {
 
 int CompareNameValuePairPartial(const void *a1,const void *b1) {
   const NameValuePair *a = a1, *b = b1;
-  int strmatch = ArrayCompare1(b->name,a->name);
+  int strmatch = CompareNameValuePair(b,a);
+    //ArrayCompare1(b->name,a->name);
 
   //printf("2. %s vs. %s = %d (%d)\n",b->name,a->name,strmatch,b->value-a->value);
   if (!strmatch) {
@@ -95,7 +102,7 @@ static char* _MapLookupPartial(NameValuePair *map,const char* stem,
   unsigned i0,i = ArrayFindWith(map,&nvp,CompareNVPP2);
   unsigned i1 = ArrayFindWith(map,&nvp,CompareNVPP3);
 
-  for (i0=i;i<i1;i++) {
+  for (i0=i;i<=i1;i++) {
     if (map[i].value == value) {
       return ArrayRange(map[i].name,ArrayLength(stem),-1);
     }
@@ -228,6 +235,8 @@ void *LocalSystemInit(LocalSystem *sys) {
   sys->Version = (void *)LocalSystemVersion;
   sys->UptimeServer = (void *)LocalSystemUptimeServer;
   sys->UptimeHost = (void *)LocalSystemUptimeHost;
+  sys->FPGARevision = (void *)LocalSystemFPGARevision;
+  sys->EchoNumber = (void *)LocalSystemEchoNumber;
 
   sys->maplock = ThreadLockAllocate(1);
   sys->map = archmap; // ArrayAlloc(0,sizeof(NameValuePair));
@@ -483,6 +492,25 @@ int LocalSystemMapDelete(LocalSystem *sys,const char* key) {
 
 char* LocalSystemNote(LocalSystem* ob,const char* msg) {
   return ArrayDup(msg);
+}
+
+Bus *BusInit(int);
+int LocalSystemFPGARevision(LocalSystem* ob) {
+  int model = ob->ModelId(ob),ret;
+  Bus *bus = BusInit(0);
+
+  bus->Lock(bus,0,0);
+  if (model == 0x4500) {
+    ret = bus->BitsGet16(bus,0x62,3,0);
+  } else {
+    ret = bus->BitsGet16(bus,0x2,3,0);
+  }
+  bus->Unlock(bus,0,0);
+  return ret;
+}
+
+int LocalSystemEchoNumber(LocalSystem* ob,int n) {
+  return n;
 }
 
 #endif

@@ -56,7 +56,9 @@ enum {
 	NetSystem_Version=17,
 	NetSystem_UptimeServer=18,
 	NetSystem_UptimeHost=19,
-	XSystem_APICount=20
+	NetSystem_FPGARevision=20,
+	NetSystem_EchoNumber=21,
+	XSystem_APICount=22
 };
 struct System {
 	void *FUNC(Init)(void *me,...);
@@ -81,6 +83,8 @@ struct System {
 	char *FUNC(Version)(void *me);
 	unsigned FUNC(UptimeServer)(void *me);
 	unsigned FUNC(UptimeHost)(void *me);
+	int FUNC(FPGARevision)(void *me);
+	int FUNC(EchoNumber)(void *me,int );
 	int InitStatus;
 	unsigned maplock;
 	NameValuePair *map;
