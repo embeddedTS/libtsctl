@@ -14,8 +14,8 @@ struct LinuxTWI {
 	int FUNC(Lock)(LinuxTWI *me,unsigned num,int flags);
 	int FUNC(Unlock)(LinuxTWI *me,unsigned num,int flags);
 	int FUNC(Preempt)(LinuxTWI *me);
-	int FUNC(Write)(LinuxTWI *me,int devadr,int adrslen,int adrs,const char *bytes);
-	int FUNC(Read)(LinuxTWI *me,int devadr,int adrslen,int adrs,char *bytes);
+	TWIResult FUNC(Write)(LinuxTWI *me,int devadr,int adrslen,int adrs,const char *bytes);
+	TWIResult FUNC(Read)(LinuxTWI *me,int devadr,int adrslen,int adrs,char *bytes);
 	int InitStatus;
 	Bus *bus;
 	int LockNum;
@@ -28,8 +28,8 @@ void LinuxTWIFini(LinuxTWI* ob);
 int LinuxTWILock(LinuxTWI* ob,unsigned num,int flags);
 int LinuxTWIUnlock(LinuxTWI* ob,unsigned num,int flags);
 int LinuxTWIPreempt(LinuxTWI* ob);
-int LinuxTWIWrite(LinuxTWI* ob,int devadr,int adrslen,int adrs,const char *bytes);
-int LinuxTWIRead(LinuxTWI* ob,int devadr,int adrslen,int adrs,char *bytes);
+TWIResult LinuxTWIWrite(LinuxTWI* ob,int devadr,int adrslen,int adrs,const char *bytes);
+TWIResult LinuxTWIRead(LinuxTWI* ob,int devadr,int adrslen,int adrs,char *bytes);
 #endif
 
 // Author: Michael Schmidt (michael@embeddedARM.com)

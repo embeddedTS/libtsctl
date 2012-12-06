@@ -159,7 +159,7 @@ void DIOTWIFini(DIOTWI *twi){
   if (twi->InitStatus > 0) twi->InitStatus = 0;
 }
 
-int DIOTWIWrite(DIOTWI *twi,int devadrs,int adrslen,int adrs,const char* bytes){
+TWIResult DIOTWIWrite(DIOTWI *twi,int devadrs,int adrslen,int adrs,const char* bytes){
   int len = ArrayLength(bytes);
   int ret=0;
 
@@ -206,7 +206,7 @@ int DIOTWIWrite(DIOTWI *twi,int devadrs,int adrslen,int adrs,const char* bytes){
   return 1;
 }
 
-int DIOTWIRead(DIOTWI *twi,int devadrs,int adrslen,int adrs,char* bytes){
+TWIResult DIOTWIRead(DIOTWI *twi,int devadrs,int adrslen,int adrs,char* bytes){
   int len = ArrayLength(bytes);
   int i,ret=0;
 

@@ -16,7 +16,7 @@ struct Cavium2132Time {
 	unsigned FUNC(Tick)(Cavium2132Time *me);
 	unsigned FUNC(usElapsed)(Cavium2132Time *me,unsigned start);
 	unsigned FUNC(usFuture)(Cavium2132Time *me,unsigned start,unsigned microseconds);
-	int FUNC(TimeoutQ)(Cavium2132Time *me,unsigned start,unsigned end);
+	TimeResult FUNC(TimeoutQ)(Cavium2132Time *me,unsigned start,unsigned end);
 	unsigned FUNC(TPS)(Cavium2132Time *me);
 	int InitStatus;
 	volatile unsigned *timer3;
@@ -29,7 +29,7 @@ void Cavium2132TimeDelay(Cavium2132Time* ob,unsigned microseconds);
 unsigned Cavium2132TimeTick(Cavium2132Time* ob);
 unsigned Cavium2132TimeusElapsed(Cavium2132Time* ob,unsigned start);
 unsigned Cavium2132TimeusFuture(Cavium2132Time* ob,unsigned start,unsigned microseconds);
-int Cavium2132TimeTimeoutQ(Cavium2132Time* ob,unsigned start,unsigned end);
+TimeResult Cavium2132TimeTimeoutQ(Cavium2132Time* ob,unsigned start,unsigned end);
 unsigned Cavium2132TimeTPS(Cavium2132Time* ob);
 #endif
 

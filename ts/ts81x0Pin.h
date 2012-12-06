@@ -15,7 +15,7 @@ struct ts81x0Pin {
 	int FUNC(Unlock)(ts81x0Pin *me,unsigned num,int flags);
 	int FUNC(Preempt)(ts81x0Pin *me);
 	PinMode FUNC(ModeGet)(ts81x0Pin *me,int PinNumber);
-	int FUNC(ModeSet)(ts81x0Pin *me,int PinNumber,PinMode Mode);
+	PinResult FUNC(ModeSet)(ts81x0Pin *me,int PinNumber,PinMode Mode);
 	int InitStatus;
 	unsigned LockBase;
 	int deferlock;
@@ -35,7 +35,7 @@ int ts81x0PinLock(ts81x0Pin* ob,unsigned num,int flags);
 int ts81x0PinUnlock(ts81x0Pin* ob,unsigned num,int flags);
 int ts81x0PinPreempt(ts81x0Pin* ob);
 PinMode ts81x0PinModeGet(ts81x0Pin* ob,int PinNumber);
-int ts81x0PinModeSet(ts81x0Pin* ob,int PinNumber,PinMode Mode);
+PinResult ts81x0PinModeSet(ts81x0Pin* ob,int PinNumber,PinMode Mode);
 #endif
 
 // Author: Michael Schmidt (michael@embeddedARM.com)

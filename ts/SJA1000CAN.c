@@ -274,7 +274,7 @@ void SJA1000CANFini(SJA1000CAN *can){
   if (can->InitStatus > 0) can->InitStatus = 0;
 }
 
-int SJA1000CANRxMulti(SJA1000CAN *can,CANMessage* buf,int min) {
+CANResult SJA1000CANRxMulti(SJA1000CAN *can,CANMessage* buf,int min) {
   int n=0;
   int ret,rdy;
 
@@ -299,7 +299,7 @@ int SJA1000CANRxMulti(SJA1000CAN *can,CANMessage* buf,int min) {
   return ret;
 }
 
-int SJA1000CANRx(SJA1000CAN *can,CANMessage msg[0]){
+CANResult SJA1000CANRx(SJA1000CAN *can,CANMessage msg[0]){
   unsigned char d[16];
   unsigned char check[10];
   int i,j=0,n,ret=0,timeout;
@@ -320,7 +320,7 @@ int SJA1000CANRx(SJA1000CAN *can,CANMessage msg[0]){
       msg->flags = (j & 0x80 ? FLAG_BUS_ERROR : 0) +
 	(j & 0x40 ? FLAG_ERROR_WARNING : 0);
       msg->id = 0;
-      return -100 - (j >> 6);
+      return (j & 0x80) ? CANErrorBusOff : CANErrorBusWarning;
     }
     if (--timeout == 0) {
       can->bus->Preempt(can->bus);
@@ -333,11 +333,11 @@ int SJA1000CANRx(SJA1000CAN *can,CANMessage msg[0]){
     ArraySizeAuto(msg->data,0);
     msg->flags = 0;
     msg->id = 0;
-    LogReturn("%d\n",-1);
+    LogReturn("%d\n",CANErrorAborted);
   }
   memset(msg,0,sizeof(CANMessage));
   n = can->bus->Peek8(can->bus,29);
-  ret = (n>0) ? 1 : -1;
+  ret = (n>0) ? CANSuccess : CANErrorFIFOUnexpectedlyEmpty;
   if (ret < 0) {
     Log(LOG_CAN,"j=%02X, n=%d\n",j,n);
   }
@@ -392,7 +392,7 @@ int SJA1000CANRx(SJA1000CAN *can,CANMessage msg[0]){
   LogReturn("%d\n",ret);
 }
 
-int SJA1000CANTx(SJA1000CAN *can,unsigned flags,unsigned id,const char* data){
+CANResult SJA1000CANTx(SJA1000CAN *can,unsigned flags,unsigned id,const char* data){
   int len = ArrayLength(data) > 8 ? 8 : ArrayLength(data);
   ArrayAutoOfSize(unsigned char,buf,13);
   unsigned char *b = buf;
@@ -405,7 +405,7 @@ int SJA1000CANTx(SJA1000CAN *can,unsigned flags,unsigned id,const char* data){
     
     if (j & 0xC0) {
       can->bus->Unlock(can->bus,0,0);
-      return -100 - (j >> 6);
+      return (j & 0x80) ? CANErrorBusOff : CANErrorBusWarning;
     }
     if ((j & 0x04)==4) break;
     if (--timeout == 0) {
@@ -423,9 +423,9 @@ int SJA1000CANTx(SJA1000CAN *can,unsigned flags,unsigned id,const char* data){
   */
   if (can->doabort) {
     can->doabort = 0;
-    return -1;
+    return CANErrorAborted;
   }
-  if (flags & FLAG_CONTROL) return -1;
+  if (flags & FLAG_CONTROL) return CANErrorCannotTxControlMessage;
 
   *b++ = ((flags&FLAG_RTR)?0x40:0)+((flags&FLAG_EXT_ID)?0x80:0)+len;
 
@@ -444,7 +444,7 @@ int SJA1000CANTx(SJA1000CAN *can,unsigned flags,unsigned id,const char* data){
   can->bus->PokeStream(can->bus,16, 1,buf);
   can->bus->Poke8(can->bus,1, 0x1); /* TX command */
   can->bus->Unlock(can->bus,0,0);
-  return 1;
+  return CANSuccess;
 }
 
 //#define DEBUG1

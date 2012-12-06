@@ -12,9 +12,9 @@ typedef enum PinMode{
   MODE_DIO=0,MODE_CAN=1,MODE_SPI=2,MODE_ADC=3,MODE_TWI=4,MODE_UART=5,MODE_TS=6,MODE_BUS=7,MODE_PWM=8,MODE_UNKNOWN=-1
 }PinMode;
 
-typedef enum PinError{
-  PinErrorModeInvalid=-100
-}PinError;
+typedef enum PinResult{
+  PinSuccess=1,PinErrorModeInvalid=-13
+}PinResult;
 
 enum {
 	NetPin_Lock=0,
@@ -31,7 +31,7 @@ struct Pin {
 	int FUNC(Unlock)(void *me,unsigned num,int flags);
 	int FUNC(Preempt)(void *me);
 	PinMode FUNC(ModeGet)(void *me,int PinNumber);
-	int FUNC(ModeSet)(void *me,int PinNumber,PinMode Mode);
+	PinResult FUNC(ModeSet)(void *me,int PinNumber,PinMode Mode);
 	int InitStatus;
 	unsigned LockBase;
 	int deferlock;

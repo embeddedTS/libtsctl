@@ -67,7 +67,7 @@ PinMode ts8900PinModeGet(ts8900Pin *pin,int npin) {
   return pin->parent->ModeGet(pin->parent,npin);
 }
 
-int ts8900PinModeSet(ts8900Pin *pin,int npin,PinMode mode) {
+PinResult ts8900PinModeSet(ts8900Pin *pin,int npin,PinMode mode) {
   int ret;
 
   npin -= pin->start;
@@ -76,12 +76,12 @@ int ts8900PinModeSet(ts8900Pin *pin,int npin,PinMode mode) {
     pin->bus->Lock(pin->bus,0,0);
     if (mode == MODE_DIO) {
       pin->bus->BitSet16(pin->bus,0x08,npin-16);
-      ret=1;
+      ret=PinSuccess;
     } else if (mode == MODE_BUS) {
       pin->bus->BitClear16(pin->bus,0x08,npin-16);
-      ret=1;
+      ret=PinSuccess;
     } else {
-      ret=-1;
+      ret=PinErrorModeInvalid;
     }
     pin->bus->Unlock(pin->bus,0,0);
     return ret;
@@ -89,12 +89,12 @@ int ts8900PinModeSet(ts8900Pin *pin,int npin,PinMode mode) {
     pin->bus->Lock(pin->bus,0,0);
     if (mode == MODE_DIO) {
       pin->bus->BitSet16(pin->bus,0x0A,8);
-      ret=1;
+      ret=PinSuccess;
     } else if (mode == MODE_BUS) {
       pin->bus->BitClear16(pin->bus,0x0A,8);
-      ret=1;
+      ret=PinSuccess;
     } else {
-      ret=-1;
+      ret=PinErrorModeInvalid;
     }
     pin->bus->Unlock(pin->bus,0,0);
     return ret;
@@ -102,12 +102,12 @@ int ts8900PinModeSet(ts8900Pin *pin,int npin,PinMode mode) {
     pin->bus->Lock(pin->bus,0,0);
     if (mode == MODE_DIO) {
       pin->bus->BitSet16(pin->bus,0x0A,npin-33);
-      ret=1;
+      ret=PinSuccess;
     } else if (mode == MODE_BUS) {
       pin->bus->BitClear16(pin->bus,0x0A,npin-33);
-      ret=1;
+      ret=PinSuccess;
     } else {
-      ret=-1;
+      ret=PinErrorModeInvalid;
     }
     pin->bus->Unlock(pin->bus,0,0);
     return ret;

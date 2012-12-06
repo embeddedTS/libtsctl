@@ -60,7 +60,7 @@ PinMode ts81x0PinModeGet(ts81x0Pin *pin,int npin) {
   return pin->parent->ModeGet(pin->parent,npin);
 }
 
-int ts81x0PinModeSet(ts81x0Pin *pin,int npin,PinMode mode) {
+PinResult ts81x0PinModeSet(ts81x0Pin *pin,int npin,PinMode mode) {
   //log9(LOG_CAN,"npin=%d, pin->CAN_TX1=%d mode!=MODE_CAN=%d\n",npin,pin->CAN_TX1,
   //       mode != MODE_CAN);
   if (npin == pin->CAN_TX1 || npin == pin->CAN_RX1) {

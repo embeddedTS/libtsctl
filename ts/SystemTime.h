@@ -16,7 +16,7 @@ struct SystemTime {
 	unsigned FUNC(Tick)(SystemTime *me);
 	unsigned FUNC(usElapsed)(SystemTime *me,unsigned start);
 	unsigned FUNC(usFuture)(SystemTime *me,unsigned start,unsigned microseconds);
-	int FUNC(TimeoutQ)(SystemTime *me,unsigned start,unsigned end);
+	TimeResult FUNC(TimeoutQ)(SystemTime *me,unsigned start,unsigned end);
 	unsigned FUNC(TPS)(SystemTime *me);
 	int InitStatus;
 };
@@ -28,7 +28,7 @@ void SystemTimeDelay(SystemTime* ob,unsigned microseconds);
 unsigned SystemTimeTick(SystemTime* ob);
 unsigned SystemTimeusElapsed(SystemTime* ob,unsigned start);
 unsigned SystemTimeusFuture(SystemTime* ob,unsigned start,unsigned microseconds);
-int SystemTimeTimeoutQ(SystemTime* ob,unsigned start,unsigned end);
+TimeResult SystemTimeTimeoutQ(SystemTime* ob,unsigned start,unsigned end);
 unsigned SystemTimeTPS(SystemTime* ob);
 #endif
 

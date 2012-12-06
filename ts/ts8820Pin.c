@@ -44,31 +44,31 @@ PinMode ts8820PinModeGet(ts8820Pin *pin,int npin) {
   return pin->parent->ModeGet(pin->parent,npin);
 }
 
-int ts8820PinModeSet(ts8820Pin *pin,int npin,PinMode mode) {
+PinResult ts8820PinModeSet(ts8820Pin *pin,int npin,PinMode mode) {
   int npin0;
 
   npin0 = npin - pin->start;
   if (npin0 >= 0 && npin0 < 14) {
-    return (mode == MODE_DIO) ? 1 : -1;
+    return (mode == MODE_DIO) ? PinSuccess :  PinErrorModeInvalid;
   }
   if (npin0 >= 14 && npin0 <= 19) {
     if (mode == MODE_DIO) {
       pin->bus->BitClear16(pin->bus,8,6+(npin0-14));
-      return 1;
+      return PinSuccess;
     } else if (mode == MODE_PWM) {
       pin->bus->BitSet16(pin->bus,8,6+(npin0-14));
-      return 1;
-    } else return -1;
+      return PinSuccess;
+    } else return PinErrorModeInvalid;
   }
   if (npin0 == 20 || npin0 == 21) {
     if (mode == MODE_DIO) {
-      return -2;
+      return PinErrorModeInvalid;
     } else if (mode == MODE_PWM) {
       pin->bus->BitSet16(pin->bus,2,6+npin0-20);
-      return 1;
+      return PinSuccess;
     }
     // TO DO: fall back to DIO mode for 0% or 100% duty cycle
-    return -1;
+    return PinErrorModeInvalid;
   }
   return pin->parent->ModeSet(pin->parent,npin,mode);
 }

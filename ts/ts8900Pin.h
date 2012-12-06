@@ -15,7 +15,7 @@ struct ts8900Pin {
 	int FUNC(Unlock)(ts8900Pin *me,unsigned num,int flags);
 	int FUNC(Preempt)(ts8900Pin *me);
 	PinMode FUNC(ModeGet)(ts8900Pin *me,int PinNumber);
-	int FUNC(ModeSet)(ts8900Pin *me,int PinNumber,PinMode Mode);
+	PinResult FUNC(ModeSet)(ts8900Pin *me,int PinNumber,PinMode Mode);
 	int InitStatus;
 	unsigned LockBase;
 	int deferlock;
@@ -32,7 +32,7 @@ int ts8900PinLock(ts8900Pin* ob,unsigned num,int flags);
 int ts8900PinUnlock(ts8900Pin* ob,unsigned num,int flags);
 int ts8900PinPreempt(ts8900Pin* ob);
 PinMode ts8900PinModeGet(ts8900Pin* ob,int PinNumber);
-int ts8900PinModeSet(ts8900Pin* ob,int PinNumber,PinMode Mode);
+PinResult ts8900PinModeSet(ts8900Pin* ob,int PinNumber,PinMode Mode);
 #endif
 
 // Author: Michael Schmidt (michael@embeddedARM.com)

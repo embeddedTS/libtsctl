@@ -82,7 +82,7 @@ unsigned SystemTimeusFuture(SystemTime *time,unsigned start,unsigned us) {
   return start + us;
 }
 
-int SystemTimeTimeoutQ(SystemTime *time,unsigned start,unsigned end) {
+TimeResult SystemTimeTimeoutQ(SystemTime *time,unsigned start,unsigned end) {
   unsigned now = SystemTimeTick(time);
   if (end > start) {
     return now >= end || now < start;

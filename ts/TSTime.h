@@ -16,7 +16,7 @@ struct TSTime {
 	unsigned FUNC(Tick)(TSTime *me);
 	unsigned FUNC(usElapsed)(TSTime *me,unsigned start);
 	unsigned FUNC(usFuture)(TSTime *me,unsigned start,unsigned microseconds);
-	int FUNC(TimeoutQ)(TSTime *me,unsigned start,unsigned end);
+	TimeResult FUNC(TimeoutQ)(TSTime *me,unsigned start,unsigned end);
 	unsigned FUNC(TPS)(TSTime *me);
 	int InitStatus;
 	Bus *bus;
@@ -32,7 +32,7 @@ void TSTimeDelay(TSTime* ob,unsigned microseconds);
 unsigned TSTimeTick(TSTime* ob);
 unsigned TSTimeusElapsed(TSTime* ob,unsigned start);
 unsigned TSTimeusFuture(TSTime* ob,unsigned start,unsigned microseconds);
-int TSTimeTimeoutQ(TSTime* ob,unsigned start,unsigned end);
+TimeResult TSTimeTimeoutQ(TSTime* ob,unsigned start,unsigned end);
 unsigned TSTimeTPS(TSTime* ob);
 #endif
 

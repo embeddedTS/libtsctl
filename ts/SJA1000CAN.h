@@ -39,12 +39,12 @@ struct CANData {
 struct SJA1000CAN {
 	void *FUNC(Init)(SJA1000CAN *me,void *bus,void *pin,void *time);
 	void FUNC(Fini)(SJA1000CAN *me);
-	int FUNC(Rx)(SJA1000CAN *me,CANMessage message[1]);
-	int FUNC(Tx)(SJA1000CAN *me,unsigned flags,unsigned id,const char *data);
+	CANResult FUNC(Rx)(SJA1000CAN *me,CANMessage message[1]);
+	CANResult FUNC(Tx)(SJA1000CAN *me,unsigned flags,unsigned id,const char *data);
 	unsigned FUNC(BaudSet)(SJA1000CAN *me,unsigned opt_baud);
 	unsigned FUNC(BaudGet)(SJA1000CAN *me);
 	void FUNC(Abort)(SJA1000CAN *me);
-	int FUNC(RxMulti)(SJA1000CAN *me,CANMessage *msg,int min);
+	CANResult FUNC(RxMulti)(SJA1000CAN *me,CANMessage *msg,int min);
 	int InitStatus;
 	unsigned LockBase;
 	int deferlock;
@@ -65,12 +65,12 @@ struct SJA1000CAN {
 
 void *SJA1000CANInit(SJA1000CAN* ob,void *bus,void *pin,void *time);
 void SJA1000CANFini(SJA1000CAN* ob);
-int SJA1000CANRx(SJA1000CAN* ob,CANMessage message[1]);
-int SJA1000CANTx(SJA1000CAN* ob,unsigned flags,unsigned id,const char *data);
+CANResult SJA1000CANRx(SJA1000CAN* ob,CANMessage message[1]);
+CANResult SJA1000CANTx(SJA1000CAN* ob,unsigned flags,unsigned id,const char *data);
 unsigned SJA1000CANBaudSet(SJA1000CAN* ob,unsigned opt_baud);
 unsigned SJA1000CANBaudGet(SJA1000CAN* ob);
 void SJA1000CANAbort(SJA1000CAN* ob);
-int SJA1000CANRxMulti(SJA1000CAN* ob,CANMessage *msg,int min);
+CANResult SJA1000CANRxMulti(SJA1000CAN* ob,CANMessage *msg,int min);
 #endif
 
 // Author: Michael Schmidt (michael@embeddedARM.com)

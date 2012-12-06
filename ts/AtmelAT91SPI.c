@@ -219,13 +219,12 @@ int AtmelAT91SPIWrite(AtmelAT91SPI *spi,int adrs,const unsigned char* buf) {
   int len = ArrayLength(buf);
   int de_cs = len,tmp;
 
-  if (adrs == 0 || adrs > 3 || adrs < -3) return -999;
+  if (adrs == 0 || adrs > 4 || adrs < -4) return SPIErrorInvalidAddress;
   if (adrs < 0) {
     adrs = -adrs;
     de_cs = len+1;
   }
   adrs--;
-  if (adrs > 3) return -5;
   AtmelAT91SPICSBegin(spi,adrs);
   spi->bus->Lock(spi->bus,0,0);
   while (len--) {
@@ -234,25 +233,24 @@ int AtmelAT91SPIWrite(AtmelAT91SPI *spi,int adrs,const unsigned char* buf) {
     //log9(LOG_SPI,"tmp=%08X, adrs=%d, len=%d, de_cs=%d\n",tmp,adrs,len,de_cs);
     spi->bus->Poke32(spi->bus,0x0C,tmp);
     de_cs--;
-    if (!AtmelAT91SPIWait(spi)) return -9;
+    if (!AtmelAT91SPIWait(spi)) return SPIErrorTimeout;
     spi->bus->Peek32(spi->bus,0x08); // clear out SPI_RDR
   }
   if (de_cs <= 0) AtmelAT91SPICSEnd(spi,adrs);
   spi->bus->Unlock(spi->bus,0,0);
-  return 1;
+  return SPISuccess;
 }
 
 int AtmelAT91SPIRead(AtmelAT91SPI *spi,int adrs,unsigned char* buf) {
   int len = ArrayLength(buf);
   int de_cs = len,tmp;
 
-  if (adrs == 0 || adrs > 3 || adrs < -3) return -999;
+  if (adrs == 0 || adrs > 4 || adrs < -4) return SPIErrorInvalidAddress;
   if (adrs < 0) {
     adrs = -adrs;
     de_cs = len+1;
   }
   adrs--;
-  if (adrs > 3) return -5;
   AtmelAT91SPICSBegin(spi,adrs);
   spi->bus->Lock(spi->bus,0,0);
   while (len--) {
@@ -261,20 +259,20 @@ int AtmelAT91SPIRead(AtmelAT91SPI *spi,int adrs,unsigned char* buf) {
     tmp = ((de_cs>1)?0:(1<<24)) + AtmelAT91PCS(adrs);
     spi->bus->Poke32(spi->bus,0x0C,tmp);
     de_cs--;
-    if (!AtmelAT91SPIWait(spi)) return -9;
+    if (!AtmelAT91SPIWait(spi)) return SPIErrorTimeout;
     *(buf++) = spi->bus->Peek32(spi->bus,0x08) & 0xFF;
   }
 
   if (de_cs <= 0) AtmelAT91SPICSEnd(spi,adrs);
   spi->bus->Unlock(spi->bus,0,0);
-
+  return SPISuccess;
 }
 
 int AtmelAT91SPIReadWrite(AtmelAT91SPI *spi,int adrs,const unsigned char* wbuf,unsigned char* rbuf) {
   int len = ArrayLength(rbuf) > ArrayLength(wbuf) ? ArrayLength(wbuf):ArrayLength(rbuf);;
   int de_cs = len,got,tmp;
 
-  if (adrs == 0 || adrs > 3 || adrs < -3) return -999;
+  if (adrs == 0 || adrs > 4 || adrs < -4) return SPIErrorInvalidAddress;
 
   //log9(LOG_SPI,"SPI RW@%d for %d\n",adrs,len);
   if (adrs < 0) {
@@ -282,7 +280,6 @@ int AtmelAT91SPIReadWrite(AtmelAT91SPI *spi,int adrs,const unsigned char* wbuf,u
     de_cs = len+1;
   }
   adrs--;
-  if (adrs > 3) return -5;
   AtmelAT91SPICSBegin(spi,adrs);
   spi->bus->Lock(spi->bus,0,0);
   //spi->bus->BitSet32(spi->bus,0,24); // SPI_CR.LASTXFER=1, needed
@@ -295,16 +292,16 @@ int AtmelAT91SPIReadWrite(AtmelAT91SPI *spi,int adrs,const unsigned char* wbuf,u
     spi->bus->Poke32(spi->bus,0x0C,tmp);
     //printf("?"); fflush(stdout);
     de_cs--;
-    if (!AtmelAT91SPIWait(spi)) return -9;
+    if (!AtmelAT91SPIWait(spi)) return SPIErrorTimeout;
     *(rbuf++) = (got=spi->bus->Peek32(spi->bus,0x08)) & 0xFF;
     //printf(". %08X\n",got); fflush(stdout);
   }
   if (de_cs <= 0) AtmelAT91SPICSEnd(spi,adrs);
   spi->bus->Unlock(spi->bus,0,0);
-  return 1;
+  return SPISuccess;
 }
 
-int AtmelAT91SPIClockSet(AtmelAT91SPI *spi,unsigned hz) {
+SPIResult AtmelAT91SPIClockSet(AtmelAT91SPI *spi,unsigned hz) {
   // SPI_CSRx[15:8] = SCBR
   // SCBR = MCK / baud rate
   // MCK = 99 Mhz
@@ -328,7 +325,7 @@ int AtmelAT91SPIClockSet(AtmelAT91SPI *spi,unsigned hz) {
 			& 0xFFFF00F7
 			| ((SCBR << 8) & 0xFF00));
   spi->bus->Unlock(spi->bus,0,0);
-  return 1;
+  return SPISuccess;
 }
 
 // spi->bus->BitAssign(spi->bus,0x30;0x34,0x38,0x3C,0;1);
@@ -359,7 +356,7 @@ int AtmelAT91SPIClockSet(AtmelAT91SPI *spi,unsigned hz) {
 // data sheet actually calls this signal NCPHA
 // MISO data changes on whichever edge the slave thinks it should
 // for the 81x0 ADC this appears to be on the negative edge
-int AtmelAT91SPIEdgeSet(AtmelAT91SPI *spi,int posedge) {
+SPIResult AtmelAT91SPIEdgeSet(AtmelAT91SPI *spi,int posedge) {
   int CPOL, CPHA;
 
   switch (posedge) {
@@ -367,7 +364,7 @@ int AtmelAT91SPIEdgeSet(AtmelAT91SPI *spi,int posedge) {
   case -1: CPOL = 0; CPHA = 1; break;
   case 1:  CPOL = 1; CPHA = 0; break;
   case -2: CPOL = 1; CPHA = 1; break;
-  default: return -10;
+  default: return SPIErrorInvalidEdge;
   }
   spi->bus->Lock(spi->bus,0,0);
   spi->bus->BitAssign32(spi->bus,0x30,0,CPOL);
@@ -379,6 +376,6 @@ int AtmelAT91SPIEdgeSet(AtmelAT91SPI *spi,int posedge) {
   spi->bus->BitAssign32(spi->bus,0x3C,0,CPOL);
   spi->bus->BitAssign32(spi->bus,0x3C,1,CPHA);
   spi->bus->Unlock(spi->bus,0,0);
-  return 1;
+  return SPISuccess;
 }
 #endif

@@ -35,6 +35,10 @@ struct NameValuePair {
   int value;
 };
 
+typedef enum SystemResult{
+  SystemSuccess=1,SystemErrorNoSuchKey=-1,SystemErrorNoSuchCANInstance=-2
+}SystemResult;
+
 enum {
 	NetSystem_ClassCount=0,
 	NetSystem_InstanceCount=1,
@@ -69,7 +73,7 @@ struct System {
 	int FUNC(LockCount)(void *me);
 	LockHolderInf*FUNC(LockHolderInfo)(void *me);
 	ConnectionWaitInf*FUNC(ConnWaitInfo)(void *me);
-	int FUNC(CANBusGet)(void *me,int CANInstance);
+	SystemResult FUNC(CANBusGet)(void *me,int CANInstance);
 	unsigned FUNC(BuildTime)(void *me);
 	int FUNC(ModelId)(void *me);
 	int FUNC(BaseBoardId)(void *me);
@@ -77,8 +81,8 @@ struct System {
 	char *FUNC(MapGet)(void *me,int MapIndex,int Value[1]);
 	int FUNC(MapLookup)(void *me,const char *String);
 	char *FUNC(MapLookupPartial)(void *me,const char *StringPrefix,int Value);
-	int FUNC(MapAdd)(void *me,const char *String,int Value);
-	int FUNC(MapDelete)(void *me,const char *String);
+	SystemResult FUNC(MapAdd)(void *me,const char *String,int Value);
+	SystemResult FUNC(MapDelete)(void *me,const char *String);
 	char *FUNC(Note)(void *me,const char *Message);
 	char *FUNC(Version)(void *me);
 	unsigned FUNC(UptimeServer)(void *me);

@@ -76,7 +76,7 @@ int WBSPIWrite(WBSPI *ob,int adrs,const unsigned char* buf) {
   int de_cs = 1;
   int maxspeed;
 
-  if (adrs == 0 || adrs > 3 || adrs < -3) return -999;
+  if (adrs == 0 || adrs > 4 || adrs < -4) return SPIErrorInvalidAddress;
   if (adrs < 0) {
     adrs = -adrs;
     de_cs = 0;
@@ -120,7 +120,7 @@ int WBSPIWrite(WBSPI *ob,int adrs,const unsigned char* buf) {
   }
   ob->bus->Unlock(ob->bus,0,0);
   ob->ChipSelect(ob,adrs,0);
-  return 1;
+  return SPISuccess;
 }
 
 int WBSPIRead(WBSPI *ob,int adrs,unsigned char* buf) {
@@ -128,7 +128,7 @@ int WBSPIRead(WBSPI *ob,int adrs,unsigned char* buf) {
   int i,n = ArrayLength(buf),reg;
   int de_cs = 1, maxspeed;
 
-  if (adrs == 0 || adrs > 3 || adrs < -3) return -999;
+  if (adrs == 0 || adrs > 4 || adrs < -4) return SPIErrorInvalidAddress;
   if (adrs < 0) {
     adrs = -adrs;
     de_cs = 0;
@@ -197,14 +197,14 @@ int WBSPIRead(WBSPI *ob,int adrs,unsigned char* buf) {
   ob->bus->Peek16(ob->bus,ob->offset); // TEMP
   ob->bus->Unlock(ob->bus,0,0); 
   ob->ChipSelect(ob,adrs,0);
-  return 1;
+  return SPISuccess;
 }
 
 int WBSPIReadWrite(WBSPI *ob,int adrs,const unsigned char* wbuf,unsigned char* rbuf) {
   unsigned s;
   int n, de_cs=1;
 
-  if (adrs == 0 || adrs > 3 || adrs < -3) return -999;
+  if (adrs == 0 || adrs > 4 || adrs < -4) return SPIErrorInvalidAddress;
   if (ArrayLength(wbuf) > ArrayLength(rbuf)) {
     n = ArrayLength(wbuf);
   } else {
@@ -266,7 +266,7 @@ int WBSPIReadWrite(WBSPI *ob,int adrs,const unsigned char* wbuf,unsigned char* r
   }
   ob->bus->Unlock(ob->bus,0,0);
   ob->ChipSelect(ob,adrs,0);
-  return 1;
+  return SPISuccess;
 }
 
 static int spi_f[] = {
@@ -279,7 +279,7 @@ static int spi_f[] = {
   1250000,0 // 1209677
 };
 
-int WBSPIClockSet(WBSPI *ob,unsigned hz) {
+SPIResult WBSPIClockSet(WBSPI *ob,unsigned hz) {
   short reg,reg2;
   int i;
   if (hz == 0) return;
@@ -297,7 +297,7 @@ int WBSPIClockSet(WBSPI *ob,unsigned hz) {
   return 1;
 }
 
-int WBSPIEdgeSet(WBSPI *ob,int posedge) {
+SPIResult WBSPIEdgeSet(WBSPI *ob,int posedge) {
   short reg,reg2;
   int maxspeed;
 
@@ -314,7 +314,7 @@ int WBSPIEdgeSet(WBSPI *ob,int posedge) {
     ob->bus->Poke16(ob->bus,ob->offset,reg);
   }
   ob->bus->Unlock(ob->bus,0,0);
-  return 1;
+  return SPISuccess;
 }
 
 

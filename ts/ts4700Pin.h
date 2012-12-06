@@ -15,7 +15,7 @@ struct ts4700Pin {
 	int FUNC(Unlock)(ts4700Pin *me,unsigned num,int flags);
 	int FUNC(Preempt)(ts4700Pin *me);
 	PinMode FUNC(ModeGet)(ts4700Pin *me,int PinNumber);
-	int FUNC(ModeSet)(ts4700Pin *me,int PinNumber,PinMode Mode);
+	PinResult FUNC(ModeSet)(ts4700Pin *me,int PinNumber,PinMode Mode);
 	int InitStatus;
 	unsigned LockBase;
 	int deferlock;
@@ -29,7 +29,7 @@ int ts4700PinLock(ts4700Pin* ob,unsigned num,int flags);
 int ts4700PinUnlock(ts4700Pin* ob,unsigned num,int flags);
 int ts4700PinPreempt(ts4700Pin* ob);
 PinMode ts4700PinModeGet(ts4700Pin* ob,int PinNumber);
-int ts4700PinModeSet(ts4700Pin* ob,int PinNumber,PinMode Mode);
+PinResult ts4700PinModeSet(ts4700Pin* ob,int PinNumber,PinMode Mode);
 #endif
 
 // Author: Michael Schmidt (michael@embeddedARM.com)

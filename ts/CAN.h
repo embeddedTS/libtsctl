@@ -26,6 +26,10 @@ typedef enum CANFlags{
   FLAG_BUS_ERROR=1,FLAG_ERROR_PASSIVE=2,FLAG_DATA_OVERRUN=4,FLAG_ERROR_WARNING=8,FLAG_RTR=16,FLAG_EXT_ID=32,FLAG_LOCAL=64,FLAG_CONTROL=128
 }CANFlags;
 
+typedef enum CANResult{
+  CANErrorBusWarning=-6,CANErrorBusOff=-5,CANErrorFIFOUnexpectedlyEmpty=-4,CANErrorCannotTxControlMessage=-3,CANErrorAborted=-2,CANSuccess=1
+}CANResult;
+
 enum {
 	NetCAN_Rx=0,
 	NetCAN_Tx=1,
@@ -38,12 +42,12 @@ enum {
 struct CAN {
 	void *FUNC(Init)(void *me,...);
 	void FUNC(Fini)(void *me);
-	int FUNC(Rx)(void *me,CANMessage message[1]);
-	int FUNC(Tx)(void *me,unsigned flags,unsigned id,const char *data);
+	CANResult FUNC(Rx)(void *me,CANMessage message[1]);
+	CANResult FUNC(Tx)(void *me,unsigned flags,unsigned id,const char *data);
 	unsigned FUNC(BaudSet)(void *me,unsigned opt_baud);
 	unsigned FUNC(BaudGet)(void *me);
 	void FUNC(Abort)(void *me);
-	int FUNC(RxMulti)(void *me,CANMessage *msg,int min);
+	CANResult FUNC(RxMulti)(void *me,CANMessage *msg,int min);
 	int InitStatus;
 	unsigned LockBase;
 	int deferlock;

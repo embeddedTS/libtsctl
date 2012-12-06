@@ -58,7 +58,7 @@ unsigned Cavium2132TimeusFuture(Cavium2132Time *time,unsigned start,unsigned us)
   return start + us/10 + ((us % 10) ? 1 : 0);
 }
 
-int Cavium2132TimeTimeoutQ(Cavium2132Time *time,unsigned start,unsigned end) {
+TimeResult Cavium2132TimeTimeoutQ(Cavium2132Time *time,unsigned start,unsigned end) {
   unsigned now = _Cavium2132TimeTick(time);
   if (end > start) {
     return now >= end || now < start;

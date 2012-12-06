@@ -80,7 +80,7 @@ PinMode ts4800PinModeGet(ts4800Pin *pin,int npin) {
   return MODE_UNKNOWN;
 }
 
-int ts4800PinModeSet(ts4800Pin *pin,int npin,PinMode mode) {
+PinResult ts4800PinModeSet(ts4800Pin *pin,int npin,PinMode mode) {
   // in the case of CAN, setting either pin of the pair to MODE_CAN
   // automatically sets the other pin as well, so only need to call once.
   if (npin == 20) {
@@ -102,7 +102,7 @@ int ts4800PinModeSet(ts4800Pin *pin,int npin,PinMode mode) {
     if (mode != MODE_CAN && mode != MODE_DIO) return PinErrorModeInvalid;
     pin->bus->BitAssign16(pin->bus,0x10,1,mode == MODE_CAN);
   }
-  return 0;
+  return PinSuccess;
 }
 /*
 DIO 21-55:

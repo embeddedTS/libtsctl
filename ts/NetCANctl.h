@@ -11,12 +11,12 @@ typedef struct NetCANctl NetCANctl;
 struct NetCANctl {
 	void *FUNC(Init)(NetCANctl *me,int socket);
 	void FUNC(Fini)(NetCANctl *me);
-	int FUNC(Rx)(NetCANctl *me,CANMessage message[1]);
-	int FUNC(Tx)(NetCANctl *me,unsigned flags,unsigned id,const char *data);
+	CANResult FUNC(Rx)(NetCANctl *me,CANMessage message[1]);
+	CANResult FUNC(Tx)(NetCANctl *me,unsigned flags,unsigned id,const char *data);
 	unsigned FUNC(BaudSet)(NetCANctl *me,unsigned opt_baud);
 	unsigned FUNC(BaudGet)(NetCANctl *me);
 	void FUNC(Abort)(NetCANctl *me);
-	int FUNC(RxMulti)(NetCANctl *me,CANMessage *msg,int min);
+	CANResult FUNC(RxMulti)(NetCANctl *me,CANMessage *msg,int min);
 	int InitStatus;
 	unsigned LockBase;
 	int deferlock;
@@ -28,12 +28,12 @@ struct NetCANctl {
 
 void *NetCANctlInit(NetCANctl* ob,int socket);
 void NetCANctlFini(NetCANctl* ob);
-int NetCANctlRx(NetCANctl* ob,CANMessage message[1]);
-int NetCANctlTx(NetCANctl* ob,unsigned flags,unsigned id,const char *data);
+CANResult NetCANctlRx(NetCANctl* ob,CANMessage message[1]);
+CANResult NetCANctlTx(NetCANctl* ob,unsigned flags,unsigned id,const char *data);
 unsigned NetCANctlBaudSet(NetCANctl* ob,unsigned opt_baud);
 unsigned NetCANctlBaudGet(NetCANctl* ob);
 void NetCANctlAbort(NetCANctl* ob);
-int NetCANctlRxMulti(NetCANctl* ob,CANMessage *msg,int min);
+CANResult NetCANctlRxMulti(NetCANctl* ob,CANMessage *msg,int min);
 #endif
 
 // Author: Michael Schmidt (michael@embeddedARM.com)

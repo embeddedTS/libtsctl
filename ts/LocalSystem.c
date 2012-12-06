@@ -327,9 +327,9 @@ ConnectionWaitInf *LocalSystemConnWaitInfo(LocalSystem *sys) {
   return 0;
 }
 
-int LocalSystemCANBusGet(LocalSystem *sys,int CANInst) {
+SystemResult LocalSystemCANBusGet(LocalSystem *sys,int CANInst) {
   if (CANInst >= LocalSystemInstanceCount(sys,ClassCAN)) {
-    return -1;
+    return SystemErrorNoSuchCANInstance;
   } else {
     ArchInfo *arch = ArchFirst;
     while (arch) {
@@ -341,7 +341,7 @@ int LocalSystemCANBusGet(LocalSystem *sys,int CANInst) {
     }
     // BUG: what if CAN instance is not in a primary architecture?
   }
-  return -1; // should not reach here!
+  return SystemErrorNoSuchCANInstance; // should not reach here!
 }
 
 extern const char build[];
@@ -465,25 +465,25 @@ char* LocalSystemMapLookupPartial(LocalSystem *sys,const char* stem,int value) {
   return ret;
 }
 
-int LocalSystemMapAdd(LocalSystem *sys,const char* key,int value) {
+SystemResult LocalSystemMapAdd(LocalSystem *sys,const char* key,int value) {
   assert(ThreadLockW(sys->maplock,LOCK_SOD) > 0);
   sys->map = ArrayReplace(sys->map,
 			  A(NameValuePair,Of((char *)ArrayDup(key),value)));
   //,
   //			      CompareNameValuePairPartial);
   assert(ThreadUnlockW(sys->maplock) > 0);
-  return 1;
+  return SystemSuccess;
 }
 
 int LocalSystemMapDelete(LocalSystem *sys,const char* key) {
   assert(ThreadLockW(sys->maplock,LOCK_SOD) > 0);
   unsigned index = ArrayFind(sys->map,A(NameValuePair,Of((char *)key,0)));
-  int ret = -1;
+  int ret = SystemErrorNoSuchKey;
   if (index < ArrayLength(sys->map) 
       && !ArrayCompare(sys->map[index].name,(char *)key)) {
     ArrayFree(sys->map[index].name);
     sys->map = ArrayDelete(sys->map,index,1);
-    ret = 1;
+    ret = SystemSuccess;
   }
   //sys->map = ArrayFindDelete(sys->map,NameValuePair,Of((char *)key,0));
   assert(ThreadUnlockW(sys->maplock) > 0);

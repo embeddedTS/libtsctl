@@ -888,6 +888,21 @@ int (*tsctlCommand[61])(char *) = {
 	tsctlEDIOCommandTextToBin,
 	tsctlModeCommandTextToBin,
 };
+int WriteEnumSystemResult(Stream *out,int val) {
+  switch(val) {
+  case 1: WriteF(out,"SystemSuccess"); break;
+  case -1: WriteF(out,"SystemErrorNoSuchKey"); break;
+  case -2: WriteF(out,"SystemErrorNoSuchCANInstance"); break;
+  default: WriteF(out,"%d",val); break;
+  }
+}
+int WriteEnumTimeResult(Stream *out,int val) {
+  switch(val) {
+  case 1: WriteF(out,"TimeoutOccurred"); break;
+  case 0: WriteF(out,"TimeoutDidNotOccur"); break;
+  default: WriteF(out,"%d",val); break;
+  }
+}
 int WriteEnumPinMode(Stream *out,int val) {
   switch(val) {
   case 0: WriteF(out,"MODE_DIO"); break;
@@ -900,13 +915,14 @@ int WriteEnumPinMode(Stream *out,int val) {
   case 7: WriteF(out,"MODE_BUS"); break;
   case 8: WriteF(out,"MODE_PWM"); break;
   case -1: WriteF(out,"MODE_UNKNOWN"); break;
-  default: WriteF(out,"%%d",val); break;
+  default: WriteF(out,"%d",val); break;
   }
 }
-int WriteEnumPinError(Stream *out,int val) {
+int WriteEnumPinResult(Stream *out,int val) {
   switch(val) {
-  case -100: WriteF(out,"PinErrorModeInvalid"); break;
-  default: WriteF(out,"%%d",val); break;
+  case 1: WriteF(out,"PinSuccess"); break;
+  case -13: WriteF(out,"PinErrorModeInvalid"); break;
+  default: WriteF(out,"%d",val); break;
   }
 }
 int WriteEnumDIOState(Stream *out,int val) {
@@ -916,7 +932,7 @@ int WriteEnumDIOState(Stream *out,int val) {
   case -1: WriteF(out,"INPUT"); break;
   case 0: WriteF(out,"LOW"); break;
   case 1: WriteF(out,"HIGH"); break;
-  default: WriteF(out,"%%d",val); break;
+  default: WriteF(out,"%d",val); break;
   }
 }
 int WriteEnumDIOCaps(Stream *out,int val) {
@@ -929,18 +945,19 @@ int WriteEnumDIOCaps(Stream *out,int val) {
   case 5: WriteF(out,"DIO_LOW_SIDE"); break;
   case 6: WriteF(out,"DIO_OUTPUT_ONLY"); break;
   case 7: WriteF(out,"DIO_NORMAL"); break;
-  default: WriteF(out,"%%d",val); break;
+  default: WriteF(out,"%d",val); break;
   }
 }
 int WriteEnumTWIMode(Stream *out,int val) {
   switch(val) {
   case 0: WriteF(out,"TWIModeSlave"); break;
   case 1: WriteF(out,"TWIModeMaster"); break;
-  default: WriteF(out,"%%d",val); break;
+  default: WriteF(out,"%d",val); break;
   }
 }
-int WriteEnumTWIError(Stream *out,int val) {
+int WriteEnumTWIResult(Stream *out,int val) {
   switch(val) {
+  case 1: WriteF(out,"TWISuccess"); break;
   case -1: WriteF(out,"TWIErrorPortInvalid"); break;
   case -2: WriteF(out,"TWIErrorModeUnsupported"); break;
   case -3: WriteF(out,"TWIErrorBaudUnconstrained"); break;
@@ -957,14 +974,14 @@ int WriteEnumTWIError(Stream *out,int val) {
   case -14: WriteF(out,"TWIErrorArbLost"); break;
   case -999: WriteF(out,"TWIErrorUnknown"); break;
   case -15: WriteF(out,"TWIErrorOpInvalid"); break;
-  default: WriteF(out,"%%d",val); break;
+  default: WriteF(out,"%d",val); break;
   }
 }
 int WriteEnumTWIOps(Stream *out,int val) {
   switch(val) {
   case 0: WriteF(out,"TWIOpWrite"); break;
   case 1: WriteF(out,"TWIOpRead"); break;
-  default: WriteF(out,"%%d",val); break;
+  default: WriteF(out,"%d",val); break;
   }
 }
 int WriteEnumCANEvent(Stream *out,int val) {
@@ -1021,6 +1038,27 @@ int WriteEnumCANFlags(Stream *out,int val) {
     WriteF(out,"%sFLAG_CONTROL",n++?"+":"");
   }
 }
+int WriteEnumCANResult(Stream *out,int val) {
+  switch(val) {
+  case -6: WriteF(out,"CANErrorBusWarning"); break;
+  case -5: WriteF(out,"CANErrorBusOff"); break;
+  case -4: WriteF(out,"CANErrorFIFOUnexpectedlyEmpty"); break;
+  case -3: WriteF(out,"CANErrorCannotTxControlMessage"); break;
+  case -2: WriteF(out,"CANErrorAborted"); break;
+  case 1: WriteF(out,"CANSuccess"); break;
+  default: WriteF(out,"%d",val); break;
+  }
+}
+int WriteEnumSPIResult(Stream *out,int val) {
+  switch(val) {
+  case 1: WriteF(out,"SPISuccess"); break;
+  case -9: WriteF(out,"SPIErrorTimeout"); break;
+  case -10: WriteF(out,"SPIErrorInvalidAddress"); break;
+  case -11: WriteF(out,"SPIErrorInvalidEdge"); break;
+  case -12: WriteF(out,"SPIErrorInvalidHz"); break;
+  default: WriteF(out,"%d",val); break;
+  }
+}
 int WriteEnumAIOType(Stream *out,int val) {
   int n = 0;
   if (val & 0x01) {
@@ -1036,7 +1074,7 @@ int WriteEnumEDIOType(Stream *out,int val) {
   case 2: WriteF(out,"EDIO_QUADRATURE"); break;
   case 3: WriteF(out,"EDIO_EDGECOUNT"); break;
   case 4: WriteF(out,"EDIO_GLITCHED"); break;
-  default: WriteF(out,"%%d",val); break;
+  default: WriteF(out,"%d",val); break;
   }
 }
 int WriteEnumHBState(Stream *out,int val) {
@@ -1045,25 +1083,25 @@ int WriteEnumHBState(Stream *out,int val) {
   case 2: WriteF(out,"HB_RIGHT"); break;
   case 3: WriteF(out,"HB_FREE_RUNNING"); break;
   case 4: WriteF(out,"HB_BRAKING"); break;
-  default: WriteF(out,"%%d",val); break;
+  default: WriteF(out,"%d",val); break;
   }
 }
 int WriteEnumCacheBusError(Stream *out,int val) {
   switch(val) {
   case -100: WriteF(out,"CacheBusErrorWidthInvalid"); break;
-  default: WriteF(out,"%%d",val); break;
+  default: WriteF(out,"%d",val); break;
   }
 }
 int WriteEnumCavium2132SBusError(Stream *out,int val) {
   switch(val) {
   case -100: WriteF(out,"Cavium2132SBusErrorMapping"); break;
-  default: WriteF(out,"%%d",val); break;
+  default: WriteF(out,"%d",val); break;
   }
 }
 int WriteEnumMMapBusError(Stream *out,int val) {
   switch(val) {
   case -100: WriteF(out,"MapBusErrorMapping"); break;
-  default: WriteF(out,"%%d",val); break;
+  default: WriteF(out,"%d",val); break;
   }
 }
 void EnumInit() {
@@ -1074,6 +1112,11 @@ void EnumInit() {
     sys->MapAdd(sys,tmp,val);
     ArrayFree(tmp);
   }
+  add("SystemSuccess",1);
+  add("SystemErrorNoSuchKey",-1);
+  add("SystemErrorNoSuchCANInstance",-2);
+  add("TimeoutOccurred",1);
+  add("TimeoutDidNotOccur",0);
   add("MODE_DIO",0);
   add("MODE_CAN",1);
   add("MODE_SPI",2);
@@ -1084,7 +1127,8 @@ void EnumInit() {
   add("MODE_BUS",7);
   add("MODE_PWM",8);
   add("MODE_UNKNOWN",-1);
-  add("PinErrorModeInvalid",-100);
+  add("PinSuccess",1);
+  add("PinErrorModeInvalid",-13);
   add("INPUT_LOW",-3);
   add("INPUT_HIGH",-2);
   add("INPUT",-1);
@@ -1100,6 +1144,7 @@ void EnumInit() {
   add("DIO_NORMAL",7);
   add("TWIModeSlave",0);
   add("TWIModeMaster",1);
+  add("TWISuccess",1);
   add("TWIErrorPortInvalid",-1);
   add("TWIErrorModeUnsupported",-2);
   add("TWIErrorBaudUnconstrained",-3);
@@ -1134,6 +1179,17 @@ void EnumInit() {
   add("FLAG_EXT_ID",32);
   add("FLAG_LOCAL",64);
   add("FLAG_CONTROL",128);
+  add("CANErrorBusWarning",-6);
+  add("CANErrorBusOff",-5);
+  add("CANErrorFIFOUnexpectedlyEmpty",-4);
+  add("CANErrorCannotTxControlMessage",-3);
+  add("CANErrorAborted",-2);
+  add("CANSuccess",1);
+  add("SPISuccess",1);
+  add("SPIErrorTimeout",-9);
+  add("SPIErrorInvalidAddress",-10);
+  add("SPIErrorInvalidEdge",-11);
+  add("SPIErrorInvalidHz",-12);
   add("AIO_ADC",1);
   add("AIO_DAC",2);
   add("EDIO_PWM",1);
@@ -1159,7 +1215,7 @@ void EnumInit() {
   add("AIO",9);
   add("EDIO",10);
 }
-ArrayAuto(void *,WriteEnum,ARR(WriteEnumPinMode,WriteEnumPinError,WriteEnumDIOState,WriteEnumDIOCaps,WriteEnumTWIMode,WriteEnumTWIError,WriteEnumTWIOps,WriteEnumCANEvent,WriteEnumCANFlags,WriteEnumAIOType,WriteEnumEDIOType,WriteEnumHBState,WriteEnumCacheBusError,WriteEnumCavium2132SBusError,WriteEnumMMapBusError,));
+ArrayAuto(void *,WriteEnum,ARR(WriteEnumSystemResult,WriteEnumTimeResult,WriteEnumPinMode,WriteEnumPinResult,WriteEnumDIOState,WriteEnumDIOCaps,WriteEnumTWIMode,WriteEnumTWIResult,WriteEnumTWIOps,WriteEnumCANEvent,WriteEnumCANFlags,WriteEnumCANResult,WriteEnumSPIResult,WriteEnumAIOType,WriteEnumEDIOType,WriteEnumHBState,WriteEnumCacheBusError,WriteEnumCavium2132SBusError,WriteEnumMMapBusError,));
 ArrayAuto(void *,SystemClassCountArgs,ARR());
 ArrayAuto(void *,SystemInstanceCountArgs,ARR(tsctlArgParseInt32,));
 ArrayAuto(void *,SystemAPICountArgs,ARR(tsctlArgParseInt32,));
@@ -1621,10 +1677,10 @@ int tsctlSystemConnWaitInfo(System *ob,Stream *out,Stream *in) {
 int tsctlSystemCANBusGet(System *ob,Stream *out,Stream *in) {
   WriteInt16LE(out,0);
   WriteInt8LE(out,6);
-  int32 ret;
+  SystemResult ret;
   int32 arg1 = ReadInt32LE(in);
   ret = ob->CANBusGet(ob,arg1);
-  WriteInt8LE(out,0x13);
+  WriteInt8LE(out,0xC0);
   WriteInt32LE(out,ret);
   WriteInt8LE(out,0x80);
   return 1;
@@ -1727,11 +1783,11 @@ int tsctlSystemMapLookupPartial(System *ob,Stream *out,Stream *in) {
 int tsctlSystemMapAdd(System *ob,Stream *out,Stream *in) {
   WriteInt16LE(out,0);
   WriteInt8LE(out,14);
-  int32 ret;
+  SystemResult ret;
   const int8* arg1 = ReadArrayInt8LE(in);
   int32 arg2 = ReadInt32LE(in);
   ret = ob->MapAdd(ob,arg1,arg2);
-  WriteInt8LE(out,0x13);
+  WriteInt8LE(out,0xC0);
   WriteInt32LE(out,ret);
   WriteInt8LE(out,0x80);
   return 1;
@@ -1739,10 +1795,10 @@ int tsctlSystemMapAdd(System *ob,Stream *out,Stream *in) {
 int tsctlSystemMapDelete(System *ob,Stream *out,Stream *in) {
   WriteInt16LE(out,0);
   WriteInt8LE(out,15);
-  int32 ret;
+  SystemResult ret;
   const int8* arg1 = ReadArrayInt8LE(in);
   ret = ob->MapDelete(ob,arg1);
-  WriteInt8LE(out,0x13);
+  WriteInt8LE(out,0xC0);
   WriteInt32LE(out,ret);
   WriteInt8LE(out,0x80);
   return 1;
@@ -2255,11 +2311,11 @@ int tsctlTimeusFuture(Time *ob,Stream *out,Stream *in) {
 int tsctlTimeTimeoutQ(Time *ob,Stream *out,Stream *in) {
   WriteInt16LE(out,2);
   WriteInt8LE(out,5);
-  int32 ret;
+  TimeResult ret;
   uint32 arg1 = ReadUInt32LE(in);
   uint32 arg2 = ReadUInt32LE(in);
   ret = ob->TimeoutQ(ob,arg1,arg2);
-  WriteInt8LE(out,0x13);
+  WriteInt8LE(out,0xC1);
   WriteInt32LE(out,ret);
   WriteInt8LE(out,0x80);
   return 1;
@@ -2313,10 +2369,10 @@ int tsctlPinPreempt(Pin *ob,Stream *out,Stream *in) {
 int tsctlPinModeGet(Pin *ob,Stream *out,Stream *in) {
   WriteInt16LE(out,3);
   WriteInt8LE(out,3);
-  Int32 ret;
+  PinMode ret;
   int32 arg1 = ReadInt32LE(in);
   ret = ob->ModeGet(ob,arg1);
-  WriteInt8LE(out,0xC0);
+  WriteInt8LE(out,0xC2);
   WriteInt32LE(out,ret);
   WriteInt8LE(out,0x80);
   return 1;
@@ -2324,11 +2380,11 @@ int tsctlPinModeGet(Pin *ob,Stream *out,Stream *in) {
 int tsctlPinModeSet(Pin *ob,Stream *out,Stream *in) {
   WriteInt16LE(out,3);
   WriteInt8LE(out,4);
-  int32 ret;
+  PinResult ret;
   int32 arg1 = ReadInt32LE(in);
-  Int32 arg2 = ReadInt32LE(in);
+  PinMode arg2 = ReadInt32LE(in);
   ret = ob->ModeSet(ob,arg1,arg2);
-  WriteInt8LE(out,0x13);
+  WriteInt8LE(out,0xC3);
   WriteInt32LE(out,ret);
   WriteInt8LE(out,0x80);
   return 1;
@@ -2474,7 +2530,7 @@ int tsctlDIOSet(DIO *ob,Stream *out,Stream *in) {
   WriteInt16LE(out,5);
   WriteInt8LE(out,5);
   int32 arg1 = ReadInt32LE(in);
-  Int32 arg2 = ReadInt32LE(in);
+  DIOState arg2 = ReadInt32LE(in);
   ob->Set(ob,arg1,arg2);
   WriteInt8LE(out,0x80);
   return 1;
@@ -2482,10 +2538,10 @@ int tsctlDIOSet(DIO *ob,Stream *out,Stream *in) {
 int tsctlDIOGet(DIO *ob,Stream *out,Stream *in) {
   WriteInt16LE(out,5);
   WriteInt8LE(out,6);
-  Int32 ret;
+  DIOState ret;
   int32 arg1 = ReadInt32LE(in);
   ret = ob->Get(ob,arg1);
-  WriteInt8LE(out,0xC2);
+  WriteInt8LE(out,0xC4);
   WriteInt32LE(out,ret);
   WriteInt8LE(out,0x80);
   return 1;
@@ -2494,7 +2550,7 @@ int tsctlDIOSetAsync(DIO *ob,Stream *out,Stream *in) {
   WriteInt16LE(out,5);
   WriteInt8LE(out,7);
   int32 arg1 = ReadInt32LE(in);
-  Int32 arg2 = ReadInt32LE(in);
+  DIOState arg2 = ReadInt32LE(in);
   ob->SetAsync(ob,arg1,arg2);
   WriteInt8LE(out,0x80);
   return 1;
@@ -2502,10 +2558,10 @@ int tsctlDIOSetAsync(DIO *ob,Stream *out,Stream *in) {
 int tsctlDIOGetAsync(DIO *ob,Stream *out,Stream *in) {
   WriteInt16LE(out,5);
   WriteInt8LE(out,8);
-  Int32 ret;
+  DIOState ret;
   int32 arg1 = ReadInt32LE(in);
   ret = ob->GetAsync(ob,arg1);
-  WriteInt8LE(out,0xC2);
+  WriteInt8LE(out,0xC4);
   WriteInt32LE(out,ret);
   WriteInt8LE(out,0x80);
   return 1;
@@ -2544,10 +2600,10 @@ int tsctlDIOCount(DIO *ob,Stream *out,Stream *in) {
 int tsctlDIOCapabilities(DIO *ob,Stream *out,Stream *in) {
   WriteInt16LE(out,5);
   WriteInt8LE(out,11);
-  Int32 ret;
+  DIOCaps ret;
   uint32 arg1 = ReadUInt32LE(in);
   ret = ob->Capabilities(ob,arg1);
-  WriteInt8LE(out,0xC3);
+  WriteInt8LE(out,0xC5);
   WriteInt32LE(out,ret);
   WriteInt8LE(out,0x80);
   return 1;
@@ -2612,13 +2668,13 @@ int tsctlTWIPreempt(TWI *ob,Stream *out,Stream *in) {
 int tsctlTWIWrite(TWI *ob,Stream *out,Stream *in) {
   WriteInt16LE(out,6);
   WriteInt8LE(out,3);
-  int32 ret;
+  TWIResult ret;
   int32 arg1 = ReadInt32LE(in);
   int32 arg2 = ReadInt32LE(in);
   int32 arg3 = ReadInt32LE(in);
   const int8* arg4 = ReadArrayInt8LE(in);
   ret = ob->Write(ob,arg1,arg2,arg3,arg4);
-  WriteInt8LE(out,0x13);
+  WriteInt8LE(out,0xC7);
   WriteInt32LE(out,ret);
   WriteInt8LE(out,0x80);
   return 1;
@@ -2626,14 +2682,14 @@ int tsctlTWIWrite(TWI *ob,Stream *out,Stream *in) {
 int tsctlTWIRead(TWI *ob,Stream *out,Stream *in) {
   WriteInt16LE(out,6);
   WriteInt8LE(out,4);
-  int32 ret;
+  TWIResult ret;
   int32 arg1 = ReadInt32LE(in);
   int32 arg2 = ReadInt32LE(in);
   int32 arg3 = ReadInt32LE(in);
   int len4 = ReadInt32LE(in);
   int8* arg4 = ArrayAlloc(len4,sizeof(int8));
   ret = ob->Read(ob,arg1,arg2,arg3,arg4);
-  WriteInt8LE(out,0x13);
+  WriteInt8LE(out,0xC7);
   WriteInt32LE(out,ret);
   WriteInt8LE(out,0x50);
   WriteInt32LE(out,ArrayLength(arg4));
@@ -2651,10 +2707,10 @@ ArrayAuto(void **,tsctlTWI,ARR((void *)tsctlTWILock,(void *)tsctlTWIUnlock,(void
 int tsctlCANRx(CAN *ob,Stream *out,Stream *in) {
   WriteInt16LE(out,7);
   WriteInt8LE(out,0);
-  int32 ret;
+  CANResult ret;
   CANMessage arg1[1];
   ret = ob->Rx(ob,arg1);
-  WriteInt8LE(out,0x13);
+  WriteInt8LE(out,0xCB);
   WriteInt32LE(out,ret);
   WriteInt8LE(out,0x74);
   WriteInt32LE(out,1);
@@ -2687,12 +2743,12 @@ int tsctlCANRx(CAN *ob,Stream *out,Stream *in) {
 int tsctlCANTx(CAN *ob,Stream *out,Stream *in) {
   WriteInt16LE(out,7);
   WriteInt8LE(out,1);
-  int32 ret;
+  CANResult ret;
   uint32 arg1 = ReadUInt32LE(in);
   uint32 arg2 = ReadUInt32LE(in);
   const int8* arg3 = ReadArrayInt8LE(in);
   ret = ob->Tx(ob,arg1,arg2,arg3);
-  WriteInt8LE(out,0x13);
+  WriteInt8LE(out,0xCB);
   WriteInt32LE(out,ret);
   WriteInt8LE(out,0x80);
   return 1;
@@ -2728,12 +2784,12 @@ int tsctlCANAbort(CAN *ob,Stream *out,Stream *in) {
 int tsctlCANRxMulti(CAN *ob,Stream *out,Stream *in) {
   WriteInt16LE(out,7);
   WriteInt8LE(out,5);
-  int32 ret;
+  CANResult ret;
   int len1 = ReadInt32LE(in);
   CANMessage* arg1 = ArrayAlloc(len1,sizeof(CANMessage));
   int32 arg2 = ReadInt32LE(in);
   ret = ob->RxMulti(ob,arg1,arg2);
-  WriteInt8LE(out,0x13);
+  WriteInt8LE(out,0xCB);
   WriteInt32LE(out,ret);
   WriteInt8LE(out,0x74);
   WriteInt32LE(out,ArrayLength(arg1));
@@ -2802,11 +2858,11 @@ int tsctlSPIPreempt(SPI *ob,Stream *out,Stream *in) {
 int tsctlSPIWrite(SPI *ob,Stream *out,Stream *in) {
   WriteInt16LE(out,8);
   WriteInt8LE(out,3);
-  int32 ret;
+  SPIResult ret;
   int32 arg1 = ReadInt32LE(in);
   const uint8* arg2 = ReadArrayUInt8LE(in);
   ret = ob->Write(ob,arg1,arg2);
-  WriteInt8LE(out,0x13);
+  WriteInt8LE(out,0xCC);
   WriteInt32LE(out,ret);
   WriteInt8LE(out,0x80);
   return 1;
@@ -2814,12 +2870,12 @@ int tsctlSPIWrite(SPI *ob,Stream *out,Stream *in) {
 int tsctlSPIRead(SPI *ob,Stream *out,Stream *in) {
   WriteInt16LE(out,8);
   WriteInt8LE(out,4);
-  int32 ret;
+  SPIResult ret;
   int32 arg1 = ReadInt32LE(in);
   int len2 = ReadInt32LE(in);
   uint8* arg2 = ArrayAlloc(len2,sizeof(uint8));
   ret = ob->Read(ob,arg1,arg2);
-  WriteInt8LE(out,0x13);
+  WriteInt8LE(out,0xCC);
   WriteInt32LE(out,ret);
   WriteInt8LE(out,0x40);
   WriteInt32LE(out,ArrayLength(arg2));
@@ -2835,13 +2891,13 @@ int tsctlSPIRead(SPI *ob,Stream *out,Stream *in) {
 int tsctlSPIReadWrite(SPI *ob,Stream *out,Stream *in) {
   WriteInt16LE(out,8);
   WriteInt8LE(out,5);
-  int32 ret;
+  SPIResult ret;
   int32 arg1 = ReadInt32LE(in);
   const uint8* arg2 = ReadArrayUInt8LE(in);
   int len3 = ReadInt32LE(in);
   uint8* arg3 = ArrayAlloc(len3,sizeof(uint8));
   ret = ob->ReadWrite(ob,arg1,arg2,arg3);
-  WriteInt8LE(out,0x13);
+  WriteInt8LE(out,0xCC);
   WriteInt32LE(out,ret);
   WriteInt8LE(out,0x40);
   WriteInt32LE(out,ArrayLength(arg3));
@@ -2857,10 +2913,10 @@ int tsctlSPIReadWrite(SPI *ob,Stream *out,Stream *in) {
 int tsctlSPIClockSet(SPI *ob,Stream *out,Stream *in) {
   WriteInt16LE(out,8);
   WriteInt8LE(out,6);
-  int32 ret;
+  SPIResult ret;
   uint32 arg1 = ReadUInt32LE(in);
   ret = ob->ClockSet(ob,arg1);
-  WriteInt8LE(out,0x13);
+  WriteInt8LE(out,0xCC);
   WriteInt32LE(out,ret);
   WriteInt8LE(out,0x80);
   return 1;
@@ -2868,10 +2924,10 @@ int tsctlSPIClockSet(SPI *ob,Stream *out,Stream *in) {
 int tsctlSPIEdgeSet(SPI *ob,Stream *out,Stream *in) {
   WriteInt16LE(out,8);
   WriteInt8LE(out,7);
-  int32 ret;
+  SPIResult ret;
   int32 arg1 = ReadInt32LE(in);
   ret = ob->EdgeSet(ob,arg1);
-  WriteInt8LE(out,0x13);
+  WriteInt8LE(out,0xCC);
   WriteInt32LE(out,ret);
   WriteInt8LE(out,0x80);
   return 1;
@@ -2915,9 +2971,9 @@ int tsctlAIOPreempt(AIO *ob,Stream *out,Stream *in) {
 int tsctlAIOType(AIO *ob,Stream *out,Stream *in) {
   WriteInt16LE(out,9);
   WriteInt8LE(out,3);
-  Int32 ret;
+  AIOType ret;
   ret = ob->Type(ob);
-  WriteInt8LE(out,0xC9);
+  WriteInt8LE(out,0xCD);
   WriteInt32LE(out,ret);
   WriteInt8LE(out,0x80);
   return 1;
@@ -3376,7 +3432,7 @@ int tsctlEDIOQueryFunction(EDIO *ob,Stream *out,Stream *in) {
   WriteInt16LE(out,10);
   WriteInt8LE(out,3);
   int32* ret;
-  Int32 arg1 = ReadInt32LE(in);
+  EDIOType arg1 = ReadInt32LE(in);
   ret = ob->QueryFunction(ob,arg1);
   WriteInt8LE(out,0x53);
   WriteInt32LE(out,ArrayLength(ret));
@@ -3512,7 +3568,7 @@ int tsctlEDIOHBridge(EDIO *ob,Stream *out,Stream *in) {
   WriteInt8LE(out,11);
   int32 ret;
   int32 arg1 = ReadInt32LE(in);
-  Int32 arg2 = ReadInt32LE(in);
+  HBState arg2 = ReadInt32LE(in);
   ret = ob->HBridge(ob,arg1,arg2);
   WriteInt8LE(out,0x13);
   WriteInt32LE(out,ret);

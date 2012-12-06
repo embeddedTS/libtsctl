@@ -383,9 +383,17 @@ int tsctl_shell(Stream *in,Stream *out) {
 	    count++;
 	    if (ArrayLength(lu) > 0) { // patch lookups into the req stream
 	      System *sys = SystemInit(0);
-	      int val;
+	      char **names;
+	      int val=0,j,n;
+
 	      for (i=0;i<ArrayLength(lu);i++) {
-		val = sys->MapLookup(sys,lu[i].name);
+		names = split(lu[i].name,'+');
+		for (j=0;j<ArrayLength(names);j++) {
+		  n = sys->MapLookup(sys,names[j]);
+		  if (n > 0) val |= n;
+		}
+		ArrayFree(names);
+		//val = sys->MapLookup(sys,lu[i].name);
 		for (j=0;j<ArrayLength(lu[i].offset);j++) {
 		  RequestString[lu[i].offset[j]] = val & 0xFF;
 		  RequestString[lu[i].offset[j]+1] = (val>>8) & 0xFF;

@@ -8,6 +8,10 @@
 #endif
 
 typedef struct Time Time;
+typedef enum TimeResult{
+  TimeoutOccurred=1,TimeoutDidNotOccur=0
+}TimeResult;
+
 enum {
 	NetTime_Wait=0,
 	NetTime_Delay=1,
@@ -26,7 +30,7 @@ struct Time {
 	unsigned FUNC(Tick)(void *me);
 	unsigned FUNC(usElapsed)(void *me,unsigned start);
 	unsigned FUNC(usFuture)(void *me,unsigned start,unsigned microseconds);
-	int FUNC(TimeoutQ)(void *me,unsigned start,unsigned end);
+	TimeResult FUNC(TimeoutQ)(void *me,unsigned start,unsigned end);
 	unsigned FUNC(TPS)(void *me);
 	int InitStatus;
 };

@@ -78,7 +78,7 @@ unsigned TSTimeusFuture(TSTime *time,unsigned start,unsigned us) {
   //return start + us/1 + ((us % 1) ? 1 : 0);
 }
 
-int TSTimeTimeoutQ(TSTime *time,unsigned start,unsigned end) {
+TimeResult TSTimeTimeoutQ(TSTime *time,unsigned start,unsigned end) {
   unsigned now = _TSTimeTick(time);
   if (end > start) {
     return now >= end || now < start;

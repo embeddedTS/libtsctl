@@ -14,8 +14,8 @@ struct MarvellPXA166TWI {
 	int FUNC(Lock)(MarvellPXA166TWI *me,unsigned num,int flags);
 	int FUNC(Unlock)(MarvellPXA166TWI *me,unsigned num,int flags);
 	int FUNC(Preempt)(MarvellPXA166TWI *me);
-	int FUNC(Write)(MarvellPXA166TWI *me,int devadr,int adrslen,int adrs,const char *bytes);
-	int FUNC(Read)(MarvellPXA166TWI *me,int devadr,int adrslen,int adrs,char *bytes);
+	TWIResult FUNC(Write)(MarvellPXA166TWI *me,int devadr,int adrslen,int adrs,const char *bytes);
+	TWIResult FUNC(Read)(MarvellPXA166TWI *me,int devadr,int adrslen,int adrs,char *bytes);
 	int InitStatus;
 	Bus *bus;
 	int LockNum;
@@ -26,8 +26,8 @@ void MarvellPXA166TWIFini(MarvellPXA166TWI* ob);
 int MarvellPXA166TWILock(MarvellPXA166TWI* ob,unsigned num,int flags);
 int MarvellPXA166TWIUnlock(MarvellPXA166TWI* ob,unsigned num,int flags);
 int MarvellPXA166TWIPreempt(MarvellPXA166TWI* ob);
-int MarvellPXA166TWIWrite(MarvellPXA166TWI* ob,int devadr,int adrslen,int adrs,const char *bytes);
-int MarvellPXA166TWIRead(MarvellPXA166TWI* ob,int devadr,int adrslen,int adrs,char *bytes);
+TWIResult MarvellPXA166TWIWrite(MarvellPXA166TWI* ob,int devadr,int adrslen,int adrs,const char *bytes);
+TWIResult MarvellPXA166TWIRead(MarvellPXA166TWI* ob,int devadr,int adrslen,int adrs,char *bytes);
 #endif
 
 // Author: Michael Schmidt (michael@embeddedARM.com)

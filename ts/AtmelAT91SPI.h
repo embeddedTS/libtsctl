@@ -14,11 +14,11 @@ struct AtmelAT91SPI {
 	int FUNC(Lock)(AtmelAT91SPI *me,unsigned num,int flags);
 	int FUNC(Unlock)(AtmelAT91SPI *me,unsigned num,int flags);
 	int FUNC(Preempt)(AtmelAT91SPI *me);
-	int FUNC(Write)(AtmelAT91SPI *me,int adrs,const unsigned char *buf);
-	int FUNC(Read)(AtmelAT91SPI *me,int adrs,unsigned char *buf);
-	int FUNC(ReadWrite)(AtmelAT91SPI *me,int adrs,const unsigned char *wbuf,unsigned char *rbuf);
-	int FUNC(ClockSet)(AtmelAT91SPI *me,unsigned hz);
-	int FUNC(EdgeSet)(AtmelAT91SPI *me,int posedge);
+	SPIResult FUNC(Write)(AtmelAT91SPI *me,int adrs,const unsigned char *buf);
+	SPIResult FUNC(Read)(AtmelAT91SPI *me,int adrs,unsigned char *buf);
+	SPIResult FUNC(ReadWrite)(AtmelAT91SPI *me,int adrs,const unsigned char *wbuf,unsigned char *rbuf);
+	SPIResult FUNC(ClockSet)(AtmelAT91SPI *me,unsigned hz);
+	SPIResult FUNC(EdgeSet)(AtmelAT91SPI *me,int posedge);
 	int InitStatus;
 	Bus *bus;
 	unsigned LockNum;
@@ -36,11 +36,11 @@ void AtmelAT91SPIFini(AtmelAT91SPI* ob);
 int AtmelAT91SPILock(AtmelAT91SPI* ob,unsigned num,int flags);
 int AtmelAT91SPIUnlock(AtmelAT91SPI* ob,unsigned num,int flags);
 int AtmelAT91SPIPreempt(AtmelAT91SPI* ob);
-int AtmelAT91SPIWrite(AtmelAT91SPI* ob,int adrs,const unsigned char *buf);
-int AtmelAT91SPIRead(AtmelAT91SPI* ob,int adrs,unsigned char *buf);
-int AtmelAT91SPIReadWrite(AtmelAT91SPI* ob,int adrs,const unsigned char *wbuf,unsigned char *rbuf);
-int AtmelAT91SPIClockSet(AtmelAT91SPI* ob,unsigned hz);
-int AtmelAT91SPIEdgeSet(AtmelAT91SPI* ob,int posedge);
+SPIResult AtmelAT91SPIWrite(AtmelAT91SPI* ob,int adrs,const unsigned char *buf);
+SPIResult AtmelAT91SPIRead(AtmelAT91SPI* ob,int adrs,unsigned char *buf);
+SPIResult AtmelAT91SPIReadWrite(AtmelAT91SPI* ob,int adrs,const unsigned char *wbuf,unsigned char *rbuf);
+SPIResult AtmelAT91SPIClockSet(AtmelAT91SPI* ob,unsigned hz);
+SPIResult AtmelAT91SPIEdgeSet(AtmelAT91SPI* ob,int posedge);
 #endif
 
 // Author: Michael Schmidt (michael@embeddedARM.com)

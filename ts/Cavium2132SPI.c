@@ -104,7 +104,7 @@ int Cavium2132SPIWrite(Cavium2132SPI *ob,int adrs,char *buf,int len) {
   int de_cs = 1;
   int maxspeed;
 
-  if (adrs == 0 || adrs > 3 || adrs < -3) return -999;
+  if (adrs == 0 || adrs > 4 || adrs < -4) return SPIErrorInvalidAddress;
   if (adrs < 0) {
     adrs = -adrs;
     de_cs = 0;
@@ -142,7 +142,7 @@ int Cavium2132SPIWrite(Cavium2132SPI *ob,int adrs,char *buf,int len) {
     ob->bus->Poke8(ob->bus,de_cs?0x4C:0x48,buf[0]);
   }
   ob->bus->Lock(ob->bus,DoRelease,0);
-  return 1;
+  return SPISuccess;
 }
 
 int Cavium2132SPIRead(Cavium2132SPI *ob,int adrs,char *buf,int len) {
@@ -150,7 +150,7 @@ int Cavium2132SPIRead(Cavium2132SPI *ob,int adrs,char *buf,int len) {
   int i,n = len,reg;
   int de_cs = 1, maxspeed;
 
-  if (adrs == 0 || adrs > 3 || adrs < -3) return -999;
+  if (adrs == 0 || adrs > 4 || adrs < -4) return SPIErrorInvalidAddress;
   if (adrs < 0) {
     adrs = -adrs;
     de_cs = 0;
@@ -209,14 +209,14 @@ int Cavium2132SPIRead(Cavium2132SPI *ob,int adrs,char *buf,int len) {
     *buf = ob->bus->Peek16(ob->bus,0x42) >> 8;
   }  
   ob->bus->Lock(ob->bus,DoRelease,0);
-  return 1;
+  return SPISuccess;
 }
 
 int Cavium2132SPIReadWrite(Cavium2132SPI *ob,int adrs,unsigned char *wbuf,unsigned char *rbuf, int len) {
   unsigned s;
   int n = len, de_cs=1;
 
-  if (adrs == 0 || adrs > 3 || adrs < -3) return -999;
+  if (adrs == 0 || adrs > 4 || adrs < -4) return SPIErrorInvalidAddress;
   if (adrs < 0) {
     adrs = -adrs;
     de_cs = 0;
@@ -253,7 +253,7 @@ int Cavium2132SPIReadWrite(Cavium2132SPI *ob,int adrs,unsigned char *wbuf,unsign
     *rbuf = ob->bus->Peek8(ob->bus,0x42);
   }
   ob->bus->Lock(ob->bus,DoRelease,0);
-  return 1;
+  return SPISuccess;
 }
 
 static int cavium_spi_f[] = {
@@ -269,7 +269,7 @@ static int cavium_spi_f[] = {
 int Cavium2132SPIClockSet(Cavium2132SPI *ob,unsigned hz) {
   short reg,reg2;
   int i;
-  if (hz == 0) return;
+  if (hz == 0) return SPIErrorInvalidHz;
   for (i=0;cavium_spi_f[i]>hz;i++);
   ob->bus->Lock(ob->bus,WaitLock,0);
   reg = reg2 = ob->bus->Peek16(ob->bus,0x40);
@@ -281,10 +281,10 @@ int Cavium2132SPIClockSet(Cavium2132SPI *ob,unsigned hz) {
     ob->bus->Poke16(ob->bus,0x40,reg2);
   }
   ob->bus->Lock(ob->bus,DoRelease,0);
-  return 1;
+  return SPISuccess;
 }
 
-int Cavium2132SPIEdgeSet(Cavium2132SPI *ob,int posedge) {
+SPIResult Cavium2132SPIEdgeSet(Cavium2132SPI *ob,int posedge) {
   short reg,reg2;
   int maxspeed;
 
@@ -297,7 +297,7 @@ int Cavium2132SPIEdgeSet(Cavium2132SPI *ob,int posedge) {
     ob->bus->Poke16(ob->bus,0x40,reg2);
   }
   ob->bus->Lock(ob->bus,DoRelease,0);
-  return 1;
+  return SPISuccess;
 }
 
 

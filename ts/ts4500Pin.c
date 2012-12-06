@@ -153,14 +153,14 @@ PinMode ts4500PinModeGet(ts4500Pin *pin,int npin) {
 /*
   clear sbus + 0x16, bit 11 to disable CAN and enable DIO_15
  */
-int ts4500PinModeSet(ts4500Pin *pin,int npin,PinMode mode) {
+PinResult ts4500PinModeSet(ts4500Pin *pin,int npin,PinMode mode) {
   if (npin == 17 && mode == MODE_DIO) { // SPI is automatic with CS#
     pin->sbus->Lock(pin->sbus,0,0);
     if (((pin->sbus->Peek16(pin->sbus,0x40) >> 8) & 3) == 0) {
       pin->sbus->BitClear16(pin->sbus,0x40,7);
     }
     pin->sbus->Unlock(pin->sbus,0,0);
-    return 1;
+    return PinSuccess;
   }
   if (npin == 48 && mode == MODE_DIO) { // SPI is automatic with CS#
     pin->sbus->Lock(pin->sbus,0,0);
@@ -168,7 +168,7 @@ int ts4500PinModeSet(ts4500Pin *pin,int npin,PinMode mode) {
       pin->sbus->BitClear16(pin->sbus,0x40,7);
     }
     pin->sbus->Unlock(pin->sbus,0,0);
-    return 1;
+    return PinSuccess;
   }
   if (npin == 18 && mode == MODE_DIO) { // SPI is automatic with CS#
     pin->sbus->Lock(pin->sbus,0,0);
@@ -176,7 +176,7 @@ int ts4500PinModeSet(ts4500Pin *pin,int npin,PinMode mode) {
       pin->sbus->BitClear16(pin->sbus,0x40,7);
     }
     pin->sbus->Unlock(pin->sbus,0,0);
-    return 1;
+    return PinSuccess;
   }
   if (npin == 19 && mode == MODE_DIO) { // SPI is automatic with CS#
     pin->sbus->Lock(pin->sbus,0,0);
@@ -184,7 +184,7 @@ int ts4500PinModeSet(ts4500Pin *pin,int npin,PinMode mode) {
       pin->sbus->BitClear16(pin->sbus,0x40,7);
     }
     pin->sbus->Unlock(pin->sbus,0,0);
-    return 1;
+    return PinSuccess;
   }
   if (npin >= 23 && npin <= 34) {
     if (mode == MODE_DIO) {
@@ -196,16 +196,16 @@ int ts4500PinModeSet(ts4500Pin *pin,int npin,PinMode mode) {
   if (npin == 13+56 || npin == 14+56) {
     if (mode != MODE_DIO && mode != MODE_TWI) return PinErrorModeInvalid;
     pin->cpubus->BitAssign32(pin->cpubus,0x20,npin-56,mode == MODE_TWI);
-    return 1;
+    return PinSuccess;
   }
   if (npin == 15 || npin == 16) {
     if (mode != MODE_DIO && mode != MODE_CAN) return PinErrorModeInvalid;
     pin->sbus->Lock(pin->sbus,0,0);
     pin->sbus->BitAssign16(pin->sbus,0x76,11,mode==MODE_CAN);
     pin->sbus->Unlock(pin->sbus,0,0);
-    return 1;
+    return PinSuccess;
   }
-  return 0;
+  return PinErrorModeInvalid;
 }
 /*
 DIO 23-34

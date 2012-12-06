@@ -8,6 +8,10 @@
 #endif
 
 typedef struct SPI SPI;
+typedef enum SPIResult{
+  SPISuccess=1,SPIErrorTimeout=-9,SPIErrorInvalidAddress=-10,SPIErrorInvalidEdge=-11,SPIErrorInvalidHz=-12
+}SPIResult;
+
 enum {
 	NetSPI_Lock=0,
 	NetSPI_Unlock=1,
@@ -25,11 +29,11 @@ struct SPI {
 	int FUNC(Lock)(void *me,unsigned num,int flags);
 	int FUNC(Unlock)(void *me,unsigned num,int flags);
 	int FUNC(Preempt)(void *me);
-	int FUNC(Write)(void *me,int adrs,const unsigned char *buf);
-	int FUNC(Read)(void *me,int adrs,unsigned char *buf);
-	int FUNC(ReadWrite)(void *me,int adrs,const unsigned char *wbuf,unsigned char *rbuf);
-	int FUNC(ClockSet)(void *me,unsigned hz);
-	int FUNC(EdgeSet)(void *me,int posedge);
+	SPIResult FUNC(Write)(void *me,int adrs,const unsigned char *buf);
+	SPIResult FUNC(Read)(void *me,int adrs,unsigned char *buf);
+	SPIResult FUNC(ReadWrite)(void *me,int adrs,const unsigned char *wbuf,unsigned char *rbuf);
+	SPIResult FUNC(ClockSet)(void *me,unsigned hz);
+	SPIResult FUNC(EdgeSet)(void *me,int posedge);
 	int InitStatus;
 };
 #endif

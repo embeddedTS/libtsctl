@@ -14,8 +14,8 @@ struct DIOTWI {
 	int FUNC(Lock)(DIOTWI *me,unsigned num,int flags);
 	int FUNC(Unlock)(DIOTWI *me,unsigned num,int flags);
 	int FUNC(Preempt)(DIOTWI *me);
-	int FUNC(Write)(DIOTWI *me,int devadr,int adrslen,int adrs,const char *bytes);
-	int FUNC(Read)(DIOTWI *me,int devadr,int adrslen,int adrs,char *bytes);
+	TWIResult FUNC(Write)(DIOTWI *me,int devadr,int adrslen,int adrs,const char *bytes);
+	TWIResult FUNC(Read)(DIOTWI *me,int devadr,int adrslen,int adrs,char *bytes);
 	int InitStatus;
 	DIO *dio;
 	Time *t;
@@ -32,8 +32,8 @@ void DIOTWIFini(DIOTWI* ob);
 int DIOTWILock(DIOTWI* ob,unsigned num,int flags);
 int DIOTWIUnlock(DIOTWI* ob,unsigned num,int flags);
 int DIOTWIPreempt(DIOTWI* ob);
-int DIOTWIWrite(DIOTWI* ob,int devadr,int adrslen,int adrs,const char *bytes);
-int DIOTWIRead(DIOTWI* ob,int devadr,int adrslen,int adrs,char *bytes);
+TWIResult DIOTWIWrite(DIOTWI* ob,int devadr,int adrslen,int adrs,const char *bytes);
+TWIResult DIOTWIRead(DIOTWI* ob,int devadr,int adrslen,int adrs,char *bytes);
 #endif
 
 // Author: Michael Schmidt (michael@embeddedARM.com)

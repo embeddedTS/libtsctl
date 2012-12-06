@@ -117,7 +117,7 @@ PinMode ts4700PinModeGet(ts4700Pin *pin,int npin) {
 /* mux bus DIO pins:
   22-42
  */
-int ts4700PinModeSet(ts4700Pin *pin,int npin,PinMode mode) {
+PinResult ts4700PinModeSet(ts4700Pin *pin,int npin,PinMode mode) {
   //log9(LOG_PIN,"ts4700PinModeSet %d,%d\n",npin,mode);
   if (npin >= 22 && npin <= 42) {
     if (mode == MODE_BUS) {
@@ -139,7 +139,7 @@ int ts4700PinModeSet(ts4700Pin *pin,int npin,PinMode mode) {
       pin->mfpbus->Lock(pin->mfpbus,0,0);
       pin->mfpbus->Poke32(pin->mfpbus,0x1f0,0x4c06);
       pin->mfpbus->Unlock(pin->mfpbus,0,0);
-    } else return 0;
+    } else return PinErrorModeInvalid;
   } else if (npin == 150) { // PWR_SCL (use DIO 150 for DIO mode)
     if (mode == MODE_TWI) {
       pin->mfpbus->Lock(pin->mfpbus,0,0);
@@ -149,7 +149,7 @@ int ts4700PinModeSet(ts4700Pin *pin,int npin,PinMode mode) {
       pin->mfpbus->Lock(pin->mfpbus,0,0);
       pin->mfpbus->Poke32(pin->mfpbus,0x1ec,0x4c06);
       pin->mfpbus->Unlock(pin->mfpbus,0,0);
-    } else return 0;
+    } else return PinErrorModeInvalid;
   } else if (npin == 15 || npin == 16) {
     if (mode != MODE_DIO && mode != MODE_CAN) return PinErrorModeInvalid;
     pin->diobus->Lock(pin->diobus,0,0);
@@ -188,9 +188,9 @@ int ts4700PinModeSet(ts4700Pin *pin,int npin,PinMode mode) {
     pin->diobus->BitAssign16(pin->diobus,0x2,14,mode == MODE_TS);
     pin->diobus->Unlock(pin->diobus,0,0);
   } else {
-    if (mode != MODE_DIO) return 0;
+    if (mode != MODE_DIO) return PinErrorModeInvalid;
   }
-  return 1;
+  return PinSuccess;
 }
 /*
 FPGA DIO 22-42

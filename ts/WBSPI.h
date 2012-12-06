@@ -14,11 +14,11 @@ struct WBSPI {
 	int FUNC(Lock)(WBSPI *me,unsigned num,int flags);
 	int FUNC(Unlock)(WBSPI *me,unsigned num,int flags);
 	int FUNC(Preempt)(WBSPI *me);
-	int FUNC(Write)(WBSPI *me,int adrs,const unsigned char *buf);
-	int FUNC(Read)(WBSPI *me,int adrs,unsigned char *buf);
-	int FUNC(ReadWrite)(WBSPI *me,int adrs,const unsigned char *wbuf,unsigned char *rbuf);
-	int FUNC(ClockSet)(WBSPI *me,unsigned hz);
-	int FUNC(EdgeSet)(WBSPI *me,int posedge);
+	SPIResult FUNC(Write)(WBSPI *me,int adrs,const unsigned char *buf);
+	SPIResult FUNC(Read)(WBSPI *me,int adrs,unsigned char *buf);
+	SPIResult FUNC(ReadWrite)(WBSPI *me,int adrs,const unsigned char *wbuf,unsigned char *rbuf);
+	SPIResult FUNC(ClockSet)(WBSPI *me,unsigned hz);
+	SPIResult FUNC(EdgeSet)(WBSPI *me,int posedge);
 	int InitStatus;
 	Bus *bus;
 	Bus *bus8;
@@ -32,11 +32,11 @@ void WBSPIFini(WBSPI* ob);
 int WBSPILock(WBSPI* ob,unsigned num,int flags);
 int WBSPIUnlock(WBSPI* ob,unsigned num,int flags);
 int WBSPIPreempt(WBSPI* ob);
-int WBSPIWrite(WBSPI* ob,int adrs,const unsigned char *buf);
-int WBSPIRead(WBSPI* ob,int adrs,unsigned char *buf);
-int WBSPIReadWrite(WBSPI* ob,int adrs,const unsigned char *wbuf,unsigned char *rbuf);
-int WBSPIClockSet(WBSPI* ob,unsigned hz);
-int WBSPIEdgeSet(WBSPI* ob,int posedge);
+SPIResult WBSPIWrite(WBSPI* ob,int adrs,const unsigned char *buf);
+SPIResult WBSPIRead(WBSPI* ob,int adrs,unsigned char *buf);
+SPIResult WBSPIReadWrite(WBSPI* ob,int adrs,const unsigned char *wbuf,unsigned char *rbuf);
+SPIResult WBSPIClockSet(WBSPI* ob,unsigned hz);
+SPIResult WBSPIEdgeSet(WBSPI* ob,int posedge);
 #endif
 
 // Author: Michael Schmidt (michael@embeddedARM.com)
