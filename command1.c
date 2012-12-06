@@ -1013,7 +1013,7 @@ mode ModeNL = {
   .StartValue = 0,
   .EndValue = 0,
   .Separator = ColonSeparator,
-  .base=16, .abase=-8
+  .base=10, .abase=-8
 };
 
 void ModeAssignInit(mode *mode) {

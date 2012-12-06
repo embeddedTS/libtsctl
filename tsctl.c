@@ -300,7 +300,6 @@ int tsctl_shell(Stream *in,Stream *out) {
     printf("tsctl " LIBTSCTL_FULL_VERSION " (%s)\n",compiledate+7);
     printf("Type \"?\" to get context-sensitive help.\n");
     mode1 = &ModeNL;
-    mode1->base = 10;
   }
   while (!exception) {
     if (!in) { // interactive, display prompt
