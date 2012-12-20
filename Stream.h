@@ -15,6 +15,7 @@ struct Stream {
   int (*Write)(Stream *,char *bytes,int len);
   int (*WriteChar)(Stream *st,char byte);
   int (*isEOF)(Stream *st);
+  void (*Flush)(Stream *st);
   int outputOffset;
 };
 
@@ -27,6 +28,7 @@ typedef struct {
   int (*Write)(Stream *,char *bytes,int len);
   int (*WriteChar)(Stream *st,char byte);
   int (*isEOF)(Stream *st);
+  void (*Flush)(Stream *st);
   int outputOffset;
   FILE *I,*O;
 } FileStream;
@@ -40,9 +42,10 @@ typedef struct {
   int (*Write)(Stream *,char *bytes,int len);
   int (*WriteChar)(Stream *st,char byte);
   int (*isEOF)(Stream *st);
+  void (*Flush)(Stream *st);
   int outputOffset;
-  int i,o,iptr,ilen;
-  int8 *ibuf;
+  int i,o,iptr,ilen,ordy,olen;
+  int8 *ibuf, *obuf;
 } DescriptorStream;
 
 typedef struct {
@@ -54,6 +57,7 @@ typedef struct {
   int (*Write)(Stream *,char *bytes,int len);
   int (*WriteChar)(Stream *st,char byte);
   int (*isEOF)(Stream *st);
+  void (*Flush)(Stream *st);
   int outputOffset;
   int inputOffset;
   int8** input;
@@ -62,6 +66,7 @@ typedef struct {
 
 Stream *FileStreamInit(FILE *in,FILE *out);
 Stream *DescriptorStreamInit(int in,int out);
+Stream *DescriptorStreamInit2(int in,int out,int buflen);
 Stream *StringStreamInit(int8** in,int8** out);
 
 // static int Skip(Stream *st,int len)

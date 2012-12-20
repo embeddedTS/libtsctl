@@ -53,6 +53,10 @@ int FileStreamEOF(Stream *st0) {
   FileStream *st = (FileStream *)st0;
   return feof(st->I);
 }
+void FileStreamFlush(Stream *st0) {
+  FileStream *st = (FileStream *)st0;
+  fflush(st->O);
+}
 
 void DescriptorStreamFini(Stream *st0) {
   DescriptorStream *st = (DescriptorStream *)st0;
@@ -64,13 +68,14 @@ static int DescriptorStreamFillBuffer(Stream *st0,int block) {
   DescriptorStream *st = (DescriptorStream *)st0;
   int ret;
 
-  if (!block && !DescriptorReadyRead(st->i)) return 1;
   if (st->iptr + st->ilen < 4096) {
-    ret = read(st->i,st->ibuf + st->iptr + st->ilen,4096-st->ilen-st->iptr);
-    if (ret > 0) st->ilen += ret;
+    if (block <= 0 && !DescriptorReadyRead(st->i)) return 1;
+    ret = NOSIG(read(st->i,st->ibuf + st->iptr + st->ilen,4096-st->ilen-st->iptr));
+    if (ret > 0) { st->ilen += ret; block -= ret; }
   }
   if (st->iptr + st->ilen >= 4096 && st->ilen < 4096) {
-    ret = read(st->i,st->ibuf + st->iptr + st->ilen - 4096,4096-st->ilen);
+    if (block <= 0 && !DescriptorReadyRead(st->i)) return 1;
+    ret = NOSIG(read(st->i,st->ibuf + st->iptr + st->ilen - 4096,4096-st->ilen));
     if (ret > 0) st->ilen += ret;
   }
   return ret;
@@ -80,12 +85,12 @@ static int DescriptorStreamDrainBytes(Stream *st0,char *buf,int len) {
   DescriptorStream *st = (DescriptorStream *)st0;
 
   if (len > st->ilen) {
-    DescriptorStreamFillBuffer(st0,1);
+    DescriptorStreamFillBuffer(st0,len);
   }
   if (st->iptr + st->ilen < 4096) {
     if (len > st->ilen) len = st->ilen;
   } else {
-    if (len > 4096 - st->iptr - st->ilen) len = 4096 - st->iptr - st->ilen;
+    if (len > st->iptr + st->ilen - 4096) len = len > st->iptr + st->ilen - 4096;
   }
   memcpy(buf,st->ibuf+st->iptr,len);
   st->iptr += len;
@@ -116,6 +121,7 @@ int DescriptorStreamUnread(Stream *st0,int ch) {
 
   if (st->ilen == 4096) return 0;
   if (--st->iptr < 0) st->iptr = 4095;
+  st->ilen++;
 }
 
 int DescriptorStreamReadChar(Stream *st0) {
@@ -137,17 +143,53 @@ unsigned DescriptorStreamInputReady(Stream *st0) {
   return st->ilen;
 }
 
+int surewrite(int h,void *buf,int len) {
+  int n,tot=len;
+
+  while (len > 0) {
+    n = write(h,buf,len);
+    if (n < 0) {
+      if (errno == EINTR) continue;
+      return n; // assumes blocking, else CPU will be high polling
+    }
+    buf += n;
+    len -= n;
+  }
+  return tot;
+}
+
+int DescriptorStreamBufferedWrite(DescriptorStream *st,char *bytes,int len) {
+  int n;
+  while (len > st->olen - st->ordy) { // enough to send next buffer
+    memcpy(st->obuf + st->ordy,bytes,st->olen - st->ordy);
+    n = surewrite(st->o,st->obuf,st->olen);
+    if (n < 0) return n;
+    len -= (st->olen - st->ordy);
+    bytes += (st->olen - st->ordy);
+    st->ordy = 0;
+  }
+  memcpy(st->obuf + st->ordy,bytes,len);
+  st->ordy += len;
+  return len;
+}
+
 int DescriptorStreamWrite(Stream *st0,char *bytes,int len) {
   DescriptorStream *st = (DescriptorStream *)st0;
 
   st->outputOffset+=len; // if write doesn't write everything, this is wrong
   // but it probably doesn't matter since we won't use this here
+  if (st->obuf) {
+    return DescriptorStreamBufferedWrite(st,bytes,len);
+  }
   return write(st->o,bytes,len); // FIXME: should be blocking!
 }
 
 int DescriptorStreamWriteChar(Stream *st0,char byte) {
   DescriptorStream *st = (DescriptorStream *)st0;
   st->outputOffset++;
+  if (st->obuf) {
+    return DescriptorStreamBufferedWrite(st,&byte,1);
+  }
   return write(st->o,&byte,1); // FIXME: should be blocking!
 }
 
@@ -157,6 +199,15 @@ int DescriptorStreamEOF(Stream *st0) {
   int ret = DescriptorStreamFillBuffer(st0,0);
   //fprintf(stderr,"eof@%d\n",ret);
   return ret <= 0;
+}
+
+void DescriptorStreamFlush(Stream *st0) {
+  DescriptorStream *st = (DescriptorStream *)st0;
+
+  if (st->obuf) {
+    surewrite(st->o,st->obuf,st->ordy);
+    st->ordy = 0;
+  }
 }
 
 void StringStreamFini(Stream *st) {
@@ -218,6 +269,8 @@ int StringStreamEOF(Stream *st0) {
   return (ArrayLength(*(st->input)) - st->inputOffset) == 0;
 }
 
+void StringStreamFlush(Stream *st0) {
+}
 
 Stream *FileStreamInit(FILE *in,FILE *out) {
   FileStream *st = malloc(sizeof(FileStream));
@@ -229,6 +282,7 @@ Stream *FileStreamInit(FILE *in,FILE *out) {
   st->Write = FileStreamWrite;
   st->WriteChar = FileStreamWriteChar;
   st->isEOF = FileStreamEOF;
+  st->Flush = FileStreamFlush;
   st->I = in;
   st->O = out;
   return (Stream *)st;
@@ -244,11 +298,20 @@ Stream *DescriptorStreamInit(int in,int out) {
   st->Write = DescriptorStreamWrite;
   st->WriteChar = DescriptorStreamWriteChar;
   st->isEOF = DescriptorStreamEOF;
+  st->Flush = DescriptorStreamFlush;
   st->i = in;
   st->o = out;
   st->ibuf = malloc(4096);
-  st->iptr = st->ilen = 0;
+  st->iptr = st->ilen = st->ordy = st->olen = 0;
+  st->obuf = 0;
   return (Stream *)st;
+}
+
+Stream *DescriptorStreamInit2(int in,int out,int buflen) {
+  DescriptorStream *ret= (DescriptorStream *)DescriptorStreamInit(in,out);
+  ret->obuf = malloc(buflen);
+  ret->olen = buflen;
+  return (Stream *)ret;
 }
 
 Stream *StringStreamInit(int8** in,int8** out) {
@@ -261,6 +324,7 @@ Stream *StringStreamInit(int8** in,int8** out) {
   st->Write = StringStreamWrite;
   st->WriteChar = StringStreamWriteChar;
   st->isEOF = StringStreamEOF;
+  st->Flush = StringStreamFlush;
   st->input = in;
   st->output = out;
   st->inputOffset = st->outputOffset = 0;
