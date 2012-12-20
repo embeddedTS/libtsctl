@@ -25,7 +25,7 @@ extern Thread *head_thread;
 
 void *httpServerConstor(int socket) {
   if (socket < 0) return 0;
-  return DescriptorStreamInit(socket,socket);
+  return DescriptorStreamInit2(socket,socket,1436);
 }
 
 void httpServerDester(void *arg) {
@@ -52,21 +52,24 @@ void *httpServer(void *arg) {
   // look for POST data, which follows headers.
   do {
     last = st->ReadChar(st);
-  } while (st->InputReady(st) && last != '\r');
-  while (st->InputReady(st)) {
+  } while (last > 0 && last != '\r');
+  if (last < 0) return 0;
+  while (1) {
     next = st->ReadChar(st);
+    if (next < 0) return 0;
     if (next == '\r') continue;
     if (last == '\n' && next == '\n') break;
     last = next;
   }
   t = time(0);
   WriteASCIIZ(st,"HTTP/1.1 200 OK\r\nExpires: Sun, 1 Apr 2012 00:00:00 GMT\r\nServer: tsctl\r\nAccess-Control-Allow-Origin: *\r\nContent-Type: text/plain; charset=UTF-8\r\nConnection: close\r\n\r\n{");
-
-  while (st->InputReady(st)) {
-    tsctl_shell(st,st);
+  st->Flush(st);
+  while (!st->isEOF(st)) {
+    if (tsctl_shell(st,st)) break;
+    st->Flush(st);
   }
   WriteASCIIZ(st,"\"end\":1\n}");
-
+  st->Flush(st);
  httpServerDone:
   //fprintf(stderr,"httpServer @%p/%d finished on socket %d\n",th,th->pid,socket);
   return 0;
