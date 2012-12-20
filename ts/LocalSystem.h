@@ -32,7 +32,7 @@ struct LocalSystem {
 	unsigned FUNC(UptimeServer)(LocalSystem *me);
 	unsigned FUNC(UptimeHost)(LocalSystem *me);
 	int FUNC(FPGARevision)(LocalSystem *me);
-	int FUNC(EchoNumber)(LocalSystem *me,int );
+	int FUNC(EchoNumber)(LocalSystem *me,int n);
 	int InitStatus;
 	unsigned maplock;
 	NameValuePair *map;
@@ -61,7 +61,7 @@ char *LocalSystemVersion(LocalSystem* ob);
 unsigned LocalSystemUptimeServer(LocalSystem* ob);
 unsigned LocalSystemUptimeHost(LocalSystem* ob);
 int LocalSystemFPGARevision(LocalSystem* ob);
-int LocalSystemEchoNumber(LocalSystem* ob,int );
+int LocalSystemEchoNumber(LocalSystem* ob,int n);
 #endif
 
 // Author: Michael Schmidt (michael@embeddedARM.com)
