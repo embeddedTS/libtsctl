@@ -220,7 +220,7 @@ int printcmds(char*** cmds) {
 
 int ClientSocketNew(char *host,int port) {
   int			rc;            /* system calls return value storage */
-  int            	s;             /* socket descriptor */
+  int            	x,s;             /* socket descriptor */
   struct addrinfo *result,*rp;
   struct addrinfo hints;
   char service[8];
@@ -238,6 +238,10 @@ int ClientSocketNew(char *host,int port) {
   for (rp=result; rp != NULL; rp = rp->ai_next) {
     s = socket(rp->ai_family, rp->ai_socktype,rp->ai_protocol);
     if (s < 0) continue;
+    if (setsockopt(s, IPPROTO_TCP, TCP_NODELAY, &x, 4) < 0) {
+      perror("TCP_NO_DELAY");
+      exit(1);
+    }
     if (connect(s, rp->ai_addr, rp->ai_addrlen) != -1) break;
     close(s);
   }
@@ -254,6 +258,8 @@ int serverRunning() {
   }
   return 0;
 }
+
+int iAmTheServer = 0;
 
 // in=0 means interactive shell
 // implement Stream type argv, or simply convert the args to a string
@@ -277,6 +283,7 @@ int tsctl_shell(Stream *in,Stream *out) {
   void *tmp=0,*tmp2=0;
 
   void setHost(char *host0) {
+    if (iAmTheServer) return;
     if (socket >= 0) {
       close(socket);
       socket = -1;
@@ -292,7 +299,7 @@ int tsctl_shell(Stream *in,Stream *out) {
       fprintf(stderr,"Server error on %s: %m\n",host);
       exit(1);
     } else {
-      HostStream = DescriptorStreamInit(socket,socket);
+      HostStream = DescriptorStreamInit2(socket,socket,1436);
     }
   }
 
@@ -413,12 +420,13 @@ int tsctl_shell(Stream *in,Stream *out) {
     // the number of replies receives, so as to not continue until
     // all our current requests have been satisfied
 
-    if (!host && serverRunning()) {
+    if (!host && !iAmTheServer && serverRunning()) {
       setHost(ASCIIZ("@127.0.0.1"));
     }
 
     if (host) {
       WriteArray(HostStream,RequestString);
+      HostStream->Flush(HostStream);
       while (count > 0 && !HostStream->isEOF(HostStream)) {
 	if (coWriteTagged0(&tmp,&tmp2,OutputStream,HostStream,&mode1)) {
 	  count--;
@@ -433,6 +441,7 @@ int tsctl_shell(Stream *in,Stream *out) {
       }
     }
     WriteArray(out,OutputString);
+    out->Flush(out);
     ArrayFree(RequestString);
     ArrayFree(ReplyString);
     ArrayFree(OutputString);
@@ -444,6 +453,7 @@ int tsctl_shell(Stream *in,Stream *out) {
  tsctl_shell_done:
   for (i=0;i<ArrayLength(stack);i++) ArrayFree(stack[i]);
   ArrayFree(stack);
+  return 0;
 }
 
 void *binaryServer(void *arg) {
@@ -489,6 +499,7 @@ int main(int argc,char *argv[]) {
     if (serverRunning()) {
       return 0;
     }
+    iAmTheServer = 1;
     sd.f = httpServer;
     sd.constor = httpServerConstor;
     sd.destor = httpServerDester;
