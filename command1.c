@@ -958,7 +958,7 @@ typedef struct {
   void (*StartStruct)(Stream *,void **,int,int,int);
   void (*EndStruct)(Stream *,void **,int,int,int);
   void (*StartValue)(Stream *,void **,int,int);
-  void (*EndValue)(Stream *,void **,int,int);
+  void (*EndValue)(Stream *,void **,int,int,int);
   void (*Separator)(Stream *,void **,int,int);
   void (*StartEnum)(Stream *,void **,int,int);
   void (*EndEnum)(Stream *,void **,int,int);
@@ -999,6 +999,23 @@ static void ColonSeparator(Stream *out,void **state,int class,int func) {
 static void NewlineSeparator(Stream *out,void **state,int class,int func,
 			     int base) {
   int **count = *state;
+  out->WriteChar(out,'\n');
+  //count[class][func]++;
+}
+
+static void CommaNewlineSeparator(Stream *out,void **state,int class,int func,
+			     int base) {
+  int **count = *state;
+  out->WriteChar(out,',');
+  out->WriteChar(out,'\n');
+  //count[class][func]++;
+}
+
+static void QuotedNewlineSeparator(Stream *out,void **state,int class,int func,
+			     int base) {
+  int **count = *state;
+  if (base < 2) out->WriteChar(out,'"');  else out->WriteChar(out,']');
+  out->WriteChar(out,',');
   out->WriteChar(out,'\n');
   //count[class][func]++;
 }
@@ -1169,7 +1186,7 @@ static void StartWithJSONName(Stream *out,void **state,int class,int func,
   WriteInt(out,count[class][func],10,0,0);  
 
   if (*i >= ArrayLength(RetNames[class][func])) {
-    fprintf(stderr,"error: assertion failure in StartWithName\n");
+    fprintf(stderr,"error: assertion failure in StartWithJSONName\n");
     exit(1);
   }
   if (RetNames[class][func][*i][0]) {
@@ -1197,11 +1214,20 @@ static void StartWithJSONName(Stream *out,void **state,int class,int func,
   out->WriteChar(out,'"');  
 
   out->WriteChar(out,':');  
-  //if (base < 2) out->WriteChar(out,'"');  
 }
 
-void JSONEndValue(Stream *out,void **state,int class,int func) {
-  out->WriteChar(out,',');
+static void StartArrayWithJSONName(Stream *out,void **state,int class,int func,
+			      int base) {
+  StartWithJSONName(out,state,class,func,base);
+  if (base < 2) out->WriteChar(out,'"');  else out->WriteChar(out,'[');
+}
+static void StartNonArrayWithJSONName(Stream *out,void **state,int class,int func,
+			      int base) {
+  StartWithJSONName(out,state,class,func,base);
+}
+
+void JSONEndValue(Stream *out,void **state,int class,int func,int base) {
+  if (base >= 2) out->WriteChar(out,',');
 }
 
 void JSONStartEnum(Stream *out,void **state,int class,int func) {
@@ -1214,9 +1240,9 @@ void JSONEndEnum(Stream *out,void **state,int class,int func) {
 
 mode ModeJSON = {
   .InitState = 0,
-  .StartArray = StartWithJSONName,
-  .EndArray = NewlineSeparator,
-  .StartNonArray = StartWithJSONName,
+  .StartArray = StartArrayWithJSONName,
+  .EndArray = QuotedNewlineSeparator,
+  .StartNonArray = StartNonArrayWithJSONName,
   .EndNonArray = NewlineSeparator,
   .StartStruct = StartStruct,
   .EndStruct = EndStruct,
@@ -1224,7 +1250,7 @@ mode ModeJSON = {
   .EndValue = JSONEndValue,
   .StartEnum = JSONStartEnum,
   .EndEnum = JSONEndEnum,
-  .Separator = ColonSeparator,
+  .Separator = 0,
   .base=16, .abase=-1616
 };
 
@@ -1362,7 +1388,7 @@ int coWriteTagged(coParm,void **state,Stream *out,Stream *in,mode **mode,
   if (co(isArray)) {
     WAITBYTES(4);
     co(length) = ReadInt32LE(in);
-    if (co(length) > 1) {
+    if (1 || co(length) > 1) {
       co(b) = (*mode)->abase;
     } else {
       co(b) = (*mode)->base;
@@ -1449,7 +1475,9 @@ int coWriteTagged(coParm,void **state,Stream *out,Stream *in,mode **mode,
 	  }
 	}
       }
-      if ((*mode)->EndValue) (*mode)->EndValue(out,state,class,func);
+      if ((*mode)->EndValue && (!co(isArray) || co(i)+1<co(length))) { 
+	(*mode)->EndValue(out,state,class,func,co(b));
+      }
       if (co(b) > 0 && co(i)+1<co(length) && (*mode)->Separator) {
 	(*mode)->Separator(out,state,class,func); 
       }
@@ -1489,7 +1517,9 @@ int coWriteTagged(coParm,void **state,Stream *out,Stream *in,mode **mode,
 	  //real64 num = ReadReal64LE(in);
 	}
       }
-      if ((*mode)->EndValue) (*mode)->EndValue(out,state,class,func);
+      if ((*mode)->EndValue && (!co(isArray) || co(i)+1<co(length))) {
+	(*mode)->EndValue(out,state,class,func,co(b));
+      }
       if (co(b) > 0 && co(i)+1<co(length) && (*mode)->Separator) {
 	(*mode)->Separator(out,state,class,func); 
       }
