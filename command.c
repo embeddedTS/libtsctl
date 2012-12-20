@@ -1426,7 +1426,7 @@ ArrayAuto(char*,SystemVersionArgNames,ARR());
 ArrayAuto(char*,SystemUptimeServerArgNames,ARR());
 ArrayAuto(char*,SystemUptimeHostArgNames,ARR());
 ArrayAuto(char*,SystemFPGARevisionArgNames,ARR());
-ArrayAuto(char*,SystemEchoNumberArgNames,ARR("",));
+ArrayAuto(char*,SystemEchoNumberArgNames,ARR("n",));
 ArrayAuto(char**,SystemArgNames,ARR(ArrayL(SystemClassCountArgNames),ArrayL(SystemInstanceCountArgNames),ArrayL(SystemAPICountArgNames),ArrayL(SystemLockCountArgNames),ArrayL(SystemLockHolderInfoArgNames),ArrayL(SystemConnWaitInfoArgNames),ArrayL(SystemCANBusGetArgNames),ArrayL(SystemBuildTimeArgNames),ArrayL(SystemModelIdArgNames),ArrayL(SystemBaseBoardIdArgNames),ArrayL(SystemMapLengthArgNames),ArrayL(SystemMapGetArgNames),ArrayL(SystemMapLookupArgNames),ArrayL(SystemMapLookupPartialArgNames),ArrayL(SystemMapAddArgNames),ArrayL(SystemMapDeleteArgNames),ArrayL(SystemNoteArgNames),ArrayL(SystemVersionArgNames),ArrayL(SystemUptimeServerArgNames),ArrayL(SystemUptimeHostArgNames),ArrayL(SystemFPGARevisionArgNames),ArrayL(SystemEchoNumberArgNames),));
 
 ArrayAuto(char*,BusLockArgNames,ARR("num","flags",));
@@ -1602,6 +1602,7 @@ int tsctlSystemClassCount(System *ob,Stream *out,Stream *in) {
   WriteInt8LE(out,0x13);
   WriteInt32LE(out,ret);
   WriteInt8LE(out,0x80);
+  out->Flush(out);
   return 1;
 }
 int tsctlSystemInstanceCount(System *ob,Stream *out,Stream *in) {
@@ -1613,6 +1614,7 @@ int tsctlSystemInstanceCount(System *ob,Stream *out,Stream *in) {
   WriteInt8LE(out,0x13);
   WriteInt32LE(out,ret);
   WriteInt8LE(out,0x80);
+  out->Flush(out);
   return 1;
 }
 int tsctlSystemAPICount(System *ob,Stream *out,Stream *in) {
@@ -1624,6 +1626,7 @@ int tsctlSystemAPICount(System *ob,Stream *out,Stream *in) {
   WriteInt8LE(out,0x13);
   WriteInt32LE(out,ret);
   WriteInt8LE(out,0x80);
+  out->Flush(out);
   return 1;
 }
 int tsctlSystemLockCount(System *ob,Stream *out,Stream *in) {
@@ -1634,6 +1637,7 @@ int tsctlSystemLockCount(System *ob,Stream *out,Stream *in) {
   WriteInt8LE(out,0x13);
   WriteInt32LE(out,ret);
   WriteInt8LE(out,0x80);
+  out->Flush(out);
   return 1;
 }
 int tsctlSystemLockHolderInfo(System *ob,Stream *out,Stream *in) {
@@ -1653,6 +1657,7 @@ int tsctlSystemLockHolderInfo(System *ob,Stream *out,Stream *in) {
     }
   }
   WriteInt8LE(out,0x80);
+  out->Flush(out);
   return 1;
 }
 int tsctlSystemConnWaitInfo(System *ob,Stream *out,Stream *in) {
@@ -1672,6 +1677,7 @@ int tsctlSystemConnWaitInfo(System *ob,Stream *out,Stream *in) {
     }
   }
   WriteInt8LE(out,0x80);
+  out->Flush(out);
   return 1;
 }
 int tsctlSystemCANBusGet(System *ob,Stream *out,Stream *in) {
@@ -1683,6 +1689,7 @@ int tsctlSystemCANBusGet(System *ob,Stream *out,Stream *in) {
   WriteInt8LE(out,0xC0);
   WriteInt32LE(out,ret);
   WriteInt8LE(out,0x80);
+  out->Flush(out);
   return 1;
 }
 int tsctlSystemBuildTime(System *ob,Stream *out,Stream *in) {
@@ -1693,6 +1700,7 @@ int tsctlSystemBuildTime(System *ob,Stream *out,Stream *in) {
   WriteInt8LE(out,0x03);
   WriteUInt32LE(out,ret);
   WriteInt8LE(out,0x80);
+  out->Flush(out);
   return 1;
 }
 int tsctlSystemModelId(System *ob,Stream *out,Stream *in) {
@@ -1703,6 +1711,7 @@ int tsctlSystemModelId(System *ob,Stream *out,Stream *in) {
   WriteInt8LE(out,0x13);
   WriteInt32LE(out,ret);
   WriteInt8LE(out,0x80);
+  out->Flush(out);
   return 1;
 }
 int tsctlSystemBaseBoardId(System *ob,Stream *out,Stream *in) {
@@ -1713,6 +1722,7 @@ int tsctlSystemBaseBoardId(System *ob,Stream *out,Stream *in) {
   WriteInt8LE(out,0x13);
   WriteInt32LE(out,ret);
   WriteInt8LE(out,0x80);
+  out->Flush(out);
   return 1;
 }
 int tsctlSystemMapLength(System *ob,Stream *out,Stream *in) {
@@ -1723,6 +1733,7 @@ int tsctlSystemMapLength(System *ob,Stream *out,Stream *in) {
   WriteInt8LE(out,0x13);
   WriteInt32LE(out,ret);
   WriteInt8LE(out,0x80);
+  out->Flush(out);
   return 1;
 }
 int tsctlSystemMapGet(System *ob,Stream *out,Stream *in) {
@@ -1749,6 +1760,7 @@ int tsctlSystemMapGet(System *ob,Stream *out,Stream *in) {
     }
   }
   WriteInt8LE(out,0x80);
+  out->Flush(out);
   return 1;
 }
 int tsctlSystemMapLookup(System *ob,Stream *out,Stream *in) {
@@ -1760,6 +1772,7 @@ int tsctlSystemMapLookup(System *ob,Stream *out,Stream *in) {
   WriteInt8LE(out,0x13);
   WriteInt32LE(out,ret);
   WriteInt8LE(out,0x80);
+  out->Flush(out);
   return 1;
 }
 int tsctlSystemMapLookupPartial(System *ob,Stream *out,Stream *in) {
@@ -1778,6 +1791,7 @@ int tsctlSystemMapLookupPartial(System *ob,Stream *out,Stream *in) {
     }
   }
   WriteInt8LE(out,0x80);
+  out->Flush(out);
   return 1;
 }
 int tsctlSystemMapAdd(System *ob,Stream *out,Stream *in) {
@@ -1790,6 +1804,7 @@ int tsctlSystemMapAdd(System *ob,Stream *out,Stream *in) {
   WriteInt8LE(out,0xC0);
   WriteInt32LE(out,ret);
   WriteInt8LE(out,0x80);
+  out->Flush(out);
   return 1;
 }
 int tsctlSystemMapDelete(System *ob,Stream *out,Stream *in) {
@@ -1801,6 +1816,7 @@ int tsctlSystemMapDelete(System *ob,Stream *out,Stream *in) {
   WriteInt8LE(out,0xC0);
   WriteInt32LE(out,ret);
   WriteInt8LE(out,0x80);
+  out->Flush(out);
   return 1;
 }
 int tsctlSystemNote(System *ob,Stream *out,Stream *in) {
@@ -1818,6 +1834,7 @@ int tsctlSystemNote(System *ob,Stream *out,Stream *in) {
     }
   }
   WriteInt8LE(out,0x80);
+  out->Flush(out);
   return 1;
 }
 int tsctlSystemVersion(System *ob,Stream *out,Stream *in) {
@@ -1834,6 +1851,7 @@ int tsctlSystemVersion(System *ob,Stream *out,Stream *in) {
     }
   }
   WriteInt8LE(out,0x80);
+  out->Flush(out);
   return 1;
 }
 int tsctlSystemUptimeServer(System *ob,Stream *out,Stream *in) {
@@ -1844,6 +1862,7 @@ int tsctlSystemUptimeServer(System *ob,Stream *out,Stream *in) {
   WriteInt8LE(out,0x03);
   WriteUInt32LE(out,ret);
   WriteInt8LE(out,0x80);
+  out->Flush(out);
   return 1;
 }
 int tsctlSystemUptimeHost(System *ob,Stream *out,Stream *in) {
@@ -1854,6 +1873,7 @@ int tsctlSystemUptimeHost(System *ob,Stream *out,Stream *in) {
   WriteInt8LE(out,0x03);
   WriteUInt32LE(out,ret);
   WriteInt8LE(out,0x80);
+  out->Flush(out);
   return 1;
 }
 int tsctlSystemFPGARevision(System *ob,Stream *out,Stream *in) {
@@ -1864,6 +1884,7 @@ int tsctlSystemFPGARevision(System *ob,Stream *out,Stream *in) {
   WriteInt8LE(out,0x13);
   WriteInt32LE(out,ret);
   WriteInt8LE(out,0x80);
+  out->Flush(out);
   return 1;
 }
 int tsctlSystemEchoNumber(System *ob,Stream *out,Stream *in) {
@@ -1875,6 +1896,7 @@ int tsctlSystemEchoNumber(System *ob,Stream *out,Stream *in) {
   WriteInt8LE(out,0x13);
   WriteInt32LE(out,ret);
   WriteInt8LE(out,0x80);
+  out->Flush(out);
   return 1;
 }
 ArrayAuto(void **,tsctlSystem,ARR((void *)tsctlSystemClassCount,(void *)tsctlSystemInstanceCount,(void *)tsctlSystemAPICount,(void *)tsctlSystemLockCount,(void *)tsctlSystemLockHolderInfo,(void *)tsctlSystemConnWaitInfo,(void *)tsctlSystemCANBusGet,(void *)tsctlSystemBuildTime,(void *)tsctlSystemModelId,(void *)tsctlSystemBaseBoardId,(void *)tsctlSystemMapLength,(void *)tsctlSystemMapGet,(void *)tsctlSystemMapLookup,(void *)tsctlSystemMapLookupPartial,(void *)tsctlSystemMapAdd,(void *)tsctlSystemMapDelete,(void *)tsctlSystemNote,(void *)tsctlSystemVersion,(void *)tsctlSystemUptimeServer,(void *)tsctlSystemUptimeHost,(void *)tsctlSystemFPGARevision,(void *)tsctlSystemEchoNumber,));
@@ -1889,6 +1911,7 @@ int tsctlBusLock(Bus *ob,Stream *out,Stream *in) {
   WriteInt8LE(out,0x13);
   WriteInt32LE(out,ret);
   WriteInt8LE(out,0x80);
+  out->Flush(out);
   return 1;
 }
 int tsctlBusUnlock(Bus *ob,Stream *out,Stream *in) {
@@ -1901,6 +1924,7 @@ int tsctlBusUnlock(Bus *ob,Stream *out,Stream *in) {
   WriteInt8LE(out,0x13);
   WriteInt32LE(out,ret);
   WriteInt8LE(out,0x80);
+  out->Flush(out);
   return 1;
 }
 int tsctlBusPreempt(Bus *ob,Stream *out,Stream *in) {
@@ -1911,6 +1935,7 @@ int tsctlBusPreempt(Bus *ob,Stream *out,Stream *in) {
   WriteInt8LE(out,0x13);
   WriteInt32LE(out,ret);
   WriteInt8LE(out,0x80);
+  out->Flush(out);
   return 1;
 }
 int tsctlBusPeek8(Bus *ob,Stream *out,Stream *in) {
@@ -1922,6 +1947,7 @@ int tsctlBusPeek8(Bus *ob,Stream *out,Stream *in) {
   WriteInt8LE(out,0x00);
   WriteUInt8LE(out,ret);
   WriteInt8LE(out,0x80);
+  out->Flush(out);
   return 1;
 }
 int tsctlBusPoke8(Bus *ob,Stream *out,Stream *in) {
@@ -1931,6 +1957,7 @@ int tsctlBusPoke8(Bus *ob,Stream *out,Stream *in) {
   uint8 arg2 = ReadUInt8LE(in);
   ob->Poke8(ob,arg1,arg2);
   WriteInt8LE(out,0x80);
+  out->Flush(out);
   return 1;
 }
 int tsctlBusPeek16(Bus *ob,Stream *out,Stream *in) {
@@ -1942,6 +1969,7 @@ int tsctlBusPeek16(Bus *ob,Stream *out,Stream *in) {
   WriteInt8LE(out,0x01);
   WriteUInt16LE(out,ret);
   WriteInt8LE(out,0x80);
+  out->Flush(out);
   return 1;
 }
 int tsctlBusPoke16(Bus *ob,Stream *out,Stream *in) {
@@ -1951,6 +1979,7 @@ int tsctlBusPoke16(Bus *ob,Stream *out,Stream *in) {
   uint16 arg2 = ReadUInt16LE(in);
   ob->Poke16(ob,arg1,arg2);
   WriteInt8LE(out,0x80);
+  out->Flush(out);
   return 1;
 }
 int tsctlBusPeek32(Bus *ob,Stream *out,Stream *in) {
@@ -1962,6 +1991,7 @@ int tsctlBusPeek32(Bus *ob,Stream *out,Stream *in) {
   WriteInt8LE(out,0x03);
   WriteUInt32LE(out,ret);
   WriteInt8LE(out,0x80);
+  out->Flush(out);
   return 1;
 }
 int tsctlBusPoke32(Bus *ob,Stream *out,Stream *in) {
@@ -1971,6 +2001,7 @@ int tsctlBusPoke32(Bus *ob,Stream *out,Stream *in) {
   uint32 arg2 = ReadUInt32LE(in);
   ob->Poke32(ob,arg1,arg2);
   WriteInt8LE(out,0x80);
+  out->Flush(out);
   return 1;
 }
 int tsctlBusBitGet8(Bus *ob,Stream *out,Stream *in) {
@@ -1983,6 +2014,7 @@ int tsctlBusBitGet8(Bus *ob,Stream *out,Stream *in) {
   WriteInt8LE(out,0x13);
   WriteInt32LE(out,ret);
   WriteInt8LE(out,0x80);
+  out->Flush(out);
   return 1;
 }
 int tsctlBusBitAssign8(Bus *ob,Stream *out,Stream *in) {
@@ -1993,6 +2025,7 @@ int tsctlBusBitAssign8(Bus *ob,Stream *out,Stream *in) {
   int32 arg3 = ReadInt32LE(in);
   ob->BitAssign8(ob,arg1,arg2,arg3);
   WriteInt8LE(out,0x80);
+  out->Flush(out);
   return 1;
 }
 int tsctlBusBitSet8(Bus *ob,Stream *out,Stream *in) {
@@ -2002,6 +2035,7 @@ int tsctlBusBitSet8(Bus *ob,Stream *out,Stream *in) {
   int32 arg2 = ReadInt32LE(in);
   ob->BitSet8(ob,arg1,arg2);
   WriteInt8LE(out,0x80);
+  out->Flush(out);
   return 1;
 }
 int tsctlBusBitClear8(Bus *ob,Stream *out,Stream *in) {
@@ -2011,6 +2045,7 @@ int tsctlBusBitClear8(Bus *ob,Stream *out,Stream *in) {
   int32 arg2 = ReadInt32LE(in);
   ob->BitClear8(ob,arg1,arg2);
   WriteInt8LE(out,0x80);
+  out->Flush(out);
   return 1;
 }
 int tsctlBusBitGet16(Bus *ob,Stream *out,Stream *in) {
@@ -2023,6 +2058,7 @@ int tsctlBusBitGet16(Bus *ob,Stream *out,Stream *in) {
   WriteInt8LE(out,0x13);
   WriteInt32LE(out,ret);
   WriteInt8LE(out,0x80);
+  out->Flush(out);
   return 1;
 }
 int tsctlBusBitAssign16(Bus *ob,Stream *out,Stream *in) {
@@ -2033,6 +2069,7 @@ int tsctlBusBitAssign16(Bus *ob,Stream *out,Stream *in) {
   int32 arg3 = ReadInt32LE(in);
   ob->BitAssign16(ob,arg1,arg2,arg3);
   WriteInt8LE(out,0x80);
+  out->Flush(out);
   return 1;
 }
 int tsctlBusBitSet16(Bus *ob,Stream *out,Stream *in) {
@@ -2042,6 +2079,7 @@ int tsctlBusBitSet16(Bus *ob,Stream *out,Stream *in) {
   int32 arg2 = ReadInt32LE(in);
   ob->BitSet16(ob,arg1,arg2);
   WriteInt8LE(out,0x80);
+  out->Flush(out);
   return 1;
 }
 int tsctlBusBitClear16(Bus *ob,Stream *out,Stream *in) {
@@ -2051,6 +2089,7 @@ int tsctlBusBitClear16(Bus *ob,Stream *out,Stream *in) {
   int32 arg2 = ReadInt32LE(in);
   ob->BitClear16(ob,arg1,arg2);
   WriteInt8LE(out,0x80);
+  out->Flush(out);
   return 1;
 }
 int tsctlBusBitGet32(Bus *ob,Stream *out,Stream *in) {
@@ -2063,6 +2102,7 @@ int tsctlBusBitGet32(Bus *ob,Stream *out,Stream *in) {
   WriteInt8LE(out,0x13);
   WriteInt32LE(out,ret);
   WriteInt8LE(out,0x80);
+  out->Flush(out);
   return 1;
 }
 int tsctlBusBitAssign32(Bus *ob,Stream *out,Stream *in) {
@@ -2073,6 +2113,7 @@ int tsctlBusBitAssign32(Bus *ob,Stream *out,Stream *in) {
   int32 arg3 = ReadInt32LE(in);
   ob->BitAssign32(ob,arg1,arg2,arg3);
   WriteInt8LE(out,0x80);
+  out->Flush(out);
   return 1;
 }
 int tsctlBusBitSet32(Bus *ob,Stream *out,Stream *in) {
@@ -2082,6 +2123,7 @@ int tsctlBusBitSet32(Bus *ob,Stream *out,Stream *in) {
   int32 arg2 = ReadInt32LE(in);
   ob->BitSet32(ob,arg1,arg2);
   WriteInt8LE(out,0x80);
+  out->Flush(out);
   return 1;
 }
 int tsctlBusBitClear32(Bus *ob,Stream *out,Stream *in) {
@@ -2091,6 +2133,7 @@ int tsctlBusBitClear32(Bus *ob,Stream *out,Stream *in) {
   int32 arg2 = ReadInt32LE(in);
   ob->BitClear32(ob,arg1,arg2);
   WriteInt8LE(out,0x80);
+  out->Flush(out);
   return 1;
 }
 int tsctlBusPeekStream(Bus *ob,Stream *out,Stream *in) {
@@ -2110,6 +2153,7 @@ int tsctlBusPeekStream(Bus *ob,Stream *out,Stream *in) {
     }
   }
   WriteInt8LE(out,0x80);
+  out->Flush(out);
   return 1;
 }
 int tsctlBusPokeStream(Bus *ob,Stream *out,Stream *in) {
@@ -2120,6 +2164,7 @@ int tsctlBusPokeStream(Bus *ob,Stream *out,Stream *in) {
   const int8* arg3 = ReadArrayInt8LE(in);
   ob->PokeStream(ob,arg1,arg2,arg3);
   WriteInt8LE(out,0x80);
+  out->Flush(out);
   return 1;
 }
 int tsctlBusRefresh(Bus *ob,Stream *out,Stream *in) {
@@ -2127,6 +2172,7 @@ int tsctlBusRefresh(Bus *ob,Stream *out,Stream *in) {
   WriteInt8LE(out,23);
   ob->Refresh(ob);
   WriteInt8LE(out,0x80);
+  out->Flush(out);
   return 1;
 }
 int tsctlBusCommit(Bus *ob,Stream *out,Stream *in) {
@@ -2135,6 +2181,7 @@ int tsctlBusCommit(Bus *ob,Stream *out,Stream *in) {
   int32 arg1 = ReadInt32LE(in);
   ob->Commit(ob,arg1);
   WriteInt8LE(out,0x80);
+  out->Flush(out);
   return 1;
 }
 int tsctlBusBitToggle8(Bus *ob,Stream *out,Stream *in) {
@@ -2147,6 +2194,7 @@ int tsctlBusBitToggle8(Bus *ob,Stream *out,Stream *in) {
   WriteInt8LE(out,0x13);
   WriteInt32LE(out,ret);
   WriteInt8LE(out,0x80);
+  out->Flush(out);
   return 1;
 }
 int tsctlBusBitToggle16(Bus *ob,Stream *out,Stream *in) {
@@ -2159,6 +2207,7 @@ int tsctlBusBitToggle16(Bus *ob,Stream *out,Stream *in) {
   WriteInt8LE(out,0x13);
   WriteInt32LE(out,ret);
   WriteInt8LE(out,0x80);
+  out->Flush(out);
   return 1;
 }
 int tsctlBusBitToggle32(Bus *ob,Stream *out,Stream *in) {
@@ -2171,6 +2220,7 @@ int tsctlBusBitToggle32(Bus *ob,Stream *out,Stream *in) {
   WriteInt8LE(out,0x13);
   WriteInt32LE(out,ret);
   WriteInt8LE(out,0x80);
+  out->Flush(out);
   return 1;
 }
 int tsctlBusAssign8X(Bus *ob,Stream *out,Stream *in) {
@@ -2185,6 +2235,7 @@ int tsctlBusAssign8X(Bus *ob,Stream *out,Stream *in) {
   WriteInt8LE(out,0x00);
   WriteUInt8LE(out,ret);
   WriteInt8LE(out,0x80);
+  out->Flush(out);
   return 1;
 }
 int tsctlBusAssign16X(Bus *ob,Stream *out,Stream *in) {
@@ -2199,6 +2250,7 @@ int tsctlBusAssign16X(Bus *ob,Stream *out,Stream *in) {
   WriteInt8LE(out,0x01);
   WriteUInt16LE(out,ret);
   WriteInt8LE(out,0x80);
+  out->Flush(out);
   return 1;
 }
 int tsctlBusAssign32X(Bus *ob,Stream *out,Stream *in) {
@@ -2213,6 +2265,7 @@ int tsctlBusAssign32X(Bus *ob,Stream *out,Stream *in) {
   WriteInt8LE(out,0x03);
   WriteUInt32LE(out,ret);
   WriteInt8LE(out,0x80);
+  out->Flush(out);
   return 1;
 }
 int tsctlBusBitsGet8(Bus *ob,Stream *out,Stream *in) {
@@ -2226,6 +2279,7 @@ int tsctlBusBitsGet8(Bus *ob,Stream *out,Stream *in) {
   WriteInt8LE(out,0x00);
   WriteUInt8LE(out,ret);
   WriteInt8LE(out,0x80);
+  out->Flush(out);
   return 1;
 }
 int tsctlBusBitsGet16(Bus *ob,Stream *out,Stream *in) {
@@ -2239,6 +2293,7 @@ int tsctlBusBitsGet16(Bus *ob,Stream *out,Stream *in) {
   WriteInt8LE(out,0x01);
   WriteUInt16LE(out,ret);
   WriteInt8LE(out,0x80);
+  out->Flush(out);
   return 1;
 }
 int tsctlBusBitsGet32(Bus *ob,Stream *out,Stream *in) {
@@ -2252,6 +2307,7 @@ int tsctlBusBitsGet32(Bus *ob,Stream *out,Stream *in) {
   WriteInt8LE(out,0x03);
   WriteUInt32LE(out,ret);
   WriteInt8LE(out,0x80);
+  out->Flush(out);
   return 1;
 }
 ArrayAuto(void **,tsctlBus,ARR((void *)tsctlBusLock,(void *)tsctlBusUnlock,(void *)tsctlBusPreempt,(void *)tsctlBusPeek8,(void *)tsctlBusPoke8,(void *)tsctlBusPeek16,(void *)tsctlBusPoke16,(void *)tsctlBusPeek32,(void *)tsctlBusPoke32,(void *)tsctlBusBitGet8,(void *)tsctlBusBitAssign8,(void *)tsctlBusBitSet8,(void *)tsctlBusBitClear8,(void *)tsctlBusBitGet16,(void *)tsctlBusBitAssign16,(void *)tsctlBusBitSet16,(void *)tsctlBusBitClear16,(void *)tsctlBusBitGet32,(void *)tsctlBusBitAssign32,(void *)tsctlBusBitSet32,(void *)tsctlBusBitClear32,(void *)tsctlBusPeekStream,(void *)tsctlBusPokeStream,(void *)tsctlBusRefresh,(void *)tsctlBusCommit,(void *)tsctlBusBitToggle8,(void *)tsctlBusBitToggle16,(void *)tsctlBusBitToggle32,(void *)tsctlBusAssign8X,(void *)tsctlBusAssign16X,(void *)tsctlBusAssign32X,(void *)tsctlBusBitsGet8,(void *)tsctlBusBitsGet16,(void *)tsctlBusBitsGet32,));
@@ -2265,6 +2321,7 @@ int tsctlTimeWait(Time *ob,Stream *out,Stream *in) {
   WriteInt8LE(out,0x03);
   WriteUInt32LE(out,ret);
   WriteInt8LE(out,0x80);
+  out->Flush(out);
   return 1;
 }
 int tsctlTimeDelay(Time *ob,Stream *out,Stream *in) {
@@ -2273,6 +2330,7 @@ int tsctlTimeDelay(Time *ob,Stream *out,Stream *in) {
   uint32 arg1 = ReadUInt32LE(in);
   ob->Delay(ob,arg1);
   WriteInt8LE(out,0x80);
+  out->Flush(out);
   return 1;
 }
 int tsctlTimeTick(Time *ob,Stream *out,Stream *in) {
@@ -2283,6 +2341,7 @@ int tsctlTimeTick(Time *ob,Stream *out,Stream *in) {
   WriteInt8LE(out,0x03);
   WriteUInt32LE(out,ret);
   WriteInt8LE(out,0x80);
+  out->Flush(out);
   return 1;
 }
 int tsctlTimeusElapsed(Time *ob,Stream *out,Stream *in) {
@@ -2294,6 +2353,7 @@ int tsctlTimeusElapsed(Time *ob,Stream *out,Stream *in) {
   WriteInt8LE(out,0x03);
   WriteUInt32LE(out,ret);
   WriteInt8LE(out,0x80);
+  out->Flush(out);
   return 1;
 }
 int tsctlTimeusFuture(Time *ob,Stream *out,Stream *in) {
@@ -2306,6 +2366,7 @@ int tsctlTimeusFuture(Time *ob,Stream *out,Stream *in) {
   WriteInt8LE(out,0x03);
   WriteUInt32LE(out,ret);
   WriteInt8LE(out,0x80);
+  out->Flush(out);
   return 1;
 }
 int tsctlTimeTimeoutQ(Time *ob,Stream *out,Stream *in) {
@@ -2318,6 +2379,7 @@ int tsctlTimeTimeoutQ(Time *ob,Stream *out,Stream *in) {
   WriteInt8LE(out,0xC1);
   WriteInt32LE(out,ret);
   WriteInt8LE(out,0x80);
+  out->Flush(out);
   return 1;
 }
 int tsctlTimeTPS(Time *ob,Stream *out,Stream *in) {
@@ -2328,6 +2390,7 @@ int tsctlTimeTPS(Time *ob,Stream *out,Stream *in) {
   WriteInt8LE(out,0x03);
   WriteUInt32LE(out,ret);
   WriteInt8LE(out,0x80);
+  out->Flush(out);
   return 1;
 }
 ArrayAuto(void **,tsctlTime,ARR((void *)tsctlTimeWait,(void *)tsctlTimeDelay,(void *)tsctlTimeTick,(void *)tsctlTimeusElapsed,(void *)tsctlTimeusFuture,(void *)tsctlTimeTimeoutQ,(void *)tsctlTimeTPS,));
@@ -2342,6 +2405,7 @@ int tsctlPinLock(Pin *ob,Stream *out,Stream *in) {
   WriteInt8LE(out,0x13);
   WriteInt32LE(out,ret);
   WriteInt8LE(out,0x80);
+  out->Flush(out);
   return 1;
 }
 int tsctlPinUnlock(Pin *ob,Stream *out,Stream *in) {
@@ -2354,6 +2418,7 @@ int tsctlPinUnlock(Pin *ob,Stream *out,Stream *in) {
   WriteInt8LE(out,0x13);
   WriteInt32LE(out,ret);
   WriteInt8LE(out,0x80);
+  out->Flush(out);
   return 1;
 }
 int tsctlPinPreempt(Pin *ob,Stream *out,Stream *in) {
@@ -2364,6 +2429,7 @@ int tsctlPinPreempt(Pin *ob,Stream *out,Stream *in) {
   WriteInt8LE(out,0x13);
   WriteInt32LE(out,ret);
   WriteInt8LE(out,0x80);
+  out->Flush(out);
   return 1;
 }
 int tsctlPinModeGet(Pin *ob,Stream *out,Stream *in) {
@@ -2375,6 +2441,7 @@ int tsctlPinModeGet(Pin *ob,Stream *out,Stream *in) {
   WriteInt8LE(out,0xC2);
   WriteInt32LE(out,ret);
   WriteInt8LE(out,0x80);
+  out->Flush(out);
   return 1;
 }
 int tsctlPinModeSet(Pin *ob,Stream *out,Stream *in) {
@@ -2387,6 +2454,7 @@ int tsctlPinModeSet(Pin *ob,Stream *out,Stream *in) {
   WriteInt8LE(out,0xC3);
   WriteInt32LE(out,ret);
   WriteInt8LE(out,0x80);
+  out->Flush(out);
   return 1;
 }
 ArrayAuto(void **,tsctlPin,ARR((void *)tsctlPinLock,(void *)tsctlPinUnlock,(void *)tsctlPinPreempt,(void *)tsctlPinModeGet,(void *)tsctlPinModeSet,));
@@ -2401,6 +2469,7 @@ int tsctlDIORawLock(DIORaw *ob,Stream *out,Stream *in) {
   WriteInt8LE(out,0x13);
   WriteInt32LE(out,ret);
   WriteInt8LE(out,0x80);
+  out->Flush(out);
   return 1;
 }
 int tsctlDIORawUnlock(DIORaw *ob,Stream *out,Stream *in) {
@@ -2413,6 +2482,7 @@ int tsctlDIORawUnlock(DIORaw *ob,Stream *out,Stream *in) {
   WriteInt8LE(out,0x13);
   WriteInt32LE(out,ret);
   WriteInt8LE(out,0x80);
+  out->Flush(out);
   return 1;
 }
 int tsctlDIORawPreempt(DIORaw *ob,Stream *out,Stream *in) {
@@ -2423,6 +2493,7 @@ int tsctlDIORawPreempt(DIORaw *ob,Stream *out,Stream *in) {
   WriteInt8LE(out,0x13);
   WriteInt32LE(out,ret);
   WriteInt8LE(out,0x80);
+  out->Flush(out);
   return 1;
 }
 int tsctlDIORawDirSet(DIORaw *ob,Stream *out,Stream *in) {
@@ -2432,6 +2503,7 @@ int tsctlDIORawDirSet(DIORaw *ob,Stream *out,Stream *in) {
   int32 arg2 = ReadInt32LE(in);
   ob->DirSet(ob,arg1,arg2);
   WriteInt8LE(out,0x80);
+  out->Flush(out);
   return 1;
 }
 int tsctlDIORawDataSet(DIORaw *ob,Stream *out,Stream *in) {
@@ -2441,6 +2513,7 @@ int tsctlDIORawDataSet(DIORaw *ob,Stream *out,Stream *in) {
   int32 arg2 = ReadInt32LE(in);
   ob->DataSet(ob,arg1,arg2);
   WriteInt8LE(out,0x80);
+  out->Flush(out);
   return 1;
 }
 int tsctlDIORawDirGet(DIORaw *ob,Stream *out,Stream *in) {
@@ -2452,6 +2525,7 @@ int tsctlDIORawDirGet(DIORaw *ob,Stream *out,Stream *in) {
   WriteInt8LE(out,0x13);
   WriteInt32LE(out,ret);
   WriteInt8LE(out,0x80);
+  out->Flush(out);
   return 1;
 }
 int tsctlDIORawDataGet(DIORaw *ob,Stream *out,Stream *in) {
@@ -2463,6 +2537,7 @@ int tsctlDIORawDataGet(DIORaw *ob,Stream *out,Stream *in) {
   WriteInt8LE(out,0x13);
   WriteInt32LE(out,ret);
   WriteInt8LE(out,0x80);
+  out->Flush(out);
   return 1;
 }
 int tsctlDIORawCount(DIORaw *ob,Stream *out,Stream *in) {
@@ -2473,6 +2548,7 @@ int tsctlDIORawCount(DIORaw *ob,Stream *out,Stream *in) {
   WriteInt8LE(out,0x03);
   WriteUInt32LE(out,ret);
   WriteInt8LE(out,0x80);
+  out->Flush(out);
   return 1;
 }
 ArrayAuto(void **,tsctlDIORaw,ARR((void *)tsctlDIORawLock,(void *)tsctlDIORawUnlock,(void *)tsctlDIORawPreempt,(void *)tsctlDIORawDirSet,(void *)tsctlDIORawDataSet,(void *)tsctlDIORawDirGet,(void *)tsctlDIORawDataGet,(void *)tsctlDIORawCount,));
@@ -2487,6 +2563,7 @@ int tsctlDIOLock(DIO *ob,Stream *out,Stream *in) {
   WriteInt8LE(out,0x13);
   WriteInt32LE(out,ret);
   WriteInt8LE(out,0x80);
+  out->Flush(out);
   return 1;
 }
 int tsctlDIOUnlock(DIO *ob,Stream *out,Stream *in) {
@@ -2499,6 +2576,7 @@ int tsctlDIOUnlock(DIO *ob,Stream *out,Stream *in) {
   WriteInt8LE(out,0x13);
   WriteInt32LE(out,ret);
   WriteInt8LE(out,0x80);
+  out->Flush(out);
   return 1;
 }
 int tsctlDIOPreempt(DIO *ob,Stream *out,Stream *in) {
@@ -2509,6 +2587,7 @@ int tsctlDIOPreempt(DIO *ob,Stream *out,Stream *in) {
   WriteInt8LE(out,0x13);
   WriteInt32LE(out,ret);
   WriteInt8LE(out,0x80);
+  out->Flush(out);
   return 1;
 }
 int tsctlDIORefresh(DIO *ob,Stream *out,Stream *in) {
@@ -2516,6 +2595,7 @@ int tsctlDIORefresh(DIO *ob,Stream *out,Stream *in) {
   WriteInt8LE(out,3);
   ob->Refresh(ob);
   WriteInt8LE(out,0x80);
+  out->Flush(out);
   return 1;
 }
 int tsctlDIOCommit(DIO *ob,Stream *out,Stream *in) {
@@ -2524,6 +2604,7 @@ int tsctlDIOCommit(DIO *ob,Stream *out,Stream *in) {
   int32 arg1 = ReadInt32LE(in);
   ob->Commit(ob,arg1);
   WriteInt8LE(out,0x80);
+  out->Flush(out);
   return 1;
 }
 int tsctlDIOSet(DIO *ob,Stream *out,Stream *in) {
@@ -2533,6 +2614,7 @@ int tsctlDIOSet(DIO *ob,Stream *out,Stream *in) {
   DIOState arg2 = ReadInt32LE(in);
   ob->Set(ob,arg1,arg2);
   WriteInt8LE(out,0x80);
+  out->Flush(out);
   return 1;
 }
 int tsctlDIOGet(DIO *ob,Stream *out,Stream *in) {
@@ -2544,6 +2626,7 @@ int tsctlDIOGet(DIO *ob,Stream *out,Stream *in) {
   WriteInt8LE(out,0xC4);
   WriteInt32LE(out,ret);
   WriteInt8LE(out,0x80);
+  out->Flush(out);
   return 1;
 }
 int tsctlDIOSetAsync(DIO *ob,Stream *out,Stream *in) {
@@ -2553,6 +2636,7 @@ int tsctlDIOSetAsync(DIO *ob,Stream *out,Stream *in) {
   DIOState arg2 = ReadInt32LE(in);
   ob->SetAsync(ob,arg1,arg2);
   WriteInt8LE(out,0x80);
+  out->Flush(out);
   return 1;
 }
 int tsctlDIOGetAsync(DIO *ob,Stream *out,Stream *in) {
@@ -2564,6 +2648,7 @@ int tsctlDIOGetAsync(DIO *ob,Stream *out,Stream *in) {
   WriteInt8LE(out,0xC4);
   WriteInt32LE(out,ret);
   WriteInt8LE(out,0x80);
+  out->Flush(out);
   return 1;
 }
 int tsctlDIOWait(DIO *ob,Stream *out,Stream *in) {
@@ -2585,6 +2670,7 @@ int tsctlDIOWait(DIO *ob,Stream *out,Stream *in) {
     }
   }
   WriteInt8LE(out,0x80);
+  out->Flush(out);
   return 1;
 }
 int tsctlDIOCount(DIO *ob,Stream *out,Stream *in) {
@@ -2595,6 +2681,7 @@ int tsctlDIOCount(DIO *ob,Stream *out,Stream *in) {
   WriteInt8LE(out,0x03);
   WriteUInt32LE(out,ret);
   WriteInt8LE(out,0x80);
+  out->Flush(out);
   return 1;
 }
 int tsctlDIOCapabilities(DIO *ob,Stream *out,Stream *in) {
@@ -2606,6 +2693,7 @@ int tsctlDIOCapabilities(DIO *ob,Stream *out,Stream *in) {
   WriteInt8LE(out,0xC5);
   WriteInt32LE(out,ret);
   WriteInt8LE(out,0x80);
+  out->Flush(out);
   return 1;
 }
 int tsctlDIOGetMulti(DIO *ob,Stream *out,Stream *in) {
@@ -2627,6 +2715,7 @@ int tsctlDIOGetMulti(DIO *ob,Stream *out,Stream *in) {
     }
   }
   WriteInt8LE(out,0x80);
+  out->Flush(out);
   return 1;
 }
 ArrayAuto(void **,tsctlDIO,ARR((void *)tsctlDIOLock,(void *)tsctlDIOUnlock,(void *)tsctlDIOPreempt,(void *)tsctlDIORefresh,(void *)tsctlDIOCommit,(void *)tsctlDIOSet,(void *)tsctlDIOGet,(void *)tsctlDIOSetAsync,(void *)tsctlDIOGetAsync,(void *)tsctlDIOWait,(void *)tsctlDIOCount,(void *)tsctlDIOCapabilities,(void *)tsctlDIOGetMulti,));
@@ -2641,6 +2730,7 @@ int tsctlTWILock(TWI *ob,Stream *out,Stream *in) {
   WriteInt8LE(out,0x13);
   WriteInt32LE(out,ret);
   WriteInt8LE(out,0x80);
+  out->Flush(out);
   return 1;
 }
 int tsctlTWIUnlock(TWI *ob,Stream *out,Stream *in) {
@@ -2653,6 +2743,7 @@ int tsctlTWIUnlock(TWI *ob,Stream *out,Stream *in) {
   WriteInt8LE(out,0x13);
   WriteInt32LE(out,ret);
   WriteInt8LE(out,0x80);
+  out->Flush(out);
   return 1;
 }
 int tsctlTWIPreempt(TWI *ob,Stream *out,Stream *in) {
@@ -2663,6 +2754,7 @@ int tsctlTWIPreempt(TWI *ob,Stream *out,Stream *in) {
   WriteInt8LE(out,0x13);
   WriteInt32LE(out,ret);
   WriteInt8LE(out,0x80);
+  out->Flush(out);
   return 1;
 }
 int tsctlTWIWrite(TWI *ob,Stream *out,Stream *in) {
@@ -2677,6 +2769,7 @@ int tsctlTWIWrite(TWI *ob,Stream *out,Stream *in) {
   WriteInt8LE(out,0xC7);
   WriteInt32LE(out,ret);
   WriteInt8LE(out,0x80);
+  out->Flush(out);
   return 1;
 }
 int tsctlTWIRead(TWI *ob,Stream *out,Stream *in) {
@@ -2700,6 +2793,7 @@ int tsctlTWIRead(TWI *ob,Stream *out,Stream *in) {
     }
   }
   WriteInt8LE(out,0x80);
+  out->Flush(out);
   return 1;
 }
 ArrayAuto(void **,tsctlTWI,ARR((void *)tsctlTWILock,(void *)tsctlTWIUnlock,(void *)tsctlTWIPreempt,(void *)tsctlTWIWrite,(void *)tsctlTWIRead,));
@@ -2738,6 +2832,7 @@ int tsctlCANRx(CAN *ob,Stream *out,Stream *in) {
     }
   }
   WriteInt8LE(out,0x80);
+  out->Flush(out);
   return 1;
 }
 int tsctlCANTx(CAN *ob,Stream *out,Stream *in) {
@@ -2751,6 +2846,7 @@ int tsctlCANTx(CAN *ob,Stream *out,Stream *in) {
   WriteInt8LE(out,0xCB);
   WriteInt32LE(out,ret);
   WriteInt8LE(out,0x80);
+  out->Flush(out);
   return 1;
 }
 int tsctlCANBaudSet(CAN *ob,Stream *out,Stream *in) {
@@ -2762,6 +2858,7 @@ int tsctlCANBaudSet(CAN *ob,Stream *out,Stream *in) {
   WriteInt8LE(out,0x03);
   WriteUInt32LE(out,ret);
   WriteInt8LE(out,0x80);
+  out->Flush(out);
   return 1;
 }
 int tsctlCANBaudGet(CAN *ob,Stream *out,Stream *in) {
@@ -2772,6 +2869,7 @@ int tsctlCANBaudGet(CAN *ob,Stream *out,Stream *in) {
   WriteInt8LE(out,0x03);
   WriteUInt32LE(out,ret);
   WriteInt8LE(out,0x80);
+  out->Flush(out);
   return 1;
 }
 int tsctlCANAbort(CAN *ob,Stream *out,Stream *in) {
@@ -2779,6 +2877,7 @@ int tsctlCANAbort(CAN *ob,Stream *out,Stream *in) {
   WriteInt8LE(out,4);
   ob->Abort(ob);
   WriteInt8LE(out,0x80);
+  out->Flush(out);
   return 1;
 }
 int tsctlCANRxMulti(CAN *ob,Stream *out,Stream *in) {
@@ -2817,6 +2916,7 @@ int tsctlCANRxMulti(CAN *ob,Stream *out,Stream *in) {
     }
   }
   WriteInt8LE(out,0x80);
+  out->Flush(out);
   return 1;
 }
 ArrayAuto(void **,tsctlCAN,ARR((void *)tsctlCANRx,(void *)tsctlCANTx,(void *)tsctlCANBaudSet,(void *)tsctlCANBaudGet,(void *)tsctlCANAbort,(void *)tsctlCANRxMulti,));
@@ -2831,6 +2931,7 @@ int tsctlSPILock(SPI *ob,Stream *out,Stream *in) {
   WriteInt8LE(out,0x13);
   WriteInt32LE(out,ret);
   WriteInt8LE(out,0x80);
+  out->Flush(out);
   return 1;
 }
 int tsctlSPIUnlock(SPI *ob,Stream *out,Stream *in) {
@@ -2843,6 +2944,7 @@ int tsctlSPIUnlock(SPI *ob,Stream *out,Stream *in) {
   WriteInt8LE(out,0x13);
   WriteInt32LE(out,ret);
   WriteInt8LE(out,0x80);
+  out->Flush(out);
   return 1;
 }
 int tsctlSPIPreempt(SPI *ob,Stream *out,Stream *in) {
@@ -2853,6 +2955,7 @@ int tsctlSPIPreempt(SPI *ob,Stream *out,Stream *in) {
   WriteInt8LE(out,0x13);
   WriteInt32LE(out,ret);
   WriteInt8LE(out,0x80);
+  out->Flush(out);
   return 1;
 }
 int tsctlSPIWrite(SPI *ob,Stream *out,Stream *in) {
@@ -2865,6 +2968,7 @@ int tsctlSPIWrite(SPI *ob,Stream *out,Stream *in) {
   WriteInt8LE(out,0xCC);
   WriteInt32LE(out,ret);
   WriteInt8LE(out,0x80);
+  out->Flush(out);
   return 1;
 }
 int tsctlSPIRead(SPI *ob,Stream *out,Stream *in) {
@@ -2886,6 +2990,7 @@ int tsctlSPIRead(SPI *ob,Stream *out,Stream *in) {
     }
   }
   WriteInt8LE(out,0x80);
+  out->Flush(out);
   return 1;
 }
 int tsctlSPIReadWrite(SPI *ob,Stream *out,Stream *in) {
@@ -2908,6 +3013,7 @@ int tsctlSPIReadWrite(SPI *ob,Stream *out,Stream *in) {
     }
   }
   WriteInt8LE(out,0x80);
+  out->Flush(out);
   return 1;
 }
 int tsctlSPIClockSet(SPI *ob,Stream *out,Stream *in) {
@@ -2919,6 +3025,7 @@ int tsctlSPIClockSet(SPI *ob,Stream *out,Stream *in) {
   WriteInt8LE(out,0xCC);
   WriteInt32LE(out,ret);
   WriteInt8LE(out,0x80);
+  out->Flush(out);
   return 1;
 }
 int tsctlSPIEdgeSet(SPI *ob,Stream *out,Stream *in) {
@@ -2930,6 +3037,7 @@ int tsctlSPIEdgeSet(SPI *ob,Stream *out,Stream *in) {
   WriteInt8LE(out,0xCC);
   WriteInt32LE(out,ret);
   WriteInt8LE(out,0x80);
+  out->Flush(out);
   return 1;
 }
 ArrayAuto(void **,tsctlSPI,ARR((void *)tsctlSPILock,(void *)tsctlSPIUnlock,(void *)tsctlSPIPreempt,(void *)tsctlSPIWrite,(void *)tsctlSPIRead,(void *)tsctlSPIReadWrite,(void *)tsctlSPIClockSet,(void *)tsctlSPIEdgeSet,));
@@ -2944,6 +3052,7 @@ int tsctlAIOLock(AIO *ob,Stream *out,Stream *in) {
   WriteInt8LE(out,0x13);
   WriteInt32LE(out,ret);
   WriteInt8LE(out,0x80);
+  out->Flush(out);
   return 1;
 }
 int tsctlAIOUnlock(AIO *ob,Stream *out,Stream *in) {
@@ -2956,6 +3065,7 @@ int tsctlAIOUnlock(AIO *ob,Stream *out,Stream *in) {
   WriteInt8LE(out,0x13);
   WriteInt32LE(out,ret);
   WriteInt8LE(out,0x80);
+  out->Flush(out);
   return 1;
 }
 int tsctlAIOPreempt(AIO *ob,Stream *out,Stream *in) {
@@ -2966,6 +3076,7 @@ int tsctlAIOPreempt(AIO *ob,Stream *out,Stream *in) {
   WriteInt8LE(out,0x13);
   WriteInt32LE(out,ret);
   WriteInt8LE(out,0x80);
+  out->Flush(out);
   return 1;
 }
 int tsctlAIOType(AIO *ob,Stream *out,Stream *in) {
@@ -2976,6 +3087,7 @@ int tsctlAIOType(AIO *ob,Stream *out,Stream *in) {
   WriteInt8LE(out,0xCD);
   WriteInt32LE(out,ret);
   WriteInt8LE(out,0x80);
+  out->Flush(out);
   return 1;
 }
 int tsctlAIOVoltageRangeList(AIO *ob,Stream *out,Stream *in) {
@@ -3005,6 +3117,7 @@ int tsctlAIOVoltageRangeList(AIO *ob,Stream *out,Stream *in) {
     }
   }
   WriteInt8LE(out,0x80);
+  out->Flush(out);
   return 1;
 }
 int tsctlAIOPrecisionList(AIO *ob,Stream *out,Stream *in) {
@@ -3015,6 +3128,7 @@ int tsctlAIOPrecisionList(AIO *ob,Stream *out,Stream *in) {
   WriteInt8LE(out,0x13);
   WriteInt32LE(out,ret);
   WriteInt8LE(out,0x80);
+  out->Flush(out);
   return 1;
 }
 int tsctlAIOPeriodRangeList(AIO *ob,Stream *out,Stream *in) {
@@ -3036,6 +3150,7 @@ int tsctlAIOPeriodRangeList(AIO *ob,Stream *out,Stream *in) {
     }
   }
   WriteInt8LE(out,0x80);
+  out->Flush(out);
   return 1;
 }
 int tsctlAIOTriggerList(AIO *ob,Stream *out,Stream *in) {
@@ -3052,6 +3167,7 @@ int tsctlAIOTriggerList(AIO *ob,Stream *out,Stream *in) {
     }
   }
   WriteInt8LE(out,0x80);
+  out->Flush(out);
   return 1;
 }
 int tsctlAIOChannels(AIO *ob,Stream *out,Stream *in) {
@@ -3062,6 +3178,7 @@ int tsctlAIOChannels(AIO *ob,Stream *out,Stream *in) {
   WriteInt8LE(out,0x13);
   WriteInt32LE(out,ret);
   WriteInt8LE(out,0x80);
+  out->Flush(out);
   return 1;
 }
 int tsctlAIOReset(AIO *ob,Stream *out,Stream *in) {
@@ -3069,6 +3186,7 @@ int tsctlAIOReset(AIO *ob,Stream *out,Stream *in) {
   WriteInt8LE(out,9);
   ob->Reset(ob);
   WriteInt8LE(out,0x80);
+  out->Flush(out);
   return 1;
 }
 int tsctlAIOChannelEnable(AIO *ob,Stream *out,Stream *in) {
@@ -3081,6 +3199,7 @@ int tsctlAIOChannelEnable(AIO *ob,Stream *out,Stream *in) {
   WriteInt8LE(out,0x13);
   WriteInt32LE(out,ret);
   WriteInt8LE(out,0x80);
+  out->Flush(out);
   return 1;
 }
 int tsctlAIOChannelSamplePeriod(AIO *ob,Stream *out,Stream *in) {
@@ -3093,6 +3212,7 @@ int tsctlAIOChannelSamplePeriod(AIO *ob,Stream *out,Stream *in) {
   WriteInt8LE(out,0x03);
   WriteUInt32LE(out,ret);
   WriteInt8LE(out,0x80);
+  out->Flush(out);
   return 1;
 }
 int tsctlAIOChannelPrecision(AIO *ob,Stream *out,Stream *in) {
@@ -3105,6 +3225,7 @@ int tsctlAIOChannelPrecision(AIO *ob,Stream *out,Stream *in) {
   WriteInt8LE(out,0x13);
   WriteInt32LE(out,ret);
   WriteInt8LE(out,0x80);
+  out->Flush(out);
   return 1;
 }
 int tsctlAIOChannelVoltageRange(AIO *ob,Stream *out,Stream *in) {
@@ -3118,6 +3239,7 @@ int tsctlAIOChannelVoltageRange(AIO *ob,Stream *out,Stream *in) {
   WriteInt8LE(out,0x13);
   WriteInt32LE(out,ret);
   WriteInt8LE(out,0x80);
+  out->Flush(out);
   return 1;
 }
 int tsctlAIOConfiguration(AIO *ob,Stream *out,Stream *in) {
@@ -3187,6 +3309,7 @@ int tsctlAIOConfiguration(AIO *ob,Stream *out,Stream *in) {
     }
   }
   WriteInt8LE(out,0x80);
+  out->Flush(out);
   return 1;
 }
 int tsctlAIOConfigureTest(AIO *ob,Stream *out,Stream *in) {
@@ -3203,6 +3326,7 @@ int tsctlAIOConfigureTest(AIO *ob,Stream *out,Stream *in) {
   WriteInt8LE(out,0x13);
   WriteInt32LE(out,ret);
   WriteInt8LE(out,0x80);
+  out->Flush(out);
   return 1;
 }
 int tsctlAIOConfigure(AIO *ob,Stream *out,Stream *in) {
@@ -3219,6 +3343,7 @@ int tsctlAIOConfigure(AIO *ob,Stream *out,Stream *in) {
   WriteInt8LE(out,0x13);
   WriteInt32LE(out,ret);
   WriteInt8LE(out,0x80);
+  out->Flush(out);
   return 1;
 }
 int tsctlAIOITrig(AIO *ob,Stream *out,Stream *in) {
@@ -3230,6 +3355,7 @@ int tsctlAIOITrig(AIO *ob,Stream *out,Stream *in) {
   WriteInt8LE(out,0x13);
   WriteInt32LE(out,ret);
   WriteInt8LE(out,0x80);
+  out->Flush(out);
   return 1;
 }
 int tsctlAIOGet(AIO *ob,Stream *out,Stream *in) {
@@ -3241,6 +3367,7 @@ int tsctlAIOGet(AIO *ob,Stream *out,Stream *in) {
   WriteInt8LE(out,0x13);
   WriteInt32LE(out,ret);
   WriteInt8LE(out,0x80);
+  out->Flush(out);
   return 1;
 }
 int tsctlAIOPut(AIO *ob,Stream *out,Stream *in) {
@@ -3253,6 +3380,7 @@ int tsctlAIOPut(AIO *ob,Stream *out,Stream *in) {
   WriteInt8LE(out,0x13);
   WriteInt32LE(out,ret);
   WriteInt8LE(out,0x80);
+  out->Flush(out);
   return 1;
 }
 int tsctlAIOReady(AIO *ob,Stream *out,Stream *in) {
@@ -3264,6 +3392,7 @@ int tsctlAIOReady(AIO *ob,Stream *out,Stream *in) {
   WriteInt8LE(out,0x13);
   WriteInt32LE(out,ret);
   WriteInt8LE(out,0x80);
+  out->Flush(out);
   return 1;
 }
 int tsctlAIOGets8(AIO *ob,Stream *out,Stream *in) {
@@ -3284,6 +3413,7 @@ int tsctlAIOGets8(AIO *ob,Stream *out,Stream *in) {
     }
   }
   WriteInt8LE(out,0x80);
+  out->Flush(out);
   return 1;
 }
 int tsctlAIOGets16(AIO *ob,Stream *out,Stream *in) {
@@ -3304,6 +3434,7 @@ int tsctlAIOGets16(AIO *ob,Stream *out,Stream *in) {
     }
   }
   WriteInt8LE(out,0x80);
+  out->Flush(out);
   return 1;
 }
 int tsctlAIOGets32(AIO *ob,Stream *out,Stream *in) {
@@ -3324,6 +3455,7 @@ int tsctlAIOGets32(AIO *ob,Stream *out,Stream *in) {
     }
   }
   WriteInt8LE(out,0x80);
+  out->Flush(out);
   return 1;
 }
 int tsctlAIOPuts8(AIO *ob,Stream *out,Stream *in) {
@@ -3335,6 +3467,7 @@ int tsctlAIOPuts8(AIO *ob,Stream *out,Stream *in) {
   WriteInt8LE(out,0x13);
   WriteInt32LE(out,ret);
   WriteInt8LE(out,0x80);
+  out->Flush(out);
   return 1;
 }
 int tsctlAIOPuts16(AIO *ob,Stream *out,Stream *in) {
@@ -3346,6 +3479,7 @@ int tsctlAIOPuts16(AIO *ob,Stream *out,Stream *in) {
   WriteInt8LE(out,0x13);
   WriteInt32LE(out,ret);
   WriteInt8LE(out,0x80);
+  out->Flush(out);
   return 1;
 }
 int tsctlAIOPuts32(AIO *ob,Stream *out,Stream *in) {
@@ -3357,6 +3491,7 @@ int tsctlAIOPuts32(AIO *ob,Stream *out,Stream *in) {
   WriteInt8LE(out,0x13);
   WriteInt32LE(out,ret);
   WriteInt8LE(out,0x80);
+  out->Flush(out);
   return 1;
 }
 int tsctlAIOReadys8(AIO *ob,Stream *out,Stream *in) {
@@ -3368,6 +3503,7 @@ int tsctlAIOReadys8(AIO *ob,Stream *out,Stream *in) {
   WriteInt8LE(out,0x13);
   WriteInt32LE(out,ret);
   WriteInt8LE(out,0x80);
+  out->Flush(out);
   return 1;
 }
 int tsctlAIOReadys16(AIO *ob,Stream *out,Stream *in) {
@@ -3379,6 +3515,7 @@ int tsctlAIOReadys16(AIO *ob,Stream *out,Stream *in) {
   WriteInt8LE(out,0x13);
   WriteInt32LE(out,ret);
   WriteInt8LE(out,0x80);
+  out->Flush(out);
   return 1;
 }
 int tsctlAIOReadys32(AIO *ob,Stream *out,Stream *in) {
@@ -3390,6 +3527,7 @@ int tsctlAIOReadys32(AIO *ob,Stream *out,Stream *in) {
   WriteInt8LE(out,0x13);
   WriteInt32LE(out,ret);
   WriteInt8LE(out,0x80);
+  out->Flush(out);
   return 1;
 }
 ArrayAuto(void **,tsctlAIO,ARR((void *)tsctlAIOLock,(void *)tsctlAIOUnlock,(void *)tsctlAIOPreempt,(void *)tsctlAIOType,(void *)tsctlAIOVoltageRangeList,(void *)tsctlAIOPrecisionList,(void *)tsctlAIOPeriodRangeList,(void *)tsctlAIOTriggerList,(void *)tsctlAIOChannels,(void *)tsctlAIOReset,(void *)tsctlAIOChannelEnable,(void *)tsctlAIOChannelSamplePeriod,(void *)tsctlAIOChannelPrecision,(void *)tsctlAIOChannelVoltageRange,(void *)tsctlAIOConfiguration,(void *)tsctlAIOConfigureTest,(void *)tsctlAIOConfigure,(void *)tsctlAIOITrig,(void *)tsctlAIOGet,(void *)tsctlAIOPut,(void *)tsctlAIOReady,(void *)tsctlAIOGets8,(void *)tsctlAIOGets16,(void *)tsctlAIOGets32,(void *)tsctlAIOPuts8,(void *)tsctlAIOPuts16,(void *)tsctlAIOPuts32,(void *)tsctlAIOReadys8,(void *)tsctlAIOReadys16,(void *)tsctlAIOReadys32,));
@@ -3404,6 +3542,7 @@ int tsctlEDIOLock(EDIO *ob,Stream *out,Stream *in) {
   WriteInt8LE(out,0x13);
   WriteInt32LE(out,ret);
   WriteInt8LE(out,0x80);
+  out->Flush(out);
   return 1;
 }
 int tsctlEDIOUnlock(EDIO *ob,Stream *out,Stream *in) {
@@ -3416,6 +3555,7 @@ int tsctlEDIOUnlock(EDIO *ob,Stream *out,Stream *in) {
   WriteInt8LE(out,0x13);
   WriteInt32LE(out,ret);
   WriteInt8LE(out,0x80);
+  out->Flush(out);
   return 1;
 }
 int tsctlEDIOPreempt(EDIO *ob,Stream *out,Stream *in) {
@@ -3426,6 +3566,7 @@ int tsctlEDIOPreempt(EDIO *ob,Stream *out,Stream *in) {
   WriteInt8LE(out,0x13);
   WriteInt32LE(out,ret);
   WriteInt8LE(out,0x80);
+  out->Flush(out);
   return 1;
 }
 int tsctlEDIOQueryFunction(EDIO *ob,Stream *out,Stream *in) {
@@ -3443,6 +3584,7 @@ int tsctlEDIOQueryFunction(EDIO *ob,Stream *out,Stream *in) {
     }
   }
   WriteInt8LE(out,0x80);
+  out->Flush(out);
   return 1;
 }
 int tsctlEDIOPWM(EDIO *ob,Stream *out,Stream *in) {
@@ -3456,6 +3598,7 @@ int tsctlEDIOPWM(EDIO *ob,Stream *out,Stream *in) {
   WriteInt8LE(out,0x13);
   WriteInt32LE(out,ret);
   WriteInt8LE(out,0x80);
+  out->Flush(out);
   return 1;
 }
 int tsctlEDIOQueryPWM(EDIO *ob,Stream *out,Stream *in) {
@@ -3485,6 +3628,7 @@ int tsctlEDIOQueryPWM(EDIO *ob,Stream *out,Stream *in) {
     }
   }
   WriteInt8LE(out,0x80);
+  out->Flush(out);
   return 1;
 }
 int tsctlEDIOPWMfd(EDIO *ob,Stream *out,Stream *in) {
@@ -3498,6 +3642,7 @@ int tsctlEDIOPWMfd(EDIO *ob,Stream *out,Stream *in) {
   WriteInt8LE(out,0x13);
   WriteInt32LE(out,ret);
   WriteInt8LE(out,0x80);
+  out->Flush(out);
   return 1;
 }
 int tsctlEDIOQueryPWMfd(EDIO *ob,Stream *out,Stream *in) {
@@ -3527,6 +3672,7 @@ int tsctlEDIOQueryPWMfd(EDIO *ob,Stream *out,Stream *in) {
     }
   }
   WriteInt8LE(out,0x80);
+  out->Flush(out);
   return 1;
 }
 int tsctlEDIOQuadratureCount(EDIO *ob,Stream *out,Stream *in) {
@@ -3538,6 +3684,7 @@ int tsctlEDIOQuadratureCount(EDIO *ob,Stream *out,Stream *in) {
   WriteInt8LE(out,0x13);
   WriteInt32LE(out,ret);
   WriteInt8LE(out,0x80);
+  out->Flush(out);
   return 1;
 }
 int tsctlEDIOEdgeCount(EDIO *ob,Stream *out,Stream *in) {
@@ -3550,6 +3697,7 @@ int tsctlEDIOEdgeCount(EDIO *ob,Stream *out,Stream *in) {
   WriteInt8LE(out,0x03);
   WriteUInt32LE(out,ret);
   WriteInt8LE(out,0x80);
+  out->Flush(out);
   return 1;
 }
 int tsctlEDIOGlitched(EDIO *ob,Stream *out,Stream *in) {
@@ -3561,6 +3709,7 @@ int tsctlEDIOGlitched(EDIO *ob,Stream *out,Stream *in) {
   WriteInt8LE(out,0x13);
   WriteInt32LE(out,ret);
   WriteInt8LE(out,0x80);
+  out->Flush(out);
   return 1;
 }
 int tsctlEDIOHBridge(EDIO *ob,Stream *out,Stream *in) {
@@ -3573,6 +3722,7 @@ int tsctlEDIOHBridge(EDIO *ob,Stream *out,Stream *in) {
   WriteInt8LE(out,0x13);
   WriteInt32LE(out,ret);
   WriteInt8LE(out,0x80);
+  out->Flush(out);
   return 1;
 }
 ArrayAuto(void **,tsctlEDIO,ARR((void *)tsctlEDIOLock,(void *)tsctlEDIOUnlock,(void *)tsctlEDIOPreempt,(void *)tsctlEDIOQueryFunction,(void *)tsctlEDIOPWM,(void *)tsctlEDIOQueryPWM,(void *)tsctlEDIOPWMfd,(void *)tsctlEDIOQueryPWMfd,(void *)tsctlEDIOQuadratureCount,(void *)tsctlEDIOEdgeCount,(void *)tsctlEDIOGlitched,(void *)tsctlEDIOHBridge,));
@@ -3582,6 +3732,7 @@ int tsctlModeJSON(Mode *ob,Stream *out,Stream *in) {
   WriteInt8LE(out,0);
   ob->JSON(ob);
   WriteInt8LE(out,0x80);
+  out->Flush(out);
   return 1;
 }
 int tsctlModeAssign(Mode *ob,Stream *out,Stream *in) {
@@ -3589,6 +3740,7 @@ int tsctlModeAssign(Mode *ob,Stream *out,Stream *in) {
   WriteInt8LE(out,1);
   ob->Assign(ob);
   WriteInt8LE(out,0x80);
+  out->Flush(out);
   return 1;
 }
 int tsctlModeNoAssign(Mode *ob,Stream *out,Stream *in) {
@@ -3596,6 +3748,7 @@ int tsctlModeNoAssign(Mode *ob,Stream *out,Stream *in) {
   WriteInt8LE(out,2);
   ob->NoAssign(ob);
   WriteInt8LE(out,0x80);
+  out->Flush(out);
   return 1;
 }
 int tsctlModeHex(Mode *ob,Stream *out,Stream *in) {
@@ -3603,6 +3756,7 @@ int tsctlModeHex(Mode *ob,Stream *out,Stream *in) {
   WriteInt8LE(out,3);
   ob->Hex(ob);
   WriteInt8LE(out,0x80);
+  out->Flush(out);
   return 1;
 }
 int tsctlModeDec(Mode *ob,Stream *out,Stream *in) {
@@ -3610,6 +3764,7 @@ int tsctlModeDec(Mode *ob,Stream *out,Stream *in) {
   WriteInt8LE(out,4);
   ob->Dec(ob);
   WriteInt8LE(out,0x80);
+  out->Flush(out);
   return 1;
 }
 int tsctlModeOct(Mode *ob,Stream *out,Stream *in) {
@@ -3617,6 +3772,7 @@ int tsctlModeOct(Mode *ob,Stream *out,Stream *in) {
   WriteInt8LE(out,5);
   ob->Oct(ob);
   WriteInt8LE(out,0x80);
+  out->Flush(out);
   return 1;
 }
 int tsctlModeAStr(Mode *ob,Stream *out,Stream *in) {
@@ -3624,6 +3780,7 @@ int tsctlModeAStr(Mode *ob,Stream *out,Stream *in) {
   WriteInt8LE(out,6);
   ob->AStr(ob);
   WriteInt8LE(out,0x80);
+  out->Flush(out);
   return 1;
 }
 int tsctlModeAHex(Mode *ob,Stream *out,Stream *in) {
@@ -3631,6 +3788,7 @@ int tsctlModeAHex(Mode *ob,Stream *out,Stream *in) {
   WriteInt8LE(out,7);
   ob->AHex(ob);
   WriteInt8LE(out,0x80);
+  out->Flush(out);
   return 1;
 }
 int tsctlModeADec(Mode *ob,Stream *out,Stream *in) {
@@ -3638,6 +3796,7 @@ int tsctlModeADec(Mode *ob,Stream *out,Stream *in) {
   WriteInt8LE(out,8);
   ob->ADec(ob);
   WriteInt8LE(out,0x80);
+  out->Flush(out);
   return 1;
 }
 int tsctlModeAOct(Mode *ob,Stream *out,Stream *in) {
@@ -3645,6 +3804,7 @@ int tsctlModeAOct(Mode *ob,Stream *out,Stream *in) {
   WriteInt8LE(out,9);
   ob->AOct(ob);
   WriteInt8LE(out,0x80);
+  out->Flush(out);
   return 1;
 }
 int tsctlModeABinOct(Mode *ob,Stream *out,Stream *in) {
@@ -3652,6 +3812,7 @@ int tsctlModeABinOct(Mode *ob,Stream *out,Stream *in) {
   WriteInt8LE(out,10);
   ob->ABinOct(ob);
   WriteInt8LE(out,0x80);
+  out->Flush(out);
   return 1;
 }
 int tsctlModeABinHex(Mode *ob,Stream *out,Stream *in) {
@@ -3659,6 +3820,7 @@ int tsctlModeABinHex(Mode *ob,Stream *out,Stream *in) {
   WriteInt8LE(out,11);
   ob->ABinHex(ob);
   WriteInt8LE(out,0x80);
+  out->Flush(out);
   return 1;
 }
 int tsctlModeABinUni(Mode *ob,Stream *out,Stream *in) {
@@ -3666,6 +3828,7 @@ int tsctlModeABinUni(Mode *ob,Stream *out,Stream *in) {
   WriteInt8LE(out,12);
   ob->ABinUni(ob);
   WriteInt8LE(out,0x80);
+  out->Flush(out);
   return 1;
 }
 ArrayAuto(void **,tsctlMode,ARR((void *)tsctlModeJSON,(void *)tsctlModeAssign,(void *)tsctlModeNoAssign,(void *)tsctlModeHex,(void *)tsctlModeDec,(void *)tsctlModeOct,(void *)tsctlModeAStr,(void *)tsctlModeAHex,(void *)tsctlModeADec,(void *)tsctlModeAOct,(void *)tsctlModeABinOct,(void *)tsctlModeABinHex,(void *)tsctlModeABinUni,));
