@@ -9,7 +9,7 @@
 
 int ClientSocketNew(char *host,int port) {
   int			rc;            /* system calls return value storage */
-  int            	s;             /* socket descriptor */
+  int            	x,s;             /* socket descriptor */
   struct addrinfo *result,*rp;
   struct addrinfo hints;
   char service[8];
@@ -27,6 +27,9 @@ int ClientSocketNew(char *host,int port) {
   for (rp=result; rp != NULL; rp = rp->ai_next) {
     s = socket(rp->ai_family, rp->ai_socktype,rp->ai_protocol);
     if (s < 0) continue;
+    if (setsockopt(s, IPPROTO_TCP, TCP_NODELAY, &x, 4) < 0) {
+      perror("TCP_NO_DELAY");
+    }
     if (connect(s, rp->ai_addr, rp->ai_addrlen) != -1) break;
     close(s);
   }
