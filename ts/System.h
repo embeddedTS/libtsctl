@@ -88,7 +88,7 @@ struct System {
 	unsigned FUNC(UptimeServer)(void *me);
 	unsigned FUNC(UptimeHost)(void *me);
 	int FUNC(FPGARevision)(void *me);
-	int FUNC(EchoNumber)(void *me,int );
+	int FUNC(EchoNumber)(void *me,int n);
 	int InitStatus;
 	unsigned maplock;
 	NameValuePair *map;
