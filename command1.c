@@ -960,6 +960,8 @@ typedef struct {
   void (*StartValue)(Stream *,void **,int,int);
   void (*EndValue)(Stream *,void **,int,int);
   void (*Separator)(Stream *,void **,int,int);
+  void (*StartEnum)(Stream *,void **,int,int);
+  void (*EndEnum)(Stream *,void **,int,int);
 } mode;
 // the mode, if needed, should define these functions such that
 // as needed, it tracks the current position in the output 
@@ -986,6 +988,8 @@ mode ModeRaw = {
   .EndStruct = 0,
   .StartValue = 0,
   .EndValue = 0,
+  .StartEnum = 0,
+  .EndEnum = 0,
   .Separator = 0
 };
 
@@ -1012,6 +1016,8 @@ mode ModeNL = {
   .EndStruct = EndStruct,
   .StartValue = 0,
   .EndValue = 0,
+  .StartEnum = 0,
+  .EndEnum = 0,
   .Separator = ColonSeparator,
   .base=10, .abase=-8
 };
@@ -1137,8 +1143,10 @@ mode ModeAssign = {
   .EndStruct = EndStruct,
   .StartValue = 0,
   .EndValue = 0,
+  .StartEnum = 0,
+  .EndEnum = 0,
   .Separator = ColonSeparator,
-  .base=16, .abase=-8
+  .base=10, .abase=-8
 };
 
 /*
@@ -1196,6 +1204,14 @@ void JSONEndValue(Stream *out,void **state,int class,int func) {
   out->WriteChar(out,',');
 }
 
+void JSONStartEnum(Stream *out,void **state,int class,int func) {
+  out->WriteChar(out,'"');
+}
+void JSONEndEnum(Stream *out,void **state,int class,int func) {
+  out->WriteChar(out,'"');
+  out->WriteChar(out,',');
+}
+
 mode ModeJSON = {
   .InitState = 0,
   .StartArray = StartWithJSONName,
@@ -1206,6 +1222,8 @@ mode ModeJSON = {
   .EndStruct = EndStruct,
   .StartValue = 0,
   .EndValue = JSONEndValue,
+  .StartEnum = JSONStartEnum,
+  .EndEnum = JSONEndEnum,
   .Separator = ColonSeparator,
   .base=16, .abase=-1616
 };
@@ -1361,8 +1379,8 @@ int coWriteTagged(coParm,void **state,Stream *out,Stream *in,mode **mode,
     if (!co(isArray) && (*mode)->StartNonArray) {
       (*mode)->StartNonArray(out,state,class,func,co(b));
     }
-    if ((*mode)->StartValue) {
-      (*mode)->StartValue(out,state,class,func);
+    if ((*mode)->StartEnum) {
+      (*mode)->StartEnum(out,state,class,func);
     }
     if ((byte & 0x3F) > ArrayLength(WriteEnum)) {
       // should not happen
@@ -1371,7 +1389,7 @@ int coWriteTagged(coParm,void **state,Stream *out,Stream *in,mode **mode,
       int (*func)(Stream *,int) = WriteEnum[byte&0x3F];
       func(out,val);
     }
-    if ((*mode)->EndValue) (*mode)->EndValue(out,state,class,func);
+    if ((*mode)->EndEnum) (*mode)->EndEnum(out,state,class,func);
     if (!co(isArray) && (*mode)->EndNonArray) {
       (*mode)->EndNonArray(out,state,class,func,co(b));
     }
