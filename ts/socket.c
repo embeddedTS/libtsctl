@@ -33,7 +33,10 @@ int ServerSocketNew(int port) {
     return -1;
   }
   setsockopt(s, SOL_SOCKET, SO_REUSEADDR, &x, 4);
-  setsockopt(s, IPPROTO_TCP, TCP_NODELAY, &x, 4);
+  if (setsockopt(s, IPPROTO_TCP, TCP_NODELAY, &x, 4) < 0) {
+    perror("TCP_NO_DELAY");
+    exit(1);
+  }
   if (FileBlockingSet(s,0) < 0) {
     printf("ERROR: Unable to set server socket non-blocking (%m)!\n");
     NOSIG(close(s));
