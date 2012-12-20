@@ -1,3 +1,5 @@
+#ifndef __Net2_h
+#define __Net2_h
 enum {
 	NetSystemClass = 0,
 	NetBusClass = 1,
@@ -13,3 +15,4 @@ enum {
 	NetModeClass = 11,
 	Net_ClassCount=12
 };
+#endif
