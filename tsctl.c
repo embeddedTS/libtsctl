@@ -384,7 +384,7 @@ int tsctl_shell(Stream *in,Stream *out) {
 	    ArrayFree(stack);
 	    stack = cmd;
 	  } else if (ret < 0) {
-	    // TO DO: directly output the exception
+	    count++;
 	  } else { // ok, we have a valid command to execute
 	    count++;
 	    if (ArrayLength(lu) > 0) { // patch lookups into the req stream
