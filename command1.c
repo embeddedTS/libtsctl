@@ -1258,7 +1258,7 @@ void ModeSet(mode **mode,int func) {
   switch(func) {
   case NetMode_JSON:
     ModeJSON.base = (*mode)->base;
-    ModeJSON.abase = (*mode)->abase;
+    //ModeJSON.abase = (*mode)->abase;
     *mode = &ModeJSON;
     break;
   case NetMode_Assign:
@@ -1443,7 +1443,7 @@ int coWriteTagged(coParm,void **state,Stream *out,Stream *in,mode **mode,
 	}
       } else if (co(b) < 0) { // escaped
 	val = in->ReadChar(in);
-	if (val == '\n' || (val >= 32 && val <= 126 && val != '\\')) {
+	if ((val == '\n' && *mode != &ModeJSON) || (val >= 32 && val <= 126 && val != '\\')) {
 	  out->WriteChar(out,val);
 	} else if (co(b) == -8) { // \nnn is octal
 	  out->WriteChar(out,'\\');
