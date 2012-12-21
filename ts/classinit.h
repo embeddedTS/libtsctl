@@ -8,7 +8,11 @@ CLASS *TEMPLATE(CLASS,Init)(int inst) {
   int instances,ind=0,archexists;
   CLASS *ret,*ret1;
   ArchInit();
-  if (inst < 0) return 0;
+  if (inst < 0) {
+    ArrayFree(parenta);
+    ArrayFree(parenti);
+    return 0;
+  }
 
   parenta = ArrayQueue(parenta,A(ArchInfo *,&TS_ArchInfo));
   parenti = ArrayQueue(parenti,A(int,0));
@@ -70,6 +74,8 @@ CLASS *TEMPLATE(CLASS,Init)(int inst) {
       }
 #undef CLASS_OVERRIDE
 #endif
+      ArrayFree(parenta);
+      ArrayFree(parenti);
       LogReturn("%p",ret);
     } else {
       inst -= instances;
@@ -83,6 +89,8 @@ CLASS *TEMPLATE(CLASS,Init)(int inst) {
       }
     }
   }
+  ArrayFree(parenta);
+  ArrayFree(parenti);
   LogReturn("%p",0);
 }
 
