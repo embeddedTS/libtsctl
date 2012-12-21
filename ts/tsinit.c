@@ -46,10 +46,13 @@ unsigned DIOCount() {
 
 #ifdef __AggregateDIO_h
 DIO *DIOInit0(AggregateDIO *DIO0) {
+  static DIO *ret = 0;
   int i,j,total = 0;
-  DIO **pDIO,*dio = DIOInit(1);
+  DIO **pDIO,*dio;
   int n = 0,offset, *SubCount;
   
+  if (ret) return ret;
+  dio = DIOInit(1);
   while (dio) {
     total++;
     dio = DIOInit(total+1);
@@ -61,7 +64,7 @@ DIO *DIOInit0(AggregateDIO *DIO0) {
   for (i=0;i<total;i++) {
     pDIO[i] = DIOInit(1+i);
   }
-  return AggregateDIOInit(DIO0,total,PinInit(0),SubCount,pDIO);
+  return (ret=AggregateDIOInit(DIO0,total,PinInit(0),SubCount,pDIO));
 }
 
 // the old way won't work any more, because not every architecture defined
