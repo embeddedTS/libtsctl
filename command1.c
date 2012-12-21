@@ -652,6 +652,7 @@ int tsctlCommandParse(Stream* out,LookupRef* *lu,char** args) {
   colon = strchr(args[0],':');
   if (colon) {
     inst = strtol(colon+1,0,0);
+    *colon = 0;
   }
   if (args[0][0] == '?') {
     return tsctlException(out,0,ListClasses(),1);
@@ -721,9 +722,10 @@ int tsctlCommandParse(Stream* out,LookupRef* *lu,char** args) {
 // tsctlArgParseInt8 replaces Input_8
 int tsctlArgParseInt8(Stream *out,LookupRef* *lu,char *arg) {
   int offset = out->outputOffset;
-  int val = strtol(arg,0,0);
+  char *endptr;
+  int val = strtol(arg,&endptr,0);
   WriteInt8LE(out,val);
-  if (!val && arg[0] != '0') {
+  if (*endptr || (!val && arg[0] != '0')) {
     LookupRef *entry = LookupRefName(lu,arg);
     entry->offset = ArrayQueue(entry->offset,A(int,offset));
   }
@@ -731,9 +733,10 @@ int tsctlArgParseInt8(Stream *out,LookupRef* *lu,char *arg) {
 
 int tsctlArgParseInt16(Stream *out,LookupRef* *lu,char *arg) {
   int offset = out->outputOffset;
-  int val = strtol(arg,0,0);
+  char *endptr;
+  int val = strtol(arg,&endptr,0);
   WriteInt16LE(out,val);
-  if (!val && arg[0] != '0') {
+  if (*endptr || (!val && arg[0] != '0')) {
     LookupRef *entry = LookupRefName(lu,arg);
     entry->offset = ArrayQueue(entry->offset,A(int,offset));
   }
@@ -741,9 +744,10 @@ int tsctlArgParseInt16(Stream *out,LookupRef* *lu,char *arg) {
 
 int tsctlArgParseInt32(Stream *out,LookupRef* *lu,char *arg) {
   int offset = out->outputOffset;
-  int val = strtol(arg,0,0);
+  char *endptr;
+  int val = strtol(arg,&endptr,0);
   WriteInt32LE(out,val);
-  if (!val && arg[0] != '0') {
+  if (*endptr || (!val && arg[0] != '0')) {
     LookupRef *entry = LookupRefName(lu,arg);
     entry->offset = ArrayQueue(entry->offset,A(int,offset));
   }
@@ -751,9 +755,10 @@ int tsctlArgParseInt32(Stream *out,LookupRef* *lu,char *arg) {
 
 int tsctlArgParseUInt8(Stream *out,LookupRef* *lu,char *arg) {
   int offset = out->outputOffset;
-  int val = strtoul(arg,0,0);
+  char *endptr;
+  int val = strtoul(arg,&endptr,0);
   WriteInt8LE(out,val);
-  if (!val && arg[0] != '0') {
+  if (*endptr || (!val && arg[0] != '0')) {
     LookupRef *entry = LookupRefName(lu,arg);
     entry->offset = ArrayQueue(entry->offset,A(int,offset));
   }
@@ -761,9 +766,10 @@ int tsctlArgParseUInt8(Stream *out,LookupRef* *lu,char *arg) {
 
 int tsctlArgParseUInt16(Stream *out,LookupRef* *lu,char *arg) {
   int offset = out->outputOffset;
-  int val = strtoul(arg,0,0);
+  char *endptr;
+  int val = strtoul(arg,&endptr,0);
   WriteInt16LE(out,val);
-  if (!val && arg[0] != '0') {
+  if (*endptr || (!val && arg[0] != '0')) {
     LookupRef *entry = LookupRefName(lu,arg);
     entry->offset = ArrayQueue(entry->offset,A(int,offset));
   }
@@ -771,9 +777,10 @@ int tsctlArgParseUInt16(Stream *out,LookupRef* *lu,char *arg) {
 
 int tsctlArgParseUInt32(Stream *out,LookupRef* *lu,char *arg) {
   int offset = out->outputOffset;
-  int val = strtoul(arg,0,0);
+  char *endptr;
+  int val = strtoul(arg,&endptr,0);
   WriteInt32LE(out,val);
-  if (!val && arg[0] != '0') {
+  if (*endptr || (!val && arg[0] != '0')) {
     LookupRef *entry = LookupRefName(lu,arg);
     entry->offset = ArrayQueue(entry->offset,A(int,offset));
   }
@@ -797,13 +804,14 @@ int tsctlArgParseArrayInt8(Stream *out,LookupRef* *lu,char *arg) {
 int tsctlArgParseArrayInt16(Stream *out,LookupRef* *lu,char *arg) {
   char** n = split(arg,':');
   int i;
+  char *endptr;
   short val;
 
   if (ArrayLength(n) > 1) {
     WriteInt32LE(out,ArrayLength(n));
     for (i=0;i<ArrayLength(n);i++) {
-      val = strtol(n[i],0,0);
-      if (!val && n[i][0] != '0') {
+      val = strtol(n[i],&endptr,0);
+      if (*endptr || (!val && n[i][0] != '0')) {
 	int offset = out->outputOffset;
 	LookupRef *entry = LookupRefName(lu,arg);
 	entry->offset = ArrayQueue(entry->offset,A(int,offset));
@@ -815,8 +823,8 @@ int tsctlArgParseArrayInt16(Stream *out,LookupRef* *lu,char *arg) {
       WriteInt32LE(out,0);
     } else {
       WriteInt32LE(out,1);
-      val = strtol(arg,0,0);
-      if (!val && n[0][0] != '0') {
+      val = strtol(arg,&endptr,0);
+      if (*endptr || (!val && n[i][0] != '0')) {
 	int offset = out->outputOffset;
 	LookupRef *entry = LookupRefName(lu,arg);
 	entry->offset = ArrayQueue(entry->offset,A(int,offset));
@@ -829,13 +837,14 @@ int tsctlArgParseArrayInt16(Stream *out,LookupRef* *lu,char *arg) {
 
 int tsctlArgParseArrayInt32(Stream *out,LookupRef* *lu,char *arg) {
   char** n = split(arg,':');
+  char *endptr;
   int i,val;
 
   if (ArrayLength(n) > 1) {
     WriteInt32LE(out,ArrayLength(n));
     for (i=0;i<ArrayLength(n);i++) {
-      val = strtol(n[i],0,0);
-      if (!val && n[i][0] != '0') {
+      val = strtol(n[i],&endptr,0);
+      if (*endptr || (!val && n[i][0] != '0')) {
 	int offset = out->outputOffset;
 	LookupRef *entry = LookupRefName(lu,arg);
 	entry->offset = ArrayQueue(entry->offset,A(int,offset));
@@ -847,8 +856,8 @@ int tsctlArgParseArrayInt32(Stream *out,LookupRef* *lu,char *arg) {
       WriteInt32LE(out,0);
     } else {
       WriteInt32LE(out,1);
-      val = strtol(arg,0,0);
-      if (!val && n[0][0] != '0') {
+      val = strtol(arg,&endptr,0);
+      if (*endptr || (!val && n[i][0] != '0')) {
 	int offset = out->outputOffset;
 	LookupRef *entry = LookupRefName(lu,arg);
 	entry->offset = ArrayQueue(entry->offset,A(int,offset));
