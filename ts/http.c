@@ -40,9 +40,8 @@ void httpServerDester(void *arg) {
 void *httpServer(void *arg) {
   Thread *th = arg;
   int socket = th->socket;
-  int i,ret=0,last,next,cmdcount=0;
-  char *cstr,cmd[1024],tmp[256],*s;
-  time_t t;
+  int i,ret=0,last,next;
+  char *cstr,*s;
   Stream *st = th->data;
  
   if (!st) goto httpServerDone;
@@ -53,15 +52,15 @@ void *httpServer(void *arg) {
   do {
     last = st->ReadChar(st);
   } while (last > 0 && last != '\r');
-  if (last < 0) return 0;
+  if (last <= 0) return 0;
   while (1) {
     next = st->ReadChar(st);
-    if (next < 0) return 0;
+    if (next <= 0) return 0;
     if (next == '\r') continue;
     if (last == '\n' && next == '\n') break;
     last = next;
   }
-  t = time(0);
+  //t = time(0);
   WriteASCIIZ(st,"HTTP/1.1 200 OK\r\nExpires: Sun, 1 Apr 2012 00:00:00 GMT\r\nServer: tsctl\r\nAccess-Control-Allow-Origin: *\r\nContent-Type: text/plain; charset=UTF-8\r\nConnection: close\r\n\r\n{");
   st->Flush(st);
   while (!st->isEOF(st)) {
