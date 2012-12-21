@@ -396,7 +396,7 @@ int tsctl_shell(Stream *in,Stream *out) {
 		names = split(lu[i].name,'+');
 		for (j=0;j<ArrayLength(names);j++) {
 		  n = sys->MapLookup(sys,names[j]);
-		  if (n > 0) val |= n;
+		  val |= n;
 		}
 		ArrayFree(names);
 		//val = sys->MapLookup(sys,lu[i].name);
