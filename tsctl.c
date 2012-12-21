@@ -390,7 +390,7 @@ int tsctl_shell(Stream *in,Stream *out) {
 	    if (ArrayLength(lu) > 0) { // patch lookups into the req stream
 	      System *sys = SystemInit(0);
 	      char **names;
-	      int val=0,j,n;
+	      int val=0,i,j,n;
 
 	      for (i=0;i<ArrayLength(lu);i++) {
 		names = split(lu[i].name,'+');
