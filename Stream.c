@@ -60,6 +60,7 @@ void FileStreamFlush(Stream *st0) {
 
 void DescriptorStreamFini(Stream *st0) {
   DescriptorStream *st = (DescriptorStream *)st0;
+  if (st->obuf) free(st->obuf);
   free(st->ibuf);
   free(st);
 }
