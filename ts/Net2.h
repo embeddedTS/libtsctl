@@ -1,5 +1,13 @@
 #ifndef __Net2_h
 #define __Net2_h
+#include <setjmp.h>
+typedef struct tsctl tsctl;
+struct tsctl {
+  jmp_buf exception;
+  struct Stream *st;
+  int mode,count;
+};
+tsctl *TsctlClient(char *host,int mode);
 enum {
 	NetSystemClass = 0,
 	NetBusClass = 1,
