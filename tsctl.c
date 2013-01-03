@@ -1,6 +1,6 @@
 #define THREAD_USE_POSIX
-#include "libtsctl.h"
 #include "mtrace.c"
+#include "libtsctl.h"
 #include "ts/tcp.c"
 #include "ts/http.c"
 #include <stdio.h>
@@ -16,10 +16,10 @@
 #include "command1.c"
 #include "Stream.c"
 #include "LookupRef.c"
-
+#ifndef DONT_USE_READLINE
 #include <readline/readline.h>
 #include <readline/history.h>
-
+#endif
 //typedef long long int64;
 //typedef unsigned long long uint64;
 
@@ -192,6 +192,7 @@ char*** ReadTsctlCommands(Stream *in) {
     }
     if (ch == '\n') break;
   }
+  if (args) ArrayFreeFree(args);
   return cmd;
 }
 
@@ -270,15 +271,15 @@ int iAmTheServer = 0;
 //   maintains a command stack which is enlarged with partial arguments
 //     and shrunk with an empty command
 int tsctl_shell(Stream *in,Stream *out) {
-  int i,j,exception=0,socket=-1,count=0;
+  int i,j,exception=0,socket=-1,count=0,ret=0;
   char* host=0;
   char** stack = ArrayAlloc(0,sizeof(char *));
-  char*** cmds;
-  Stream *RequestStream, *ReplyStream, *OutputStream, *HostStream=0;
-  int8 *RequestString;
-  int8 *ReplyString;
-  int8 *OutputString;
-  LookupRef* lu;
+  char*** cmds=0;
+  Stream *RequestStream=0, *ReplyStream=0, *OutputStream=0, *HostStream=0;
+  int8 *RequestString=0;
+  int8 *ReplyString=0;
+  int8 *OutputString=0;
+  LookupRef* lu=0;
   mode *mode1 = &ModeAssign;
   void *tmp=0,*tmp2=0;
 
@@ -313,12 +314,15 @@ int tsctl_shell(Stream *in,Stream *out) {
       char* cmd0 = readline1(host,stack);
       if (!cmd0 || !cmd0[0]) {
 	fprintf(stderr,"\n");
-	return;
+	goto tsctl_shell_done;
       }
       cmds = StringToTsctlCommands(cmd0);
       ArrayFree(cmd0);
     } else {
-      if (in->isEOF(in)) return 1;
+      if (in->isEOF(in)) {
+	ret=1;
+	goto tsctl_shell_done;
+      }
       cmds = ReadTsctlCommands(in);
     }
     if (ArrayLength(cmds) == 0) { // empty input, pop command stack
@@ -352,7 +356,8 @@ int tsctl_shell(Stream *in,Stream *out) {
       } else if (ArrayLength(cmds[i]) == 1 && ArrayLength(cmds[i][0]) == 3 
 		 && cmds[i][0][0]=='e' 
 		 && cmds[i][0][1]=='n' && cmds[i][0][2]=='d') {
-	return 1;
+	ret=1;
+	goto tsctl_shell_done;
       } else {
 	if (ArrayLength(stack) == 0 && !host) { // first command might be host
 	  if (cmds[i][0][0] != '@' && !isdigit(cmds[i][0][0])) {
@@ -384,8 +389,12 @@ int tsctl_shell(Stream *in,Stream *out) {
 	    ArrayFree(stack);
 	    stack = cmd;
 	  } else if (ret < 0) {
+	    ArrayFreeFree(cmdcopy);
+	    ArrayFree(cmd);
 	    count++;
 	  } else { // ok, we have a valid command to execute
+	    ArrayFreeFree(cmdcopy);
+	    ArrayFree(cmd);
 	    count++;
 	    if (ArrayLength(lu) > 0) { // patch lookups into the req stream
 	      System *sys = SystemInit(0);
@@ -398,7 +407,7 @@ int tsctl_shell(Stream *in,Stream *out) {
 		  n = sys->MapLookup(sys,names[j]);
 		  if (n != -1 || val == 0) val |= n;
 		}
-		ArrayFree(names);
+		ArrayFreeFree(names);
 		//val = sys->MapLookup(sys,lu[i].name);
 		for (j=0;j<ArrayLength(lu[i].offset);j++) {
 		  RequestString[lu[i].offset[j]] = val & 0xFF;
@@ -413,7 +422,7 @@ int tsctl_shell(Stream *in,Stream *out) {
       }
     }
     //fprintf(stderr,"count=%d\n",count);
-    ArrayFreeFreeFree(cmds);
+    ArrayFreeFreeFree(cmds); cmds=0;
     // at this point, i == ArrayLength(cmds)
     // i therefore contains the number of commands to run
     // if we are in host mode, then we can use this to count
@@ -442,18 +451,29 @@ int tsctl_shell(Stream *in,Stream *out) {
     }
     WriteArray(out,OutputString);
     out->Flush(out);
-    ArrayFree(RequestString);
-    ArrayFree(ReplyString);
-    ArrayFree(OutputString);
-    RequestStream->Fini(RequestStream);
-    ReplyStream->Fini(ReplyStream);
-    OutputStream->Fini(OutputStream);
-    LookupRefOld(lu);
+    ArrayFree(RequestString); RequestString=0;
+    ArrayFree(ReplyString); ReplyString=0;
+    ArrayFree(OutputString); OutputString=0;
+    RequestStream->Fini(RequestStream); RequestStream=0;
+    ReplyStream->Fini(ReplyStream); ReplyStream=0;
+    OutputStream->Fini(OutputStream); OutputStream=0;
+    LookupRefOld(lu); lu=0;
   }
  tsctl_shell_done:
+  if (cmds) ArrayFreeFreeFree(cmds); cmds=0;
+  if (RequestString) ArrayFree(RequestString);
+  if (ReplyString) ArrayFree(ReplyString);
+  if (OutputString) ArrayFree(OutputString);
+  if (RequestStream) RequestStream->Fini(RequestStream);
+  if (ReplyStream)ReplyStream->Fini(ReplyStream);
+  if (OutputStream) OutputStream->Fini(OutputStream);
+  if (HostStream) HostStream->Fini(HostStream);
+  if (lu) LookupRefOld(lu);
+
   for (i=0;i<ArrayLength(stack);i++) ArrayFree(stack[i]);
   ArrayFree(stack);
-  return 0;
+  FiniState(&tmp2);
+  return ret;
 }
 
 void *binaryServer(void *arg) {
