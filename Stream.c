@@ -1,7 +1,6 @@
 #include <string.h>
 #include <stdarg.h>
 #include "Stream.h"
-#include "ts/shell.h"
 
 int DescriptorReadyRead(int desc) {
   fd_set rfd;
@@ -355,6 +354,19 @@ int WriteArray(Stream *st,void *arr) {
 int WriteASCIIZ(Stream *st,char *arr) {
   return st->Write(st,arr,strlen(arr));
 }
+
+#ifndef __vstrf_defined
+#define __vstrf_defined
+char *vstrf(char *format,va_list ap) {
+  int len;
+  char *str,dummy[1];
+
+  len = vsnprintf(dummy,0,format,ap);
+  str = ArrayAlloc(len,sizeof(char));
+  vsprintf(str,format,ap);
+  return str;
+}
+#endif
 
 int WriteF(Stream *st,char *format,...) {
   va_list ap;

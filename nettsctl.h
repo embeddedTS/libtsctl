@@ -14,6 +14,4 @@
 #include "Net.c"
 #include "Net2.c"
 #include "Stream.c"
-#include "shell.c"
-#include "HashTable.c"
 #endif

@@ -35,6 +35,8 @@ char *strappend(char *str1,char *str2) {
   return str;
 }
 
+#ifndef __vstrf_defined
+#define __vstrf_defined
 char *vstrf(char *format,va_list ap) {
   int len;
   char *str,dummy[1];
@@ -44,7 +46,7 @@ char *vstrf(char *format,va_list ap) {
   vsprintf(str,format,ap);
   return str;
 }
-
+#endif
 char *strf(char *format,...) {
   va_list ap;
   int len;
