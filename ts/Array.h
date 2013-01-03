@@ -4,6 +4,7 @@
 #include <stdlib.h>
 #include <string.h>
 
+#if 1
 static inline void *ArrayAlloc(unsigned count,unsigned elementBytes) {
   unsigned *ptr = malloc(elementBytes * (1+count) + 12);
   ptr[0] = 0;
@@ -12,11 +13,23 @@ static inline void *ArrayAlloc(unsigned count,unsigned elementBytes) {
   memset(&((char *)ptr)[12+count*ptr[1]],0,elementBytes);
   return &ptr[3];
 }
+#else
+#define ArrayAlloc(count,elementBytes) ({ \
+      unsigned *ptr = malloc((elementBytes) * (1+(count)) + 12);	\
+  ptr[0] = 0;\
+  ptr[1] = elementBytes;\
+  ptr[2] = count;\
+  memset(&((char *)ptr)[12+(count)*ptr[1]],0,elementBytes);	\
+  (void *)(&ptr[3]);					 \
+    })
+#endif
+
 static inline void ArrayFree(const void *arr) {
   unsigned *ptr = (unsigned *)arr;
   free(ptr-3);
 }
 
+#if 1
 static inline void *ArraySize(void *arr,unsigned count) {
   unsigned *ptr = arr;
   ptr -= 3;
@@ -25,6 +38,30 @@ static inline void *ArraySize(void *arr,unsigned count) {
   memset(&((char *)ptr)[12+count*ptr[1]],0,ptr[1]);
   return &ptr[3];
 }
+#else
+#define ArraySize(arr,count) ({ \
+      unsigned *ptr = (arr);	\
+  void *ret;\
+  ptr -= 3;\
+  ptr = realloc(ptr,ptr[1] * (1+(count)) + 12);	\
+  ptr[2] = (count);					\
+  memset(&((char *)ptr)[12+(count)*ptr[1]],0,ptr[1]);	\
+  (void *)(&ptr[3]);				\
+    })
+
+void *ArraySize1(void *arr,unsigned count) {
+  unsigned *ptr = arr;
+  ptr -= 3;
+  ptr = realloc(ptr,ptr[1] * (1+count) + 12);
+  ptr[2] = count;
+  memset(&((char *)ptr)[12+count*ptr[1]],0,ptr[1]);
+  return &ptr[3];
+}
+void *ArraySize2(void *arr,unsigned count) {
+  return ArraySize(arr,count);
+}
+#endif
+
 static inline char *ASCIIZ(const char *str) {
   unsigned len = strlen(str);
   char *str2 = ArrayAlloc(len,1);
@@ -156,6 +193,7 @@ static inline void *ArrayJoin(void *arr1,void *arr2) {
 	 ArrayElementSize(arr1));
   return &ret[3];
 }
+
 static inline void *ArrayAppend(void *arr1,void *arr2) {
   void *ret = ArrayJoin(arr1,arr2);
   ArrayFree(arr1);
