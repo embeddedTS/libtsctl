@@ -360,5 +360,5 @@ unsigned int IntegerHash(void *i) {
 }
 
 int IntegerEqualQ(void *a,void *b) {
-  return (int)a - (int)b;
+  return (int)a == (int)b;
 }
