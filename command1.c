@@ -798,7 +798,7 @@ int tsctlArgParseArrayInt8(Stream *out,LookupRef* *lu,char *arg) {
     WriteInt32LE(out,ArrayLength(arg));
     WriteArray(out,arg);
   }
-  ArrayFree(n);
+  ArrayFreeFree(n);
 }
 
 int tsctlArgParseArrayInt16(Stream *out,LookupRef* *lu,char *arg) {
@@ -832,7 +832,7 @@ int tsctlArgParseArrayInt16(Stream *out,LookupRef* *lu,char *arg) {
       WriteInt16LE(out,val);
     }
   }
-  ArrayFree(n);
+  ArrayFreeFree(n);
 }
 
 int tsctlArgParseArrayInt32(Stream *out,LookupRef* *lu,char *arg) {
@@ -1063,6 +1063,17 @@ typedef struct {
   int* stack; // of offset in Ret array
   int* index;
 } internalstate;
+
+void FiniState(void **state) {
+  if (*state) {
+    internalstate *st = *state;
+    ArrayFree(st->stack);
+    ArrayFree(st->index);
+    ArrayFreeFree(st->count);
+    free(st);
+    *state=0;
+  }
+}
 
 void InitStateAssign(void **state) {
   int i,j,** count;
@@ -1392,7 +1403,7 @@ int coWriteTagged(coParm,void **state,Stream *out,Stream *in,mode **mode,
   //if (!*state && (*mode)->InitState) (*mode)->InitState(state);
   WAITBYTES(1);
   byte = ReadInt8LE(in);
-  if (byte == 0x80) return -1; // void
+  if (byte == 0x80) coReturn(-1); // void
   co(isArray) = ( ((byte & 0x80) == 0) && (byte & 0x40)) ? 1 : 0;
   if (co(isArray)) {
     WAITBYTES(4);

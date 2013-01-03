@@ -17,6 +17,7 @@ void LookupRefOld(LookupRef* lu) {
 
   for (i=0;i<ArrayLength(lu);i++) {
     ArrayFree(lu[i].offset);
+    ArrayFree(lu[i].name);
   }
   ArrayFree(lu);
 }
@@ -30,6 +31,7 @@ LookupRef *LookupRefName(LookupRef* *lu,char* name) {
       return *lu + index;
     }
   }
+  ref.name = ArrayDup(ref.name);
   ref.offset = ArrayAlloc(0,sizeof(int));
   *lu = ArrayInsert(*lu,&ref);
   return &lu[0][ArrayFind(*lu,&ref)];
