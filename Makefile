@@ -5,6 +5,7 @@ CFLAGS+=-march=armv4 -ffunction-sections -fdata-sections -D$(BOARDSEL)=1
 LDFLAGS+=-D$(BOARDSEL)=1
 
 CFLAGS_NetTest=-Its
+CFLAGS_NetTest2=-Its
 CFLAGS_tsctl_wrap=-I/usr/include/python2.5
 LDFLAGS_CAN2=-lpthread
 LDFLAGS_CANRx=-lpthread
