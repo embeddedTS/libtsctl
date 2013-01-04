@@ -29,6 +29,14 @@ void error(int output,int input,int driven,int read,int cn0,int pin0,int cn1,int
 	 DIOValueString(read));
 }
 
+void noerror(int output,int input,int driven,int read,int cn0,int pin0,int cn1,int pin1) {
+  /*
+  printf("DIO %d (CN%d_%d) driven %s, DIO (CN%d_%d) %d read back %s -- GOOD!\n",
+	 output,cn0,pin0,DIOValueString(driven),cn1,pin1,input,
+	 DIOValueString(read));
+  */
+}
+
 // TO DO: sync versus async
 int main(int argc,char *argv[]) {
   System *sys = SystemInit(0);
@@ -49,25 +57,6 @@ int main(int argc,char *argv[]) {
     bb = sys->BaseBoardId(sys);
     //printf("BaseBoard=%04X\n",bb);
   }
-  /* Following code is obsolete.  
-     config file must always be in /etc/dioctl.config
-     this is loaded by the System object. it must have all
-     base board definitions in it as well as the usual definitions.
-  if (argc == 2) {
-    cf = argv[1];
-    printf("Using config file %s\n",cf);
-  } else {
-    sprintf(configfile,"./ts%04X.dioctl.config",bb);
-    cf = configfile;
-  }
-  if (!DIOMapLoadFromFile(cf)) {
-    sprintf(configfile,"/etc/ts%04X.dioctl.config",bb);
-    if (!DIOMapLoadFromFile(configfile)) {
-      fprintf(stderr,"Can't find %s in . or /etc\n",cf,bb);
-      return 1;
-    }
-  }
-  */
   // make sure we have a DIO object
   if (!dio) {
     fprintf(stderr,"No DIO 0 object\n");
@@ -145,7 +134,12 @@ int main(int argc,char *argv[]) {
 		    cnn[i+j*maxconn],pinn[i+j*maxconn],
 		    cnn[i2+j*maxconn],pinn[i2+j*maxconn]);
 	      failed++;
-	    } else passed++;
+	    } else {
+	      noerror(dionum[i+j*maxconn],dionum[i2+j*maxconn],0,val,
+		    cnn[i+j*maxconn],pinn[i+j*maxconn],
+		    cnn[i2+j*maxconn],pinn[i2+j*maxconn]);
+	      passed++;
+	    }
 	  }
 	}
       }
@@ -162,7 +156,12 @@ int main(int argc,char *argv[]) {
 		    cnn[i+j*maxconn],pinn[i+j*maxconn],
 		    cnn[i2+j*maxconn],pinn[i2+j*maxconn]);
 	      failed++;
-	    } else passed++;
+	    } else {
+	      noerror(dionum[i+j*maxconn],dionum[i2+j*maxconn],1,val,
+		    cnn[i+j*maxconn],pinn[i+j*maxconn],
+		    cnn[i2+j*maxconn],pinn[i2+j*maxconn]);
+	      passed++;
+	    }
 	  }
 	}
       }
@@ -183,7 +182,7 @@ int main(int argc,char *argv[]) {
     }
   }
   switch ((model << 16) + bb) {
-  case 0x42008200: tests = 132; break;
+  case 0x42008200: tests = 142; break;
   case 0x45008200: tests = 188; break;
   case 0x47008200: tests = 180; break;
   case 0x48008200: tests = 174; break;
