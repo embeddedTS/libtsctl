@@ -9,7 +9,7 @@ int tsctlClassTextToBin(char *str) {
       switch (*str++) {
       case 'O':case 'o':
         switch (*str++) {
-        case 0: return 5;
+        case 0: case ':': return 5;
         case 'R':case 'r': return 4;
         }
         break;
@@ -108,7 +108,7 @@ int tsctlSystemCommandTextToBin(char *str) {
                   switch (*str++) {
                   case 'P':case 'p':
                     switch (*str++) {
-                    case 0: return 14;
+                    case 0: case ':': return 14;
                     case 'P':case 'p': return 15;
                     }
                     break;
@@ -486,7 +486,7 @@ int tsctlDIOCommandTextToBin(char *str) {
       switch (*str++) {
       case 'T':case 't':
         switch (*str++) {
-        case 0: return 8;
+        case 0: case ':': return 8;
         case 'A':case 'a': return 10;
         case 'M':case 'm': return 14;
         }
@@ -505,7 +505,7 @@ int tsctlDIOCommandTextToBin(char *str) {
       switch (*str++) {
       case 'T':case 't':
         switch (*str++) {
-        case 0: return 7;
+        case 0: case ':': return 7;
         case 'A':case 'a': return 9;
         }
         break;
@@ -557,7 +557,7 @@ int tsctlCANCommandTextToBin(char *str) {
     switch (*str++) {
     case 'X':case 'x':
       switch (*str++) {
-      case 0: return 2;
+      case 0: case ':': return 2;
       case 'M':case 'm': return 7;
       }
       break;
@@ -583,7 +583,7 @@ int tsctlSPICommandTextToBin(char *str) {
         switch (*str++) {
         case 'D':case 'd':
           switch (*str++) {
-          case 0: return 6;
+          case 0: case ':': return 6;
           case 'W':case 'w': return 7;
           }
           break;
@@ -618,7 +618,7 @@ int tsctlAIOCommandTextToBin(char *str) {
                 case 'P':case 'p': return 14;
                 case 'S':case 's':
                   switch (*str++) {
-                  case 0: return 10;
+                  case 0: case ':': return 10;
                   case 'A':case 'a': return 13;
                   }
                   break;
@@ -652,7 +652,7 @@ int tsctlAIOCommandTextToBin(char *str) {
                   case 'A':case 'a': return 16;
                   case 'E':case 'e':
                     switch (*str++) {
-                    case 0: return 18;
+                    case 0: case ':': return 18;
                     case 'T':case 't': return 17;
                     }
                     break;
@@ -679,7 +679,7 @@ int tsctlAIOCommandTextToBin(char *str) {
       switch (*str++) {
       case 'T':case 't':
         switch (*str++) {
-        case 0: return 20;
+        case 0: case ':': return 20;
         case 'S':case 's':
           switch (*str++) {
           case '1': return 24;
@@ -717,7 +717,7 @@ int tsctlAIOCommandTextToBin(char *str) {
       switch (*str++) {
       case 'T':case 't':
         switch (*str++) {
-        case 0: return 21;
+        case 0: case ':': return 21;
         case 'S':case 's':
           switch (*str++) {
           case '1': return 27;
@@ -741,7 +741,7 @@ int tsctlAIOCommandTextToBin(char *str) {
           switch (*str++) {
           case 'Y':case 'y':
             switch (*str++) {
-            case 0: return 22;
+            case 0: case ':': return 22;
             case 'S':case 's':
               switch (*str++) {
               case '1': return 30;
@@ -786,7 +786,7 @@ int tsctlEDIOCommandTextToBin(char *str) {
       switch (*str++) {
       case 'M':case 'm':
         switch (*str++) {
-        case 0: return 6;
+        case 0: case ':': return 6;
         case 'F':case 'f': return 8;
         }
         break;
@@ -812,7 +812,7 @@ int tsctlEDIOCommandTextToBin(char *str) {
                 switch (*str++) {
                 case 'M':case 'm':
                   switch (*str++) {
-                  case 0: return 7;
+                  case 0: case ':': return 7;
                   case 'F':case 'f': return 9;
                   }
                   break;

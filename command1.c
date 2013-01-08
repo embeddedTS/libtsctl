@@ -652,7 +652,7 @@ int tsctlCommandParse(Stream* out,LookupRef* *lu,char** args) {
   colon = strchr(args[0],':');
   if (colon) {
     inst = strtol(colon+1,0,0);
-    *colon = 0;
+    //*colon = 0;
   }
   if (args[0][0] == '?') {
     return tsctlException(out,0,ListClasses(),1);
