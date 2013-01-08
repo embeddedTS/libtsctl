@@ -134,7 +134,9 @@ Bus *ts4500__BusInit1(Bus *bus,int inst) {
 Bus *ts4500__BusInit8(Bus *bus,int inst);
 Bus *ts4500__BusInit2(Bus *bus,int inst) {
   Bus *bus0 = ts4500__BusInit0(0,0);
-  int modelid,fpgarev,muxpresent;
+  int modelid,fpgarev,muxpresent,bb;
+  
+  if (!BaseBoardMuxBusSupport()) return DummyBusInit(&altmux);
   bus0->Lock(bus0,0,0);
   modelid = bus0->Peek16(bus0,0x60);
   fpgarev = bus0->BitsGet16(bus0,0x62,3,0);

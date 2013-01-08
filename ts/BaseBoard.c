@@ -2,7 +2,7 @@
 #include "libtsctl.h"
 #include "Array.h"
 
-int BaseBoardIdGet() {
+int _BaseBoardIdGet() {
   int adrs[3],inbit,extrabit;
   int saveCN2_6,saveCN2_8,saveCN1_98,saveCN1_83,saveCN1_85;
   int i,value=0,tmp;
@@ -77,10 +77,43 @@ int BaseBoardIdGet() {
   case 0x08: return 0x8820;
   case 0x0A: return 0x8900;
   case 0x0B: return 0x8290;
+  case 0x0C: return 0xF16;
+  case 0x0D: return 0x8700;
+  case 0x0E: return 0x8280;
+  case 0x0F: return 0x8380;
+  case 0x10: return 0xA20; // TS-AN20
   case 0x30: return 0x9490;
-    // case 0x39: return Adapco custom base board
+  case 0x38: return 0xC0DE;
+  case 0x3A: return 0x1EC2011;
+  case 0x3B: return 0xDDC3;
+  case 0x3C: return 0x1111;
+  case 0x3D: return 0x3044;
+  case 0x3E: return 0x1EC2010;
   case 0x00: case 0x3F: return 0x8200;
-  default: /*fprintf(stderr,"Unknown baseboard id %X\n",value);*/ return 0;
+  default:
+    return value & 0x3F;
   }
 }
 
+typedef struct {
+  unsigned baseboardid;
+} tsctlpage;
+
+int BaseBoardIdGet() {
+  tsctlpage *page = SharedMemoryGet(0x75015001,4096,0);
+  int ret;
+
+  if (!page || !page->baseboardid) {
+    ret = _BaseBoardIdGet();
+    if (page) page->baseboardid = ret;
+  } else ret=page->baseboardid;
+  return ret;
+}
+
+int BaseBoardMuxBusSupport() {
+  int bb = BaseBoardIdGet();
+  if ((bb & 0xFF00) == 0x8100) return 1;
+  if (bb == 0x8900) return 1;
+  if (bb == 0x8820) return 1;
+  return 0;
+}

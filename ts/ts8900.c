@@ -160,16 +160,13 @@ int ts8900_CANBusNum[0];
 
 int ts8900_ArchInit() {
   LogEnter("");
-  static int found = 0;
+  static int found = 0, entered = 0;
   if (found) LogReturn("%d",1);
-  Bus *muxbus = BusInit(2);
   int model;
-  muxbus->Lock(muxbus,0,SHARED);
-  model = muxbus->Peek16(muxbus,0);
-  if (model != 0x8900) { // bug workaround
-    model = muxbus->Peek16(muxbus,0);
-  }
-  muxbus->Unlock(muxbus,0,SHARED);
+  if (entered) return 0;
+  entered=1;
+  model = BaseBoardIdGet();
+  entered=0;
   found = model == 0x8900;
   if (found) {
     dioctl_config_add(ts8900_dioctl_config);

@@ -1,6 +1,7 @@
 //#include "MarvellPXA166TWI.c"
 #include "Thread.c"
 #include "ts4700.h"
+#include "DummyBus.c"
 #include "MMapBus.c"
 #include "SystemTime.c"
 #include "AggregateDIO.c"
@@ -19,6 +20,7 @@
 #include "Array.h"
 
 // object hierarchy
+DummyBus altmux;
 MMapBus MarvellPXA166DIOBus, ts4700DIOBus, ts4700CANBus, testbus, twiregs,
   mfpregs, mux8bus, mux16bus, spi8bus, spi16bus;
 TSMuxBus muxbus;
@@ -96,6 +98,7 @@ Bus *ts4700__BusInit1(Bus *bus,int inst) {
 Bus *ts4700__BusInit9(Bus *bus,int inst);
 Bus *ts4700__BusInit10(Bus *bus,int inst);
 Bus *ts4700__BusInit2(Bus *bus,int inst) {
+  if (!BaseBoardMuxBusSupport()) return DummyBusInit(&altmux);
   return TSMuxBusInit(&muxbus,ts4700__BusInit0(0,0),0x4,
 		      ts4700__BusInit9(0,9),0,ts4700__BusInit10(0,10),0);
 }

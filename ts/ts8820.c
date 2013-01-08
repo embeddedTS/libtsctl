@@ -151,14 +151,14 @@ AIO *ts8820__AIOInit1(AIO *dio,int inst) {
 
 int ts8820_ArchInit() {
   LogEnter("");
-  static int found = 0;
+  static int found = 0, entered=0;
   if (found) LogReturn("%d",1);
-  Bus *muxbus = BusInit(2);
   int model,ret;
-  muxbus->Lock(muxbus,0,SHARED);
-  model = muxbus->Peek16(muxbus,0);
-  muxbus->Unlock(muxbus,0,SHARED);
-  ret = (model & 0xFF0F == 0x8100);
+  if (entered) return 0;
+  entered=1;
+  model = BaseBoardIdGet();
+  entered=0;
+  ret = (model == 0x8820);
   //Log(-1,"model=%04X",model);
   //Log(-1,"model=%04X",model);
   //LogReturn("%d",ret);

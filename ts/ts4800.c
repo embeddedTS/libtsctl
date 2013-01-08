@@ -99,6 +99,7 @@ Bus *ts4800__BusInit17(Bus *bus,int inst);
 Bus *ts4800__BusInit2(Bus *bus,int inst) {
   Bus *bus0 = ts4800__BusInit0(0,0);
   int fpgarev;
+  if (!BaseBoardMuxBusSupport()) return DummyBusInit(&altmux);
   bus0->Lock(bus0,0,0);
   fpgarev = bus0->BitsGet16(bus0,2,3,0);
   bus0->Unlock(bus0,0,0);

@@ -187,6 +187,14 @@ PinResult ts4700PinModeSet(ts4700Pin *pin,int npin,PinMode mode) {
     pin->diobus->Lock(pin->diobus,0,0);
     pin->diobus->BitAssign16(pin->diobus,0x2,14,mode == MODE_TS);
     pin->diobus->Unlock(pin->diobus,0,0);
+  } else if (npin == 3) {
+    pin->diobus->Lock(pin->diobus,0,0);
+    if (mode == MODE_DIO) {
+      pin->diobus->BitClear16(pin->diobus,2,11); // turn off 12.5Mhz clock
+    } else {
+      pin->diobus->BitSet16(pin->diobus,2,11); // turn off 12.5Mhz clock
+    }
+    pin->diobus->Unlock(pin->diobus,0,0);
   } else {
     if (mode != MODE_DIO) return PinErrorModeInvalid;
   }

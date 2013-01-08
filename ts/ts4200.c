@@ -1,6 +1,7 @@
 #include "Thread.c"
 #include <string.h>
 #include "arch.h"
+#include "DummyBus.c"
 #include "MMapBus.c"
 #include "TSMuxBus.c"
 #include "CacheBus.c"
@@ -53,6 +54,7 @@ ArchInfo TS_ArchInfo = {
   .AIOInit=0
 };
 
+DummyBus altmux;
 MMapBus AtmelAT91DIOBus1,
   AtmelAT91DIOBus2,
   AtmelAT91DIOBus3,
@@ -153,6 +155,7 @@ Bus *ts4200__BusInit1(Bus *bus,int inst) {
 Bus *ts4200__BusInit10(Bus *bus,int inst);
 Bus *ts4200__BusInit11(Bus *bus,int inst);
 Bus *ts4200__BusInit2(Bus *bus,int inst) {
+  if (!BaseBoardMuxBusSupport()) return DummyBusInit(&altmux);
   return TSMuxBusInit(&muxbus,ts4200__BusInit0(0,0),0x20,ts4200__BusInit10(0,10),
 		      0,ts4200__BusInit11(0,11),0);
 }
@@ -312,15 +315,9 @@ DIO *ts4200__DIOInit3(DIO *dio,int inst) {
 DIO *ts4200__DIOInit4(DIO *dio,int inst) {
   int i;
 
-  for (i=0;i<=15;i++) {
+  for (i=0;i<=31;i++) {
     ts4200DIOCapabilities[i] = DIO_NORMAL;
   }
-  ts4200DIOCapabilities[16] = DIO_NORMAL;
-  ts4200DIOCapabilities[25] = DIO_NORMAL;
-  ts4200DIOCapabilities[26] = DIO_NORMAL;
-  ts4200DIOCapabilities[28] = DIO_NORMAL;
-  ts4200DIOCapabilities[31] = DIO_NORMAL;
-  
   ts4200DIOCapabilities[32] = DIO_OUTPUT_ONLY;
   ts4200DIOCapabilities[33] = DIO_OUTPUT_ONLY;
   ts4200DIO.Caps = ts4200DIOCapabilities;
