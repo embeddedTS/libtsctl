@@ -9,7 +9,6 @@
 
 typedef struct LockHolderInf LockHolderInf;
 typedef struct ConnectionWaitInf ConnectionWaitInf;
-typedef struct BuildInf BuildInf;
 typedef struct NameValuePair NameValuePair;
 typedef struct System System;
 struct LockHolderInf {
@@ -20,14 +19,6 @@ struct LockHolderInf {
 struct ConnectionWaitInf {
   int pid;
   int wait;
-};
-
-struct BuildInf {
-  unsigned buildNumber;
-  int buildTime;
-  unsigned uptime;
-  char *hostname;
-  char *arch;
 };
 
 struct NameValuePair {
