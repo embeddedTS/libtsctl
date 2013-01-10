@@ -388,16 +388,6 @@ char *LocalSystemVersion(LocalSystem* ob) {
   return ASCIIZ(LIBTSCTL_FULL_VERSION);
 }
 
-void LocalSystemBuildInfo(LocalSystem *sys,BuildInf inf[1]) {
-  char *str;
-  unsigned buildNumber = strtoul(build+7,&str,10);
-
-  inf[0].buildNumber = buildNumber;
-  inf[0].buildTime = tFromDateTime(compiledate+7);
-  inf[0].hostname = ASCIIZ(str+1);
-  inf[0].arch = ASCIIZ((char *)archstr+1);
-}
-
 int LocalSystemModelId(LocalSystem *sys) {
   return TSModelGet();
 }
