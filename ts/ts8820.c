@@ -164,16 +164,14 @@ int ts8820_ArchInit() {
   //LogReturn("%d",ret);
   found = (model == 0x8820);
   if (found) {
-    Bus *bus = BusInit(0);
-    if (!bus) return 0;
+    System *sys = SystemInit(0);
+    if (!sys) return 0;
+    Pin *pin = PinInit(0);
+    if (!pin) return 0;
+    int CN1_87 = sys->MapLookup(sys,ASCIIZLocal("CN1_87"));
+    if (pin->ModeSet(pin,CN1_87,MODE_CLK) != PinSuccess) return 0;
 
     dioctl_config_add(ts8820_dioctl_config);
-    bus->Lock(bus,0,0);
-    bus->BitSet16(bus,2,11); // enable 12.5Mhz base board clock
-    // oops, this is TS-4700 only!!!
-    // not sure any other TS-SOCKET board will even work, as this is the
-    // only one i have found that even offers this functionality!
-    bus->Unlock(bus,0,0);
   }
   LogReturn("0x%04X==0x8100?%d",model,found);
 }

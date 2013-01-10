@@ -70,13 +70,6 @@ int ts4700_ArchInit() {
   if (!value) LogReturn("%d",0);
   ThreadInit();
   dioctl_config_add(ts4700_dioctl_config);
-
-  Bus *bus = BusInit(0);
-  if (!bus) return 0;
-  bus->Lock(bus,0,0);
-  bus->BitSet16(bus,2,11); // enable 12.5Mhz base board clock
-  bus->Unlock(bus,0,0);
-
   LogReturn("%d",1);
 }
 

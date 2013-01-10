@@ -76,6 +76,9 @@ PinMode ts4800PinModeGet(ts4800Pin *pin,int npin) {
   if (npin >= 21 && npin <= 55) {
     return pin->bus->BitGet16(pin->bus,0x12,0) ? MODE_BUS : MODE_DIO;
   }
+  if (npin == 3) {
+    return pin->bus->BitGet16(pin->bus,2,11) ? MODE_CLK : MODE_DIO;
+  }
   //return (pin->bus->BitGet32(pin->bus,0x30,pin)) ? MODE_TWI : MODE_DIO;
   return MODE_UNKNOWN;
 }
@@ -101,6 +104,18 @@ PinResult ts4800PinModeSet(ts4800Pin *pin,int npin,PinMode mode) {
   } else if (npin == 10 || npin == 11) {
     if (mode != MODE_CAN && mode != MODE_DIO) return PinErrorModeInvalid;
     pin->bus->BitAssign16(pin->bus,0x10,1,mode == MODE_CAN);
+  }
+  if (npin == 3) {
+    pin->bus->Lock(pin->bus,0,0);
+    if (mode == MODE_DIO) {
+      pin->bus->BitClear16(pin->bus,2,11); // turn off 12.5Mhz clock
+    } else if (mode == MODE_CLK) {
+      pin->bus->BitSet16(pin->bus,2,11); // turn on 12.5Mhz clock
+    } else {
+      pin->bus->Unlock(pin->bus,0,0);
+      return PinErrorModeInvalid;
+    }
+    pin->bus->Unlock(pin->bus,0,0);  
   }
   return PinSuccess;
 }

@@ -169,6 +169,12 @@ int ts8900_ArchInit() {
   entered=0;
   found = model == 0x8900;
   if (found) {
+    System *sys = SystemInit(0);
+    if (!sys) return 0;
+    Pin *pin = PinInit(0);
+    if (!pin) return 0;
+    int CN1_87 = sys->MapLookup(sys,ASCIIZLocal("CN1_87"));
+    if (pin->ModeSet(pin,CN1_87,MODE_CLK) != PinSuccess) return 0;
     dioctl_config_add(ts8900_dioctl_config);
   }
   LogReturn("0x%04X==0x8900?%d",model,found);

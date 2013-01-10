@@ -123,9 +123,19 @@ int ts81x0_ArchInit() {
   model = BaseBoardIdGet();
   entered=0;
   found = (model & 0xFF0F) == 0x8100;
+  if ((mod & 0xFF00) == 0x8100) {
+    System *sys = SystemInit(0);
+    if (!sys) return 0;
+    Pin *pin = PinInit(0);
+    if (!pin) return 0;
+    int CN1_87 = sys->MapLookup(sys,ASCIIZLocal("CN1_87"));
+    if (pin->ModeSet(pin,CN1_87,MODE_CLK) != PinSuccess) return 0;
+  }
   if (!modded) {
     modded = 1;
-    mod = BaseBoardIdGet();
+    // The following is kind of a hack to deal with the fact that we have
+    // some base boards which don't have their own arch, but which have
+    // dioctl config files to load
     if (mod == 0x8100) {
       dioctl_config_add(ts8100_dioctl_config);
     } else if (mod == 0x8160) {
