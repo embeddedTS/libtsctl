@@ -914,6 +914,7 @@ int WriteEnumPinMode(Stream *out,int val) {
   case 6: WriteF(out,"MODE_TS"); break;
   case 7: WriteF(out,"MODE_BUS"); break;
   case 8: WriteF(out,"MODE_PWM"); break;
+  case 9: WriteF(out,"MODE_CLK"); break;
   case -1: WriteF(out,"MODE_UNKNOWN"); break;
   default: WriteF(out,"%d",val); break;
   }
@@ -1126,6 +1127,7 @@ void EnumInit() {
   add("MODE_TS",6);
   add("MODE_BUS",7);
   add("MODE_PWM",8);
+  add("MODE_CLK",9);
   add("MODE_UNKNOWN",-1);
   add("PinSuccess",1);
   add("PinErrorModeInvalid",-13);
