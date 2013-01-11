@@ -12,7 +12,8 @@ LDFLAGS_CANRx=-lpthread
 CFLAGS_CANRx=-DTHREAD_USE_POSIX
 LDFLAGS_canctl=-lpthread
 #CFLAGS_tsctl=-DLOGGING
-LDFLAGS_tsctl=-lpthread -lreadline
+#LDFLAGS_tsctl=-lpthread -lreadline -static
+LDFLAGS_tsctl=-lpthread /usr/lib/libreadline.a -lcurses 
 #-lefence
 LDFLAGS_ptest=-lpthread
 
