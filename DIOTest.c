@@ -187,7 +187,7 @@ int main(int argc,char *argv[]) {
   case 0x47008200: tests = 180; break;
   case 0x48008200: tests = 174; break;
   
-  case 0x42009490: tests = 250; break;
+  case 0x42009490: tests = 238; break;
   case 0x45009490: tests = 172; break;
   case 0x47009490: tests = 202; break;
   case 0x48009490: tests = 168; break;
