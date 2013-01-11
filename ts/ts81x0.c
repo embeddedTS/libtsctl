@@ -117,13 +117,13 @@ int ts81x0_ArchInit() {
   LogEnter("");
   static int found = 0, modded = 0, entered = 0;
   if (found) LogReturn("%d",1);
-  int model,ret,mod;
+  int model,ret;
   if (entered) return 0;
   entered=1;
   model = BaseBoardIdGet();
   entered=0;
   found = (model & 0xFF0F) == 0x8100;
-  if ((mod & 0xFF00) == 0x8100) {
+  if ((model & 0xFF00) == 0x8100) {
     System *sys = SystemInit(0);
     if (!sys) return 0;
     Pin *pin = PinInit(0);
@@ -136,15 +136,15 @@ int ts81x0_ArchInit() {
     // The following is kind of a hack to deal with the fact that we have
     // some base boards which don't have their own arch, but which have
     // dioctl config files to load
-    if (mod == 0x8100) {
+    if (model == 0x8100) {
       dioctl_config_add(ts8100_dioctl_config);
-    } else if (mod == 0x8160) {
+    } else if (model == 0x8160) {
       dioctl_config_add(ts8160_dioctl_config);
-    } else if (mod == 0x8200) {
+    } else if (model == 0x8200) {
       dioctl_config_add(ts8200_dioctl_config);
-    } else if (mod == 0x8390) {
+    } else if (model == 0x8390) {
       dioctl_config_add(ts8390_dioctl_config);
-    } else if (mod == 0x9490) {
+    } else if (model == 0x9490) {
       dioctl_config_add(ts9490_dioctl_config);
     }
   }
