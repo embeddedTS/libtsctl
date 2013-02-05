@@ -1,0 +1,11 @@
+#!/bin/sh
+
+gcc -o dioctl_map dioctl.map.c
+./dioctl_map > dioctl_map.c
+gcc -I../ts -o dioctl_config dioctl.config.c
+
+for I in ts4200 ts4500 ts4700 ts4800 ts8100 ts8160 ts8200 ts8390 ts8820 ts8900 ts9490 tsdio24 tsrelay8; do
+    ./dioctl_config ${I}.dioctl.config > ../ts/${I}_dioctl_config.c
+done
+rm -f dioctl_config dioctl_map dioctl_map.c
+
