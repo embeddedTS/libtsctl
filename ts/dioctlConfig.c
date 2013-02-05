@@ -116,8 +116,8 @@ NameValuePair* dioctladd(NameValuePair ***map,char **config,diostuff *S) {
     for (j=0;j<ArrayLength(conf);j++) {
       str2 = ArrayDup(conf[j]);
       str = XYZ(str2,&val1);
-      //fprintf(stderr,"%s = %d\n",str,val1);
       type = line_type(str);
+      //fprintf(stderr,"%s = %d (%d)\n",str,val1,type);
       tofree = 0;
       switch (type) {
       case 1: val1 += S->DIOStart; break;

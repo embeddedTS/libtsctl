@@ -129,7 +129,7 @@ int ts81x0_ArchInit() {
     Pin *pin = PinInit(0);
     if (!pin) return 0;
     int CN1_87 = sys->MapLookup(sys,ASCIIZLocal("CN1_87"));
-    if (pin->ModeSet(pin,CN1_87,MODE_CLK) != PinSuccess) return 0;
+    pin->ModeSet(pin,CN1_87,MODE_CLK);
   }
   if (!modded) {
     modded = 1;
