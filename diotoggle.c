@@ -1,7 +1,6 @@
 #include <stdlib.h>
 #include <stdio.h>
 #include "libtsctl.h"
-#include "ts/Array.h"
 
 int main(int argc,char *argv[]) {
   DIO *dio;

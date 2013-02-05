@@ -3,8 +3,8 @@
 #include <asm/ioctls.h>
 #include <sys/resource.h>
 #include <sys/time.h>
-#include "ts/NetCANctl.c"
-#include "ts/Net.c"
+#include "NetCANctl.c"
+#include "Net.c"
 
 CAN *Net_CANctlInit(int inst,char *host,int mode){
   int socket = ClientSocketNew(host,7552+inst);

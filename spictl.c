@@ -8,7 +8,7 @@
 #include <sys/ipc.h>
 #include <sys/shm.h>
 #include "spictl-defbin.h"
-#include "ts/opt.h"
+#include "opt.h"
 
 //Stream protocol:
 #define SPI_CMD_MASK            b1100_0000

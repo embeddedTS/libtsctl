@@ -1,7 +1,7 @@
 #include <stdlib.h>
 #include <stdio.h>
 #include "libtsctl.h"
-#include "ts/Array.h"
+#include "Array.h"
 
 int main(int argc,char *argv[]) {
   SPI *spi;
