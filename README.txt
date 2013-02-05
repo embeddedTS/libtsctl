@@ -2,30 +2,57 @@ Herein lies all the source code for libtsctl, which is the library
 implementing the tsctl C API ("libtsctl"), as well as all sample code
 which uses this API.
 
-The CHANGES.txt file contains a summary of changes for each release.
-For more in depth information, please visit the libtsctl blog at:
+For in depth information on recent changes, please visit the libtsctl 
+blog at:
 http://libtsctl.blogspot.com
 
+All libtsctl files are under the ts/ sub-directory.  To integrate libtsctl
+directly into your own project, include ts/libtsctl.h to embed the
+library into your code and make the API available.  Be sure to define
+the ARCH variable to a valid architecture (e.g. "cavium" or "noncavium").
+Then, the appropriate C files for the architecture you have selected
+will be automatically included into whatever file you included libtsctl.h
+into, eliminating the need to modify your build process to accomdate files
+in ts/.  If you need to access the libtsctl from multiple files, you will
+need to #include "libtsctl0.h" into all files except the one you included
+libtsctl.h into, this will pull in the API definitions only.
 
-Before you can compile you create a file called Makefile.config.
-There is a sample "Makefile.config.sample" that you can use as a
-reference.  You will need to define TOOL_PREFIX to be the path to
-your compiler (or cross-compiler) plus any common prefix such as
-"arm-linux" if that exists.  You will also need to define BOARDSEL
-to be either "cavium" if you are compiling for a Cavium based board
-(TS-4500 or TS-75XX), or "noncavium" for all other CPU boards.
-The LDFLAGS variable must be set to any linker flags.  The sample
-config shows the flags necessary for using our uclibc cross tools
-in a way that is compatible with our initrd and Debian. If you are
-linking against glibc you should not use most of these flags.
+All tsctl client files are under the net/ directory.  To integrate
+these directly into your own project, include net/nettsctl.h into
+your code.
 
-For ease of embedding libtsctl in your own application while still
-being able to support a wide range of hardware, the approach is
-taking of including the C files for each architecture to be supported.
-If you want to import libtsctl into your own project, it should be
-sufficient to copy the .h header files and the ts/ sub-directory 
-to your own project directory, and then  #include "libtsctl.h" in 
-your program.
+The build process is set up to build tsctl for non-cavium boards out of the 
+box directly on the board (e.g. in the Debian environment) by simply invoking 
+'make' in the top-most project directory (i.e. the directory this README.txt 
+file is in.)  You can also specify other products to build or "make all" to
+build all sample code.  Please consult the Makefile for available sample
+products to build; look for the line beginning "PRODUCTS=".
+
+The tsctl product requires libreadline to compile correctly; before compiling
+on the board you may need to run libreadline5-dev.  The default build process
+will statically link readline, so you will not need it to be installed on
+the board tsctl is run on.
+
+If you wish to build for Cavium boards (TS-4500, TS-75XX), you will need to
+define ARCH=cavium, e.g.
+    ARCH=cavium make
+
+Presently we recommend that you compile all libtsctl based products
+directly on the board.  If you do not do this, you will need to
+define TOOL_PREFIX to point to the path prefix to your toolchain,
+for example:
+    TOOL_PREFIX=/opt/locall/arm-linux/gcc-3.4.5-glibc-2.3.4/bin/arm-linux- make
+
+By default the products go in a sub-directory with the same name of the
+architecture; by default this is "noncavium".  You can override this using
+the DIR variable, e.g.
+    DIR=binaries
+
+The resulting binaries can be run from anywhere on your board, although
+it is recommended that they go somewhere in your PATH to avoid needing
+to specify an explicit path.  If you wish to override or extend any
+of the default configuration you can do so by creating an /etc/dioctl.config
+file containing name=value assignments as specific in the documentation.
 
 If for your own purposes you want to create a stripped-down version
 of libtsctl that supports only the specific architecture for your
@@ -36,22 +63,14 @@ of ts4200.c (for noncavium) or ts4500.c (for cavium) to remove the
 data structures corresponding to these boards.  More specifically,
 look for the lines starting with "ArrayAuto" and remove the references
 from each line to the variables containing those board names in each
-list.
+list.  You may also need to move these definitions, e.g. if you are only
+including ts4700.c you will need to move these data structures from ts4200.c
+to ts4700.c.
 
-The provided Makefile by default will compile all the sample applications
-for your selected board class (cavium or noncavium), putting the binaries
-in a sub-directory of the same name.  You can compile a subset of the
-applications be prefixing the make command with a "PRODUCTS=..."
-assignment with the list of applications to compile.
-
-The resulting binaries can be run from anywhere on your board, although
-it is recommended that they go somewhere in your PATH to avoid needing
-to specify an explicit path.  If you wish to override or extend any
-of the default configuration you can do so by creating an /etc/dioctl.config
-file containing name=value assignments as specific in the documentation.
-
-Support for using libtsctl from languages other than C is provided by
+It is possible to use libtsctl from languages other than C is provided by
 a SWIG .i file.  Please read the SWIG.txt file for more information.
+Please note that this method is provided for your convenience only and is
+not officially supported at this time.
 
 === SAMPLE CODE ===
 
@@ -96,7 +115,7 @@ dioctl: implements the classic standalone dioctl server and command line
 options using the libtsctl API.  cannot be run simultaneously with any of the 
 other ctl servers documented here.
 
-tsctl: implementint the full tsctl client and server. also incorporates the 
+tsctl: implementing the full tsctl client and server. also incorporates the 
 canctl, dioctl, and spictl servers.  in addition, implements modbus and 
 http servers.  compile time options can selectively exclude any of the 
 auxiliary (canctl, dioctl, spictl, modbus, http) servers.
