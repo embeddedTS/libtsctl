@@ -1,5 +1,5 @@
 #include <stdio.h>
-#include "libtsctl.h"
+#include "libtsctl0.h"
 #include "Array.h"
 
 int _BaseBoardIdGet() {
