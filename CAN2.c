@@ -2,10 +2,10 @@
 #include "libtsctl.h"
 #include <stdlib.h>
 #include <stdio.h>
-#include "ts/Array.h"
+#include "Array.h"
 
-#include "ts/NetCANctl.c"
-#include "ts/Net.c"
+#include "NetCANctl.c"
+#include "Net.c"
 CAN *Net_CANctlInit(int inst,char *host,int mode){
   int socket = ClientSocketNew(host,7552+inst);
   if (socket < 0) return 0;
