@@ -18,6 +18,22 @@ PRODUCTS=tsctl CAN2 CANTx CANDiag CANRx diotoggle spi8200 ts8160ctl DIOTest canc
 
 $(shell mkdir -p $(DIR))
 
+libtsctl: $(DIR)/libtsctl.o
+	@true
+
+$(DIR)/libtsctl.o: libtsctl.c $(DEPS)
+	@echo "Building $@"
+	@$(CC) -c $(CFLAGS) $(CFLAGS_$(patsubst %.c,%,$<)) $< \
+        $(LDFLAGS) -o $@
+
+MapDump: $(DIR)/MapDump
+	@true
+
+$(DIR)/MapDump: MapDump.c $(DEPS)
+	@echo "Building $@"
+	$(CC) $(CFLAGS) $(CFLAGS_$(patsubst %.c,%,$<)) $< \
+        $(LDFLAGS) $(ARCH)/libtsctl.o -o $@
+
 tsctl: $(DIR)/tsctl
 	@true
 
