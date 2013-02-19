@@ -19,17 +19,19 @@
 extern int ModelId;
 extern int CANBusNum[];
 
-System *SystemInit(int inst);
-Time *TimeInit(int inst);
-Bus *BusInit(int inst);
-Pin *PinInit(int inst);
-CAN *CANInit(int inst);
-DIORaw *DIORawInit(int inst);
-DIO *DIOInit(int inst);
-TWI *TWIInit(int inst);
-SPI *SPIInit(int inst);
-AIO *AIOInit(int inst);
-EDIO *EDIOInit(int inst);
+extern "C" {
+  System *SystemInit(int inst);
+  Time *TimeInit(int inst);
+  Bus *BusInit(int inst);
+  Pin *PinInit(int inst);
+  CAN *CANInit(int inst);
+  DIORaw *DIORawInit(int inst);
+  DIO *DIOInit(int inst);
+  TWI *TWIInit(int inst);
+  SPI *SPIInit(int inst);
+  AIO *AIOInit(int inst);
+  EDIO *EDIOInit(int inst);
+};
 
 #if 0
 Time *Net_TimeInit(int inst,char *host,int mode);
@@ -42,15 +44,17 @@ TWI *Net_TWIInit(int inst,char *host,int mode);
 SPI *Net_SPIInit(int inst,char *host,int mode);
 AIO *Net_AIOInit(int inst,char *host,int mode);
 
-void Net_TimeFini(void *);
-void Net_BusFini(void *);
-void Net_PinFini(void *);
-void Net_CANFini(void *);
-void Net_DIORawFini(void *);
-void Net_DIOFini(void *);
-void Net_TWIFini(void *);
-void Net_SPIFini(void *);
-void Net_AIOFini(void *);
+extern "C" {
+  void Net_TimeFini(void *);
+  void Net_BusFini(void *);
+  void Net_PinFini(void *);
+  void Net_CANFini(void *);
+  void Net_DIORawFini(void *);
+  void Net_DIOFini(void *);
+  void Net_TWIFini(void *);
+  void Net_SPIFini(void *);
+  void Net_AIOFini(void *);
+}
 #endif
 
 #endif
