@@ -19,7 +19,9 @@
 extern int ModelId;
 extern int CANBusNum[];
 
+#ifdef _cplusplus
 extern "C" {
+#endif
   System *SystemInit(int inst);
   Time *TimeInit(int inst);
   Bus *BusInit(int inst);
@@ -31,7 +33,9 @@ extern "C" {
   SPI *SPIInit(int inst);
   AIO *AIOInit(int inst);
   EDIO *EDIOInit(int inst);
+#ifdef _cplusplus
 };
+#endif
 
 #if 0
 Time *Net_TimeInit(int inst,char *host,int mode);
@@ -44,7 +48,9 @@ TWI *Net_TWIInit(int inst,char *host,int mode);
 SPI *Net_SPIInit(int inst,char *host,int mode);
 AIO *Net_AIOInit(int inst,char *host,int mode);
 
+#ifdef _cplusplus
 extern "C" {
+#endif
   void Net_TimeFini(void *);
   void Net_BusFini(void *);
   void Net_PinFini(void *);
@@ -54,7 +60,9 @@ extern "C" {
   void Net_TWIFini(void *);
   void Net_SPIFini(void *);
   void Net_AIOFini(void *);
-}
+#ifdef _cplusplus
+};
+#endif
 #endif
 
 #endif

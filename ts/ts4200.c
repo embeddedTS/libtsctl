@@ -12,7 +12,7 @@
 #include "PhysicalDIO.c"
 #include "AggregateDIO.c"
 #include "DIOTWI.c"
-#include "AtmelAT91SPI.c"
+#include "DIOSPI.c"
 #include "LocalSystem.c"
 #include "SJA1000CAN.c"
 #include "ts4200.h"
@@ -79,7 +79,7 @@ unsigned char AtmelAT91DIO3Capabilities[32];
 unsigned char ts4200DIOCapabilities[34];
 AggregateDIO ts4200DIO0;
 DIOTWI ts4200TWI0;
-AtmelAT91SPI ts4200SPI0;
+DIOSPI ts4200SPI0;
 SystemTime ts4200Time0;
 LocalSystem ts4200sys;
 
@@ -339,10 +339,10 @@ int ts4200_CANBusNum[0];
 #define ts4200CANInstances 0
 
 SPI *ts4200__SPIInit0(SPI *spi,int inst) {
-  if (!ts4200SPI0.LockNum) ts4200SPI0.LockNum = ThreadMutexAllocate(1);
-  return AtmelAT91SPIInit(&ts4200SPI0,ts4200__BusInit13(0,13),PinInit(0),
-			  ts4200__DIOInit2(0,2),25,ts4200__DIOInit2(0,2),26,
-			  ts4200__DIOInit2(0,2),27);
+  DIO *dio = DIOInit(0);
+  DIO *dio2 = DIOInit(2);
+  return DIOSPIInit(&ts4200SPI0,dio,dio,dio,dio,35,134,134,134,
+		    dio,33,dio,32,dio,34,TimeInit(0));
 }
 #define ts4200SPIInstances 1
 
