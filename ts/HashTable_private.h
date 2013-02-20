@@ -27,6 +27,7 @@ hash(struct HashTable *h, void *k);
 
 /*****************************************************************************/
 /* indexFor */
+__attribute__((always_inline)) 
 static inline unsigned int
 indexFor(unsigned int tablelength, unsigned int hashvalue) {
     return (hashvalue % tablelength);

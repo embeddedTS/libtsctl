@@ -54,6 +54,7 @@ typedef struct CANPort {
 
 
 // DIO
+__attribute__((always_inline)) 
 static inline DIOState DIOValue(DIOState state) {
   switch (state) {
   case INPUT_LOW:
@@ -66,6 +67,7 @@ static inline DIOState DIOValue(DIOState state) {
   }
 }
 
+__attribute__((always_inline)) 
 static inline const char *DIOValueString(DIOState state) {
   switch(state) {
   case INPUT_LOW: return "InputLow";
@@ -78,6 +80,7 @@ static inline const char *DIOValueString(DIOState state) {
 }
 
 // Pin
+__attribute__((always_inline)) 
 static inline const char *PinModeString(PinMode mode) {
   switch (mode) {
   case MODE_DIO: return "DIO";

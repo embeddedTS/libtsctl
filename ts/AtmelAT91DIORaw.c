@@ -39,33 +39,58 @@ void AtmelAT91DIORawFini(AtmelAT91DIORaw *dio) {
   if (dio->InitStatus > 0) dio->InitStatus = 0;
 }
 
+__attribute__((always_inline)) 
+void _AtmelAT91DIORawDirSet(AtmelAT91DIORaw *dio,int Num,int asOutput) {
+  dio->sub->Poke32(dio->sub,asOutput ? I(0x10) : I(0x14),1<<Num);
+  //dio->sub->Poke32(dio->sub,I(0),1<<Num);
+  /*
+  dio->sub->BitSet32(dio->sub,I(0),I(Num));
+  dio->sub->BitSet32(dio->sub,asOutput ? I(0x10) : I(0x14),I(Num));
+  */
+}
 void AtmelAT91DIORawDirSet(AtmelAT91DIORaw *dio,int Num,int asOutput) {
   if (I(Num) > 31) return;
   AtmelAT91DIORawLockReal(dio,0);
-  dio->sub->BitSet32(dio->sub,I(0),I(Num));
-  dio->sub->BitSet32(dio->sub,asOutput ? I(0x10) : I(0x14),I(Num));
+  return _AtmelAT91DIORawDirSet(dio,Num,asOutput);
 }
 
+__attribute__((always_inline)) 
+void _AtmelAT91DIORawDataSet(AtmelAT91DIORaw *dio,int Num,int asHigh) {
+  dio->sub->Poke32(dio->sub,asHigh ? I(0x30) : I(0x34),1<<Num);
+  //dio->sub->BitSet32(dio->sub,asHigh?I(0x30):I(0x34),I(Num));
+}
 void AtmelAT91DIORawDataSet(AtmelAT91DIORaw *dio,int Num,int asHigh) {
   if (I(Num) > 31) return;
   AtmelAT91DIORawLockReal(dio,0);
-  dio->sub->BitSet32(dio->sub,asHigh?I(0x30):I(0x34),I(Num));
+  return _AtmelAT91DIORawDataSet(dio,Num,asHigh);
 }
 
+__attribute__((always_inline)) 
+int _AtmelAT91DIORawDirGet(AtmelAT91DIORaw *dio,int Num) {
+  return dio->sub->BitGet32(dio->sub,I(0x18),I(Num));
+}
 int AtmelAT91DIORawDirGet(AtmelAT91DIORaw *dio,int Num) {
   if (I(Num) > 31) return;
   AtmelAT91DIORawLockReal(dio,SHARED);
-  return dio->sub->BitGet32(dio->sub,I(0x18),I(Num));
+  return _AtmelAT91DIORawDirGet(dio,Num);
 }
 
+__attribute__((always_inline)) 
+int _AtmelAT91DIORawDataGet(AtmelAT91DIORaw *dio,int Num) {
+  return dio->sub->BitGet32(dio->sub,I(0x3C),I(Num));
+}
 int AtmelAT91DIORawDataGet(AtmelAT91DIORaw *dio,int Num) {
   if (I(Num) > 31) return;
   AtmelAT91DIORawLockReal(dio,SHARED);
-  return dio->sub->BitGet32(dio->sub,I(0x3C),I(Num));
+  return _AtmelAT91DIORawDataGet(dio,Num);
 }
 
-unsigned AtmelAT91DIORawCount(AtmelAT91DIORaw *dio) {
+__attribute__((always_inline)) 
+unsigned _AtmelAT91DIORawCount(AtmelAT91DIORaw *dio) {
   return 32;
+}
+unsigned AtmelAT91DIORawCount(AtmelAT91DIORaw *dio) {
+  return _AtmelAT91DIORawCount(dio);
 }
 
 // Author: Michael Schmidt (michael@embeddedARM.com)

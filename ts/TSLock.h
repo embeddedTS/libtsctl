@@ -27,6 +27,7 @@
 #include "cpp.h"
 
 #ifdef LOCK_TYPE_EXCLUSIVE
+__attribute__((always_inline)) 
 static inline unsigned TEMPLATE(LOCK_CLASS,LockInit)(LOCK_CLASS *ob,
 						     unsigned lockCount) {
   return ob->LockBase = ThreadMutexAllocate(lockCount);
@@ -60,6 +61,7 @@ int TEMPLATE(LOCK_CLASS,Preempt)(LOCK_CLASS *ob) {
 #endif
 
 #ifdef LOCK_TYPE_SHARED
+__attribute__((always_inline)) 
 static inline unsigned TEMPLATE(LOCK_CLASS,LockInit)(LOCK_CLASS *ob,
 						     unsigned lockCount) {
   return ob->LockBase = ThreadLockAllocate(lockCount);
@@ -99,6 +101,7 @@ int TEMPLATE(LOCK_CLASS,Preempt)(LOCK_CLASS *ob) {
 #endif
 
 #ifdef LOCK_TYPE_EXCLUSIVE_DEFERRED
+__attribute__((always_inline)) 
 static inline unsigned TEMPLATE(LOCK_CLASS,LockInit)(LOCK_CLASS *ob) {
   ob->deferlock = 0;
 }
@@ -120,6 +123,7 @@ int TEMPLATE(LOCK_CLASS,Unlock)(LOCK_CLASS *ob, unsigned num, int flags) {
   return 1;    
 }
 
+__attribute__((always_inline)) 
 static inline int TEMPLATE(LOCK_CLASS,LockReal)(LOCK_CLASS *dio,int flags) {
   //if (flags & SHARED) return ErrorInvalidArgument;
   while (dio->deferlock) {
@@ -136,6 +140,7 @@ int TEMPLATE(LOCK_CLASS,Preempt)(LOCK_CLASS *ob) {
 #endif
 
 #ifdef LOCK_TYPE_SHARED_DEFERRED
+__attribute__((always_inline)) 
 static inline unsigned TEMPLATE(LOCK_CLASS,LockInit)(LOCK_CLASS *ob) {
   ob->deferlockR = ob->deferlockW = 0;
 }
@@ -168,6 +173,7 @@ int TEMPLATE(LOCK_CLASS,Unlock)(LOCK_CLASS *ob, unsigned num, int flags) {
   }
 }
 
+__attribute__((always_inline)) 
 static inline int TEMPLATE(LOCK_CLASS,LockReal)(LOCK_CLASS *dio,int flags) {
   if (flags & SHARED) {
     while (dio->deferlockR) {

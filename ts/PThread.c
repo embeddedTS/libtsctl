@@ -408,6 +408,7 @@ static int MutexWait4Remove(Thread *me,unsigned num) {
   return n;
 }
 /*
+__attribute__((always_inline)) 
 static inline int MutexLockDo(unsigned num) {
   int ret;
   MutexWait4Add(num);
@@ -421,26 +422,33 @@ static inline int MutexLockDo(unsigned num) {
   return ret;
 }
 */
+__attribute__((always_inline)) 
 static inline Thread *_MutexHolder(unsigned num) {
   return lockinfo[num].count ? lockinfo[num].threadHolding : 0;
 }
+__attribute__((always_inline)) 
 static inline int MutexLockIncr(unsigned num) {
   lockinfo[num].count++;
   return 1;
 }
+__attribute__((always_inline)) 
 static inline int MutexLockDecr(unsigned num) {
   return --lockinfo[num].count;
 }
+__attribute__((always_inline)) 
 static inline void MutexProtect() {
   pthread_mutex_lock(&mutex2);
 }
+__attribute__((always_inline)) 
 static inline void MutexUnprotect() {
   pthread_mutex_unlock(&mutex2);
 }
+__attribute__((always_inline)) 
 static inline void MutexClaim(Thread *th,unsigned num) {
   lockinfo[num].count = 1;
   lockinfo[num].threadHolding = th;
 }
+__attribute__((always_inline)) 
 static inline void MutexUnclaim(unsigned num) {
   lockinfo[num].count = 0;
 }
@@ -781,6 +789,7 @@ upgrade to a write lock. i think it should be sufficient to drop the read
 lock, wait for the lock, and then re-aquire it, since now nobody else can
 be holding it and we must succeed.
  */
+__attribute__((always_inline)) 
 static inline void LocalReadersInit(Thread *th) {
   if (!th->readers || lockCount > th->rcount) {
     int i;

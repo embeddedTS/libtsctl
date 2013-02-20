@@ -480,6 +480,7 @@ int ts8820ADCAIOITrig(ts8820ADCAIO *aio,int itrig) {
 // and have it return an error if we can't get any more data because
 // we overflowed, then read off enough data that we can no longer
 // get n elements.
+__attribute__((always_inline)) 
 static inline int ts8820ADCWait4(ts8820ADCAIO *aio,int n) {
   int count;
   

@@ -232,6 +232,7 @@ static void _Cavium2132SBusPoke8(Cavium2132SBus *obj,unsigned int adr, unsigned 
   obj->gpiobus->Poke32(obj->gpiobus,0,0x2<<15|1<<17|1<<3);
 }
 
+__attribute__((always_inline)) 
 static inline unsigned _Cavium2132SBusPeek32(Cavium2132SBus *obj,unsigned int adr) {
   unsigned int ret;
   unsigned short l, h;
@@ -241,6 +242,7 @@ static inline unsigned _Cavium2132SBusPeek32(Cavium2132SBus *obj,unsigned int ad
   return ret;
 }
 
+__attribute__((always_inline)) 
 static inline void _Cavium2132SBusPoke32(Cavium2132SBus *obj,unsigned int adr, unsigned dat) {
   _Cavium2132SBusPoke16(obj,adr, dat & 0xffff);
   _Cavium2132SBusPoke16(obj,adr + 2, dat >> 16);

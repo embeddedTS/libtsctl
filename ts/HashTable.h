@@ -5,6 +5,7 @@
 struct HashTable;
 typedef struct HashTable HashTable;
 
+int HashTableEqual(HashTable *a,HashTable *b);
 HashTable *HashTableNew(unsigned int minsize,
                  unsigned int (*hashfunction) (void*),
                  int (*key_eq_fn) (void*,void*));
@@ -28,14 +29,17 @@ int ArrayEqualQ(void *a,void *b);
 unsigned int IntegerHash(void *i);
 int IntegerEqualQ(void *a,void *b);
 
+__attribute__((always_inline)) 
 static inline HashTable *HashTableNewASCIIZ() {
   return HashTableNew(16,(hFcn)ASCIIZHash,(eFcn)ASCIIZEqual);
 }
 
+__attribute__((always_inline)) 
 static inline HashTable *HashTableNewArrKey() {
   return HashTableNew(16,(hFcn)ArrayHash,(eFcn)ArrayEqualQ);
 }
 
+__attribute__((always_inline)) 
 static inline HashTable *HashTableNewInteger() {
   return HashTableNew(16,(hFcn)IntegerHash,(eFcn)IntegerEqualQ);
 }

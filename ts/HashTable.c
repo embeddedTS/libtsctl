@@ -24,6 +24,11 @@ static const unsigned int primes[] = {
 const unsigned int prime_table_length = sizeof(primes)/sizeof(primes[0]);
 const unsigned max_load_factor = 65;
 
+int HashTableEqual(HashTable *a,HashTable *b) {
+  return !memcmp(a,b,sizeof(HashTable));
+}
+
+
 /*****************************************************************************/
 HashTable *HashTableNew(unsigned int minsize,
                  unsigned int (*hashf) (void*),

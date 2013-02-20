@@ -18,6 +18,7 @@ static void BusOff(SJA1000CAN *can) {
   can->bus->Poke8(can->bus,15, 0); // Reset TX error counter to 0
 }
 
+__attribute__((always_inline)) 
 static inline void BusOn(SJA1000CAN *can) {
   can->bus->Poke8(can->bus,0, 0); /* Enter operational mode */
 }
@@ -476,13 +477,17 @@ void queue(int line) {
 #else
 #ifdef DEBUG2
 
+__attribute__((always_inline)) 
 static inline void queue(int line) { 
   fprintf(stderr,"%d ",line); 
 }
+__attribute__((always_inline)) 
 static inline void dump() { }
 #define ___ queue(__LINE__);
 #else
+__attribute__((always_inline)) 
 static inline void queue(int line) { }
+__attribute__((always_inline)) 
 static inline void dump() { }
 #define ___
 #endif
@@ -752,6 +757,7 @@ void closeSocket(SJA1000CAN *can,unsigned nconn) {
 	d->nconn--;
 }
 
+__attribute__((always_inline)) 
 static inline int emptyTxQ(SJA1000CAN *can) {
 	// we really should reset txhead and txtail back to 0 when we 
 	// run out of data
@@ -759,10 +765,12 @@ static inline int emptyTxQ(SJA1000CAN *can) {
 }
 
 // not used yet, but it should be!!!
+__attribute__((always_inline)) 
 static inline int fullRxQ(SJA1000CAN *can) {
 	return can->D.rxtail == BUFLEN;
 }
 
+__attribute__((always_inline)) 
 static inline int emptyRxQ(SJA1000CAN *can) {
 	return can->D.rxtail == 0;
 }

@@ -133,6 +133,7 @@ void MMapBusCommit(MMapBus *bus,int forceall) {
 #include <stdio.h>
 #endif
 
+__attribute__((always_inline)) 
 static inline unsigned char _MMapBusPeek8(MMapBus *bus,int adrs) {
   unsigned char ret = bus->Mem[adrs];
 #ifdef DEBUG
@@ -142,6 +143,7 @@ static inline unsigned char _MMapBusPeek8(MMapBus *bus,int adrs) {
   return ret;
 }
 
+__attribute__((always_inline)) 
 static inline void _MMapBusPoke8(MMapBus *bus,int adrs,unsigned char val) {
 #ifdef DEBUG
   if (bus == DEBUG_ADRS)
@@ -150,6 +152,7 @@ static inline void _MMapBusPoke8(MMapBus *bus,int adrs,unsigned char val) {
   bus->Mem[adrs] = val;
 }
 
+__attribute__((always_inline)) 
 static inline unsigned short _MMapBusPeek16(MMapBus *bus,int adrs) {
   unsigned short ret = ((volatile unsigned short *)(bus->Mem+adrs))[0];
 #ifdef DEBUG
@@ -163,6 +166,7 @@ static inline unsigned short _MMapBusPeek16(MMapBus *bus,int adrs) {
 extern MMapBus ts4700DIOBus;
 MMapBus *DBUS = &ts4700DIOBus;
 #endif
+__attribute__((always_inline)) 
 static inline void _MMapBusPoke16(MMapBus *bus,int adrs,unsigned short val) {
 #if 0
   if (bus == DBUS && adrs == 2 && !(val & (1<<11))) {
@@ -177,6 +181,7 @@ static inline void _MMapBusPoke16(MMapBus *bus,int adrs,unsigned short val) {
   ((volatile unsigned short *)(bus->Mem+adrs))[0] = val;
 }
 
+__attribute__((always_inline)) 
 static inline unsigned _MMapBusPeek32(MMapBus *bus,int adrs) {
 #ifdef DEBUG
   if (bus == DEBUG_ADRS)
@@ -185,7 +190,8 @@ static inline unsigned _MMapBusPeek32(MMapBus *bus,int adrs) {
   return ((volatile unsigned *)(bus->Mem+adrs))[0];
 }
 
-static inline void _MMapBusPoke32(MMapBus *bus,int adrs,unsigned val) {
+__attribute__((always_inline)) 
+static inline void _MMapBusPoke32(MMapBus *bus,int adrs,unsigned val)  {
 #ifdef DEBUG
   if (bus == DEBUG_ADRS)
   fprintf(stderr,"%p:Poke32 %d,%X\n",bus,adrs,val);

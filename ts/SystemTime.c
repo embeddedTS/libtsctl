@@ -3,6 +3,7 @@
 #include <sys/time.h>
 #include "SystemTime.h"
 
+__attribute__((always_inline)) 
 static inline unsigned long long TimeDifference(struct timeval t0,struct timeval t1) {
   return (t1.tv_usec - t0.tv_usec) + 1000000 * (t1.tv_sec - t0.tv_sec);
 }

@@ -188,7 +188,7 @@ void CacheBusPokeStream(CacheBus *bus,int adr,int dir,const char* buf) {
 }
 
 //-----------------------------------------------------------------------------
-static inline unsigned char _CacheBusPeek8(CacheBus *bus,int adrs){
+unsigned char _CacheBusPeek8(CacheBus *bus,int adrs){
   if (bus->Width == 8 && adrs < 0 
       && ~adrs >= bus->Offset && ~adrs < bus->Offset + bus->Length) {
     return bus->icache[~adrs-bus->Offset];
@@ -199,7 +199,7 @@ static inline unsigned char _CacheBusPeek8(CacheBus *bus,int adrs){
   }
 }
 
-static inline void _CacheBusPoke8(CacheBus *bus,int adrs,unsigned char val){
+void _CacheBusPoke8(CacheBus *bus,int adrs,unsigned char val){
   if (bus->Width == 8  && adrs < 0 
       && ~adrs >= bus->Offset && ~adrs < bus->Offset + bus->Length) {
     bus->ocache[~adrs-bus->Offset] = val;
@@ -213,7 +213,7 @@ static inline void _CacheBusPoke8(CacheBus *bus,int adrs,unsigned char val){
   }
 }
 
-static inline unsigned short _CacheBusPeek16(CacheBus *bus,int adrs){
+unsigned short _CacheBusPeek16(CacheBus *bus,int adrs){
   if (bus->Width == 16 && adrs < 0
       && ~adrs >= bus->Offset && ~adrs < bus->Offset + 2*bus->Length) {
     //fprintf(stderr,"N1:%X->%X\n",~adrs,bus->icache[(~adrs-bus->Offset)/2]);
@@ -228,7 +228,7 @@ static inline unsigned short _CacheBusPeek16(CacheBus *bus,int adrs){
   }
 }
 
-static inline void _CacheBusPoke16(CacheBus *bus,int adrs,unsigned short val){
+void _CacheBusPoke16(CacheBus *bus,int adrs,unsigned short val){
   if (bus->Width == 16 && adrs < 0
       && ~adrs >= bus->Offset && ~adrs < bus->Offset + 2*bus->Length) {
     //fprintf(stderr,"M1:%X->%X\n",~adrs,val);
@@ -244,7 +244,7 @@ static inline void _CacheBusPoke16(CacheBus *bus,int adrs,unsigned short val){
   }
 }
 
-static inline unsigned _CacheBusPeek32(CacheBus *bus,int adrs){
+unsigned _CacheBusPeek32(CacheBus *bus,int adrs){
   if (bus->Width == 32 && adrs < 0
       && ~adrs >= bus->Offset && ~adrs < bus->Offset + 4*bus->Length) {
     return bus->icache[(~adrs-bus->Offset)/4];
@@ -255,7 +255,7 @@ static inline unsigned _CacheBusPeek32(CacheBus *bus,int adrs){
   }
 }
 
-static inline void _CacheBusPoke32(CacheBus *bus,int adrs,unsigned val){
+void _CacheBusPoke32(CacheBus *bus,int adrs,unsigned val){
   if (bus->Width == 32 && adrs < 0
       && ~adrs >= bus->Offset && ~adrs < bus->Offset + 4*bus->Length) {
     //printf("BC32 %p:[%X]=%X\n",bus->sub,~adrs,val);

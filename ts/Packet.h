@@ -21,21 +21,25 @@ typedef struct Packet {
   char data[PacketMaxLen];
 } Packet;
 
+__attribute__((always_inline)) 
 static inline void PacketInit(Packet *packet) {
   packet->len = 0;
 }
 
+__attribute__((always_inline)) 
 static inline int PacketPush8(Packet *packet,unsigned char value) {
   if (packet->len + 1 >= PacketMaxLen) return -1;
   packet->data[packet->len++] = value;
   return 1;
 }
+__attribute__((always_inline)) 
 static inline int PacketPush16(Packet *packet,unsigned short value) {
   if (packet->len + 2 >= PacketMaxLen) return -1;
   packet->data[packet->len++] = value >> 8;
   packet->data[packet->len++] = value & 0xFF;
   return 2;
 }
+__attribute__((always_inline)) 
 static inline int PacketPush32(Packet *packet,unsigned value) {
   if (packet->len + 4 >= PacketMaxLen) return -1;
   packet->data[packet->len++] = (value >> 24) & 0xFF;
@@ -44,6 +48,7 @@ static inline int PacketPush32(Packet *packet,unsigned value) {
   packet->data[packet->len++] = value & 0xFF;
   return 4;
 }
+__attribute__((always_inline)) 
 static inline int PacketPush64(Packet *packet,unsigned long long value) {
   if (packet->len + 8 >= PacketMaxLen) return -1;
   packet->data[packet->len++] = (value >> 56) & 0xFF;
@@ -56,17 +61,20 @@ static inline int PacketPush64(Packet *packet,unsigned long long value) {
   packet->data[packet->len++] = value & 0xFF;
   return 8;
 }
+__attribute__((always_inline)) 
 static inline int PacketPushBytes(Packet *packet,unsigned char len,unsigned char *data) {
   if (packet->len + len >= PacketMaxLen) return -1;
   memcpy(packet->data+packet->len,data,len);
   packet->len += len;
   return len;
 }
+__attribute__((always_inline)) 
 static inline void PacketRewind(Packet *packet,unsigned amt) {
   if (amt > packet->len) packet->len = 0;
   else packet->len -= amt;
 }
 
+__attribute__((always_inline)) 
 static inline int PacketSend0(int socket,void *buf0,int len) {
   char *s = (char *)buf0;
   int ret,n=0;
@@ -84,10 +92,12 @@ static inline int PacketSend0(int socket,void *buf0,int len) {
   // return NOSIG(send(socket,packet->data,packet->len,0));
 }
 
+__attribute__((always_inline)) 
 static inline int PacketSend(Packet *packet,int socket) {
   return PacketSend0(socket,packet->data,packet->len);
 }
 
+__attribute__((always_inline)) 
 static inline int PacketRecv(int socket,void *buf0,int len) {
   char *buf = buf0;
   int n=0,ret;
@@ -103,15 +113,18 @@ static inline int PacketRecv(int socket,void *buf0,int len) {
   return n;
 }
 
+__attribute__((always_inline)) 
 static inline int PacketPullDummy(int socket,int *dummy) {
   *dummy = 1;
   return 1;
 }
 
+__attribute__((always_inline)) 
 static inline int PacketPull8(int socket,unsigned char *ch) {
   return PacketRecv(socket,ch,1);
   //return NOSIG(recv(socket,ch,1,MSG_WAITALL));
 }
+__attribute__((always_inline)) 
 static inline int PacketPull16(int socket,unsigned short *sh) {
   unsigned char buf[2];
   int ret;
@@ -120,6 +133,7 @@ static inline int PacketPull16(int socket,unsigned short *sh) {
   *sh = 256 * buf[0] + buf[1];
   return ret;
 }
+__attribute__((always_inline)) 
 static inline int PacketPull24(int socket,unsigned *sh) {
   unsigned char buf[3];
   int ret;
@@ -128,6 +142,7 @@ static inline int PacketPull24(int socket,unsigned *sh) {
   *sh = 256*256*buf[0] + 256 * buf[1] + buf[2];
   return ret;
 }
+__attribute__((always_inline)) 
 static inline int PacketPull32(int socket,unsigned *i) {
   unsigned char buf[4];
   int ret;
@@ -136,6 +151,7 @@ static inline int PacketPull32(int socket,unsigned *i) {
   *i = 256*65536 * buf[0] + 65536 * buf[1] + 256 * buf[2] + buf[3];
   return ret;
 }
+__attribute__((always_inline)) 
 static inline int PacketPull64(int socket,unsigned long long *i) {
   unsigned char buf[8];
   int ret;
@@ -153,6 +169,7 @@ static inline int PacketPull64(int socket,unsigned long long *i) {
   return ret;
 }
 
+__attribute__((always_inline)) 
 static inline int PacketPullBytes(int socket,unsigned char len,unsigned char *data) {
   int ret = PacketRecv(socket,data,len);
   // int ret =  NOSIG(recv(socket,data,len,MSG_WAITALL));

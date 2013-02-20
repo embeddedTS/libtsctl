@@ -35,6 +35,7 @@ void Cavium2132TimeDelay(Cavium2132Time *me,unsigned us) {
   SystemMicroSecondWait(me,us);
 }
 
+__attribute__((always_inline)) 
 static inline unsigned _Cavium2132TimeTick(Cavium2132Time *me) {
   return *(me->timer3);
 }

@@ -32,6 +32,7 @@ struct Net {
   int *cmds;
 };
 
+__attribute__((always_inline)) 
 static inline void PacketPushCmd(Packet *req,int cmd,void *net0,int theclass) {
   Net *net = net0;
   PacketPush8(req,cmd);

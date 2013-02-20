@@ -5,6 +5,7 @@
 #include "Bit.h"
 #include "Thread.h"
 
+__attribute__((always_inline)) 
 static inline void TSMuxBusLockCallback(TSMuxBus *bus,int num) {
   assert(bus->configbus);
   bus->configbus->Lock(bus->configbus,num,0);
@@ -103,27 +104,33 @@ void TSMuxBusPokeStream(TSMuxBus *bus,int adr,int dir,const char* buf) {
 
 
 //-----------------------------------------------------------------------------
+__attribute__((always_inline)) 
 static inline unsigned char _TSMuxBusPeek8(TSMuxBus *bus,int adrs) {
   return bus->regbus8->Peek8(bus->regbus8,adrs+bus->base8);
 }
 
+__attribute__((always_inline)) 
 static inline void _TSMuxBusPoke8(TSMuxBus *bus,int adrs,unsigned char val) {
   bus->regbus8->Poke8(bus->regbus8,adrs+bus->base8,val);
 }
 
 // note: adrs & 1 != 0 not supported
+__attribute__((always_inline)) 
 static inline unsigned short _TSMuxBusPeek16(TSMuxBus *bus,int adrs) {
   return bus->regbus16->Peek16(bus->regbus16,adrs+bus->base16);
 }
 
+__attribute__((always_inline)) 
 static inline void _TSMuxBusPoke16(TSMuxBus *bus,int adrs,unsigned short val) {
   bus->regbus16->Poke16(bus->regbus16,adrs+bus->base16,val);
 }
 
+__attribute__((always_inline)) 
 static inline unsigned _TSMuxBusPeek32(TSMuxBus *bus,int adrs) {
   return 0;
 }
 
+__attribute__((always_inline)) 
 static inline void _TSMuxBusPoke32(TSMuxBus *bus,int adrs,unsigned val) {
 }
 //-----------------------------------------------------------------------------

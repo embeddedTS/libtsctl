@@ -48,6 +48,7 @@ void TSTimeDelay(TSTime *me,unsigned us) {
   SystemMicroSecondWait(me,us);
 }
 
+__attribute__((always_inline)) 
 static inline unsigned _TSTimeTick(TSTime *me) {
   unsigned short lsb,msb,msb2;
 
