@@ -1,5 +1,6 @@
 -include Makefile.config
 CC=$(TOOL_PREFIX)gcc
+CXX=$(TOOL_PREFIX)g++
 ARCH?=noncavium
 CFLAGS+=-march=armv4 -ffunction-sections -fdata-sections -D$(ARCH)=1 -Its
 LDFLAGS+=-Wl,-gc-sections
@@ -32,6 +33,14 @@ MapDump: $(DIR)/MapDump
 $(DIR)/MapDump: MapDump.c $(DEPS)
 	@echo "Building $@"
 	$(CC) $(CFLAGS) $(CFLAGS_$(patsubst %.c,%,$<)) $< \
+        $(LDFLAGS) $(ARCH)/libtsctl.o -o $@
+
+MapDump2: $(DIR)/MapDump2
+	@true
+
+$(DIR)/MapDump2: MapDump2.cpp $(DEPS) $(DIR)/libtsctl.o
+	@echo "Building $@"
+	$(CXX) $(CFLAGS) $(CFLAGS_$(patsubst %.c,%,$<)) $< \
         $(LDFLAGS) $(ARCH)/libtsctl.o -o $@
 
 tsctl: $(DIR)/tsctl

@@ -1,5 +1,12 @@
-void log9(int flags,char *format, ...) __attribute__ ((weak));
+#if defined(cavium) || defined(__cavium)
+  #include "libtsctl-cavium.c"
+#endif 
 
-void log9(int flags,char *format, ...) {
-}
+#if defined(noncavium) || defined(__noncavium)
+  #include "libtsctl-noncavium.c"
+#endif 
+
+
+
+
 
