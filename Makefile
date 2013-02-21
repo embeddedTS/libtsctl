@@ -22,7 +22,7 @@ $(shell mkdir -p $(DIR))
 tsctl: $(DIR)/tsctl
 	@true
 
-$(DIR)/tsctl: tsctl.c $(DEPS)
+$(DIR)/tsctl: tsctl.c $(ARCH)/libtsctl.o $(DEPS)
 	@echo "Building $@"
 	@$(CC) $(CFLAGS) $(CFLAGS_$(patsubst %.c,%,$<)) $< \
         $(LDFLAGS) $(ARCH)/libtsctl.o -lpthread /usr/lib/libreadline.a -lcurses -o $@
