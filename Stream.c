@@ -355,6 +355,8 @@ int WriteASCIIZ(Stream *st,char *arr) {
   return st->Write(st,arr,strlen(arr));
 }
 
+char *vstrf(char *format,va_list ap);
+/*
 #ifndef __vstrf_defined
 #define __vstrf_defined
 char *vstrf(char *format,va_list ap) {
@@ -367,7 +369,7 @@ char *vstrf(char *format,va_list ap) {
   return str;
 }
 #endif
-
+*/
 int WriteF(Stream *st,char *format,...) {
   va_list ap;
   char* str;

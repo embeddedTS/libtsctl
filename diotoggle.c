@@ -1,6 +1,6 @@
 #include <stdlib.h>
 #include <stdio.h>
-#include "libtsctl.h"
+#include "libtsctl.c"
 
 int main(int argc,char *argv[]) {
   DIO *dio;

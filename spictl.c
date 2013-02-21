@@ -1,4 +1,4 @@
-#include "libtsctl.h"
+#include "libtsctl.c"
 #include <assert.h>
 #include <errno.h>
 #include <stdlib.h>

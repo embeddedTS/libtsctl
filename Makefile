@@ -19,7 +19,15 @@ PRODUCTS=tsctl CAN2 CANTx CANDiag CANRx diotoggle spi8200 ts8160ctl DIOTest canc
 
 $(shell mkdir -p $(DIR))
 
-libtsctl: $(DIR)/libtsctl.o
+tsctl: $(DIR)/tsctl
+	@true
+
+$(DIR)/tsctl: tsctl.c $(DEPS)
+	@echo "Building $@"
+	@$(CC) $(CFLAGS) $(CFLAGS_$(patsubst %.c,%,$<)) $< \
+        $(LDFLAGS) $(ARCH)/libtsctl.o -lpthread /usr/lib/libreadline.a -lcurses -o $@
+
+libtsctl.o: $(DIR)/libtsctl.o
 	@true
 
 $(DIR)/libtsctl.o: libtsctl.c $(DEPS)
@@ -42,14 +50,6 @@ $(DIR)/MapDump2: MapDump2.cpp $(DEPS) $(DIR)/libtsctl.o
 	@echo "Building $@"
 	$(CXX) $(CFLAGS) $(CFLAGS_$(patsubst %.c,%,$<)) $< \
         $(LDFLAGS) $(ARCH)/libtsctl.o -o $@
-
-tsctl: $(DIR)/tsctl
-	@true
-
-$(DIR)/tsctl: tsctl.c $(DEPS)
-	@echo "Building $@"
-	@$(CC) $(CFLAGS) $(CFLAGS_$(patsubst %.c,%,$<)) $< \
-        $(LDFLAGS) -lpthread /usr/lib/libreadline.a -lcurses -o $@
 
 all: $(PRODUCTS)
 

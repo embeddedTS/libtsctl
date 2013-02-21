@@ -1,6 +1,7 @@
 #include <stdio.h>
 #include "Thread.h"
-#include "shell.c"
+#include "shell.h"
+#include "HashTable.h"
 
 typedef struct OutInfo OutInfo;
 

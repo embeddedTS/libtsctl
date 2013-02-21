@@ -5,11 +5,21 @@
 #include "ts/http.c"
 #include <stdio.h>
 #include <string.h>
+#include <signal.h>
 #include "ts/Array.h"
 #include "ts/Net.h"
 #include "ts/shell.h"
 #include "ts/IteratorHashTable.c"
 #include "ts/Mode.h"
+
+#ifndef LIBTSCTL_VERSION
+#define LIBTSCTL_VERSION "0.96"
+#endif
+#ifndef LIBTSCTL_ORGANIZATION
+#define LIBTSCTL_ORGANIZATION customer
+#endif
+#define LIBTSCTL_FULL_VERSION LIBTSCTL_VERSION "-" STRINGIFY(LIBTSCTL_ORGANIZATION)
+extern const char compiledate[]; 
 
 #include "command1.h"
 #include "command.c"

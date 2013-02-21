@@ -1,5 +1,5 @@
 #define THREAD_USE_POSIX
-#include "libtsctl.h"
+#include "libtsctl.c"
 #include <stdlib.h>
 #include <stdio.h>
 

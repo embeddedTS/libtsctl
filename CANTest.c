@@ -1,7 +1,7 @@
 #define POLYGLOT_AUTO_COMPILE \
   gcc -g -fms-extensions -o CANTest CANTest.c ; exit
 
-#include "libtsctl.h"
+#include "libtsctl.c"
 #include <stdlib.h>
 #include <stdio.h>
 #include <time.h>

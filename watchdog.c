@@ -7,7 +7,7 @@
 #include "ts/nosig.h"
 #include "ts/Array.h"
 
-#include "libtsctl.h"
+#include "libtsctl.c"
 
 
 unsigned short* SemaphoresQ(int semid) {

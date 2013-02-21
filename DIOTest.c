@@ -1,7 +1,7 @@
 #include <stdarg.h>
 #include <stdlib.h>
 #include <stdio.h>
-#include "libtsctl.h"
+#include "libtsctl.c"
 
 
 int Lookup(System *sys,char *str,...) {

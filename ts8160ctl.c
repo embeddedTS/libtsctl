@@ -2,7 +2,7 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <unistd.h>
-#include "libtsctl.h"
+#include "libtsctl.c"
 
 #define AVR_ADDR        0x07      //AVR I2C address
 #define TEMP_ADDR       0x49      //Temp Sensor I2C address

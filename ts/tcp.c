@@ -2,7 +2,7 @@
 #include <sys/select.h>
 #define THREAD_USE_POSIX
 #include "Thread.h"
-#include "socket.c"
+#include "socket.h"
 
 typedef struct {
   ThreadFunction f;

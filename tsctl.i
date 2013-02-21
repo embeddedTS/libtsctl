@@ -1,7 +1,7 @@
 %module tsctl
 %{
 
-#include "ts/libtsctl.h"
+#include "ts/libtsctl.c"
   /*
   typedef struct {
     unsigned c,size,len;

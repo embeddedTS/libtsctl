@@ -1,6 +1,6 @@
 #include <stdlib.h>
 #include <stdio.h>
-#include "libtsctl.h"
+#include "libtsctl.c"
 
 void CANMessagePrint(CANMessage *msg) {
   struct tm * tm;
