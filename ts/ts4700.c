@@ -257,7 +257,10 @@ CAN *ts4700__CANInit0(CAN *can,int inst) {
 #define ts4700CANInstances 1
 
 static void ts4700SPIChipSelect(WBSPI *ob,unsigned num,int asserted) {
-  if (num > 0) return; // CS1-3# not available
+  if (num > 0) {
+    num = 0;
+    // CS1-3# not available, use CS0 instead
+  }
   if (!asserted) return; // core will do this automatically
   ob->bus->Lock(ob->bus,0,0);
   ob->bus->Poke16(ob->bus,ob->offset,
