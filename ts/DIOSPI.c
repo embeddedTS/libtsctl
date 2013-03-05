@@ -127,7 +127,7 @@ int _DIOSPIReadWrite(DIOSPI *ob,int adrs,const unsigned char* buf,unsigned char*
   }
   clkval = ob->CPOL;
   ob->miso->SetAsync(ob->miso,ob->SPI_MISO,INPUT);
-  printf("initial clock value = %d\n",clkval);
+  //printf("initial clock value = %d\n",clkval);
   ob->clk->SetAsync(ob->clk,ob->SPI_CLK,clkval);
   if (ob->delay) ob->t->Delay(ob->t,ob->delay);
   cs->SetAsync(cs,SPI_CS,LOW); // assert CS
