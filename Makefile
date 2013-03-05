@@ -22,7 +22,7 @@ $(shell mkdir -p $(DIR))
 tsctl: $(DIR)/tsctl
 	@true
 
-$(DIR)/tsctl: tsctl.c $(ARCH)/libtsctl.o $(DEPS)
+$(DIR)/tsctl: tsctl.c $(ARCH)/libtsctl.o 
 	@echo "Building $@"
 	@$(CC) $(CFLAGS) $(CFLAGS_$(patsubst %.c,%,$<)) $< \
         $(LDFLAGS) $(ARCH)/libtsctl.o -lpthread /usr/lib/libreadline.a -lcurses -o $@
@@ -46,7 +46,7 @@ $(DIR)/MapDump: MapDump.c $(DEPS)
 MapDump2: $(DIR)/MapDump2
 	@true
 
-$(DIR)/MapDump2: MapDump2.cpp $(DEPS) $(DIR)/libtsctl.o
+$(DIR)/MapDump2: MapDump2.cpp $(DIR)/libtsctl.o
 	@echo "Building $@"
 	$(CXX) $(CFLAGS) $(CFLAGS_$(patsubst %.c,%,$<)) $< \
         $(LDFLAGS) $(ARCH)/libtsctl.o -o $@
@@ -86,8 +86,8 @@ $(DIR)/diotoggle: diotoggle.c $(DEPS)
 spi8200: $(DIR)/spi8200
 	@true
 
-$(DIR)/spi8200: spi8200.c $(DEPS)
-	@echo "Building $@";$(CC) $(CFLAGS) $< $(LDFLAGS) -o $@
+$(DIR)/spi8200: spi8200.c $(ARCH)/libtsctl.o
+	@echo "Building $@";$(CC) $(CFLAGS) $< $(LDFLAGS) $(ARCH)/libtsctl.o -o $@
 
 ts8160ctl: $(DIR)/ts8160ctl
 	@true
