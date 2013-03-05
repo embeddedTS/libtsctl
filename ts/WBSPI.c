@@ -43,10 +43,54 @@ void WBSPIFini(WBSPI *spi) {
 }
 
 int WBSPILock(WBSPI *spi,unsigned num,int flags) {
-  return ThreadMutexLock(spi->LockNum,flags);
+  int ret;
+  System *sys = SystemInit(0);
+  Pin *pin = PinInit(0);
+  int CN2_64 = sys->MapLookup(sys,ASCIIZLocal("CN2_64"));
+  int CN2_65 = sys->MapLookup(sys,ASCIIZLocal("CN2_65"));
+  int CN2_66 = sys->MapLookup(sys,ASCIIZLocal("CN2_66"));
+  int CN2_67 = sys->MapLookup(sys,ASCIIZLocal("CN2_67"));
+  int CN2_68 = sys->MapLookup(sys,ASCIIZLocal("CN2_68"));
+  int CN2_69 = sys->MapLookup(sys,ASCIIZLocal("CN2_69"));
+  int CN2_71 = sys->MapLookup(sys,ASCIIZLocal("CN2_71"));
+
+  if ((ret = ThreadMutexLock(spi->LockNum,flags)) < 0) return ret;
+  pin->Lock(pin,CN2_64,0);
+  pin->Lock(pin,CN2_65,0);
+  pin->Lock(pin,CN2_66,0);
+  pin->Lock(pin,CN2_67,0);
+  pin->Lock(pin,CN2_68,0);
+  pin->Lock(pin,CN2_69,0);
+  pin->Lock(pin,CN2_71,0);
+  pin->ModeSet(pin,CN2_64,MODE_SPI);
+  pin->ModeSet(pin,CN2_65,MODE_SPI);
+  pin->ModeSet(pin,CN2_66,MODE_SPI);
+  pin->ModeSet(pin,CN2_67,MODE_SPI);
+  pin->ModeSet(pin,CN2_68,MODE_SPI);
+  pin->ModeSet(pin,CN2_69,MODE_SPI);
+  pin->ModeSet(pin,CN2_71,MODE_SPI);
+  return ret;
 }
 
 int WBSPIUnlock(WBSPI *spi,unsigned num,int flags) {
+  System *sys = SystemInit(0);
+  Pin *pin = PinInit(0);
+
+  int CN2_64 = sys->MapLookup(sys,ASCIIZLocal("CN2_64"));
+  int CN2_65 = sys->MapLookup(sys,ASCIIZLocal("CN2_65"));
+  int CN2_66 = sys->MapLookup(sys,ASCIIZLocal("CN2_66"));
+  int CN2_67 = sys->MapLookup(sys,ASCIIZLocal("CN2_67"));
+  int CN2_68 = sys->MapLookup(sys,ASCIIZLocal("CN2_68"));
+  int CN2_69 = sys->MapLookup(sys,ASCIIZLocal("CN2_69"));
+  int CN2_71 = sys->MapLookup(sys,ASCIIZLocal("CN2_71"));
+
+  pin->Lock(pin,CN2_71,0);
+  pin->Lock(pin,CN2_69,0);
+  pin->Lock(pin,CN2_68,0);
+  pin->Lock(pin,CN2_67,0);
+  pin->Lock(pin,CN2_66,0);
+  pin->Lock(pin,CN2_65,0);
+  pin->Lock(pin,CN2_64,0);
   return ThreadMutexUnlock(spi->LockNum);
 }
 
@@ -58,7 +102,7 @@ int WBSPIPreempt(WBSPI *spi) {
   */
 }
 
-
+#define USE_OLD
 /*
 0x40 is this reg:
 * base + 0x0: LUN register (R/W)
@@ -70,7 +114,11 @@ int WBSPIPreempt(WBSPI *spi) {
 *   bits 6-1: reserved
 *   bit 0: speed[4] (RW)
  */
-
+/*
+maybe force the clock state at the start every time.
+or, force it at the end
+either way, the problem is the clock not ending in the same state as it starts
+ */
 int WBSPIWrite(WBSPI *ob,int adrs,const unsigned char* buf) {
   int n = ArrayLength(buf),reg;
   int de_cs = 1;
@@ -96,28 +144,39 @@ int WBSPIWrite(WBSPI *ob,int adrs,const unsigned char* buf) {
     }
   }
   while (n >= 4) {
-    //ob->bus->Poke16(ob->bus,ob->offset+8,buf[1]+(buf[0]<<8));
+#ifdef USE_OLD
+    ob->bus->Poke16(ob->bus,ob->offset+8,buf[1]+(buf[0]<<8));
+#else
     ob->bus->Poke8(ob->bus,ob->offset+8,buf[0]);
     ob->bus->Poke8(ob->bus,ob->offset+8,buf[1]);
+#endif
     buf += 2;
     n -= 2;
   }
   if (n > 2) { // n == 3
-    //ob->bus->Poke16(ob->bus,ob->offset+8,buf[1]+(buf[0]<<8));
+#ifdef USE_OLD
+    ob->bus->Poke16(ob->bus,ob->offset+8,buf[1]+(buf[0]<<8));
+#else
     ob->bus->Poke8(ob->bus,ob->offset+8,buf[0]);
     ob->bus->Poke8(ob->bus,ob->offset+8,buf[1]);
+#endif
     buf += 2;
     n -= 2;
     ob->bus->Poke8(ob->bus,ob->offset+(de_cs?0xC:8),buf[0]);
   } else if (n == 2) {
-    //ob->bus->Poke16(ob->bus,ob->offset+(de_cs?0xC:8),buf[1]+(buf[0]<<8));
+#ifdef USE_OLD
+    ob->bus->Poke16(ob->bus,ob->offset+(de_cs?0xC:8),buf[1]+(buf[0]<<8));
+#else
     ob->bus->Poke8(ob->bus,ob->offset+(de_cs?0x8:8),buf[0]);
     ob->bus->Poke8(ob->bus,ob->offset+(de_cs?0xC:8),buf[1]);
+#endif
     buf += 2;
     n -= 2;
   } else if (n == 1) {
     ob->bus8->Poke8(ob->bus,ob->offset+(de_cs?0xC:8),buf[0]);
   }
+  // force CLK back to starting state
+  ob->bus->BitAssign16(ob->bus,ob->offset,14,(reg>>14)&1);
   ob->bus->Unlock(ob->bus,0,0);
   ob->ChipSelect(ob,adrs,0);
   return SPISuccess;
@@ -197,12 +256,14 @@ int WBSPIRead(WBSPI *ob,int adrs,unsigned char* buf) {
   ob->bus->Peek16(ob->bus,ob->offset); // TEMP
   ob->bus->Unlock(ob->bus,0,0); 
   ob->ChipSelect(ob,adrs,0);
+  // force CLK back to starting state
+  ob->bus->BitAssign16(ob->bus,ob->offset,14,(reg>>14)&1);
   return SPISuccess;
 }
 
 int WBSPIReadWrite(WBSPI *ob,int adrs,const unsigned char* wbuf,unsigned char* rbuf) {
   unsigned s;
-  int n, de_cs=1;
+  int n, de_cs=1,reg;
 
   if (adrs == 0 || adrs > 4 || adrs < -4) return SPIErrorInvalidAddress;
   if (ArrayLength(wbuf) > ArrayLength(rbuf)) {
@@ -218,46 +279,60 @@ int WBSPIReadWrite(WBSPI *ob,int adrs,const unsigned char* wbuf,unsigned char* r
   adrs--;
   ob->ChipSelect(ob,adrs,1);
   ob->bus->Lock(ob->bus,0,0);
+  reg = ob->bus->Peek16(ob->bus,ob->offset);
   while (n >= 4) {
-    //ob->bus->Poke16(ob->bus,ob->offset+8,wbuf[1]+(wbuf[0]<<8));
+#ifdef USE_OLD
+    ob->bus->Poke16(ob->bus,ob->offset+8,wbuf[1]+(wbuf[0]<<8));
+#else
     ob->bus->Poke8(ob->bus,ob->offset+8,wbuf[0]);
     ob->bus->Poke8(ob->bus,ob->offset+8,wbuf[1]);
+#endif
     //log9(LOG_SPI,"%4: 02X->[%02X]\n",wbuf[1]+(wbuf[0]<<8),ob->offset+8);
     wbuf += 2;
-    //s = ob->bus->Peek16(ob->bus,ob->offset+2);
-    //*rbuf++ = s >> 8;
-    //*rbuf++ = s & 0xff;
+#ifdef USE_OLD
+    s = ob->bus->Peek16(ob->bus,ob->offset+2);
+    *rbuf++ = s >> 8;
+    *rbuf++ = s & 0xff;
+#else
     *rbuf++ = ob->bus->Peek8(ob->bus,ob->offset+2);
     *rbuf++ = ob->bus->Peek8(ob->bus,ob->offset+2);
+#endif
     n -= 2;
   }
   if (n > 2) { // n == 3
-    //ob->bus->Poke16(ob->bus,ob->offset+8,wbuf[1]+(wbuf[0]<<8));
+#ifdef USE_OLD
+    ob->bus->Poke16(ob->bus,ob->offset+8,wbuf[1]+(wbuf[0]<<8));
+    s = ob->bus->Peek16(ob->bus,ob->offset+2);
+    s=0;
+    wbuf += 2;
+    *rbuf++ = s >> 8;
+    *rbuf++ = s & 0xff;
+#else
     ob->bus->Poke8(ob->bus,ob->offset+8,wbuf[0]);
     ob->bus->Poke8(ob->bus,ob->offset+8,wbuf[1]);
     //log9(LOG_SPI,"3a: %02X->[%02X]\n",wbuf[1]+(wbuf[0]<<8),ob->offset+8);
-    //s = ob->bus->Peek16(ob->bus,ob->offset+2);
     *rbuf++ = ob->bus->Peek8(ob->bus,ob->offset+2);
     *rbuf++ = ob->bus->Peek8(ob->bus,ob->offset+2);
-    //s=0;
     wbuf += 2;
-    //*rbuf++ = s >> 8;
-    //*rbuf++ = s & 0xff;
+#endif
     n -= 2;
     ob->bus8->Poke8(ob->bus,ob->offset+(de_cs?0xC:8),wbuf[0]);
     //log9(LOG_SPI,"3b: %02X->[%02X]\n",wbuf[1]+(wbuf[0]<<8),ob->offset+(de_cs?0xC:8));
     *rbuf=0;
     *rbuf = ob->bus8->Peek8(ob->bus,ob->offset+2);
   } else if (n == 2) {
-    //ob->bus->Poke16(ob->bus,ob->offset+(de_cs?0xC:8),wbuf[1]+(wbuf[0]<<8));
+#ifdef USE_OLD
+    ob->bus->Poke16(ob->bus,ob->offset+(de_cs?0xC:8),wbuf[1]+(wbuf[0]<<8));
+    s = ob->bus->Peek16(ob->bus,ob->offset+2);
+    *rbuf++ = s >> 8;
+    *rbuf++ = s & 0xff;
+#else
     ob->bus->Poke8(ob->bus,ob->offset+(de_cs?0x8:8),wbuf[0]);
     ob->bus->Poke8(ob->bus,ob->offset+(de_cs?0xC:8),wbuf[1]);
-    //log9(LOG_SPI,"2: %02X->[%02X]\n",wbuf[1]+(wbuf[0]<<8),ob->offset+(de_cs?0xC:8));
     *rbuf++ = ob->bus->Peek8(ob->bus,ob->offset+2);
     *rbuf++ = ob->bus->Peek8(ob->bus,ob->offset+3);
-    //s = ob->bus->Peek16(ob->bus,ob->offset+2);
-    //*rbuf++ = s >> 8;
-    //*rbuf++ = s & 0xff;
+#endif
+    //log9(LOG_SPI,"2: %02X->[%02X]\n",wbuf[1]+(wbuf[0]<<8),ob->offset+(de_cs?0xC:8));
     n -= 2;
   } else if (n == 1) {
     ob->bus8->Poke8(ob->bus,ob->offset+(de_cs?0xC:8),wbuf[0]);
@@ -266,6 +341,8 @@ int WBSPIReadWrite(WBSPI *ob,int adrs,const unsigned char* wbuf,unsigned char* r
   }
   ob->bus->Unlock(ob->bus,0,0);
   ob->ChipSelect(ob,adrs,0);
+  // force CLK back to starting state
+  ob->bus->BitAssign16(ob->bus,ob->offset,14,(reg>>14)&1);
   return SPISuccess;
 }
 
