@@ -341,7 +341,7 @@ int ts4200_CANBusNum[0];
 SPI *ts4200__SPIInit0(SPI *spi,int inst) {
   DIO *dio = DIOInit(0);
   DIO *dio2 = DIOInit(2);
-  return DIOSPIInit(&ts4200SPI0,dio,dio,dio,dio,35,134,134,134,
+  return DIOSPIInit(&ts4200SPI0,dio,dio,dio,dio,35,57,58,59, // was 134
 		    dio,33,dio,32,dio,34,TimeInit(0));
 }
 #define ts4200SPIInstances 1
