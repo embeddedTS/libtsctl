@@ -24,6 +24,7 @@ void ThreadFini(void *th) {
 
 Thread *ThreadNew(char *name,int inst,ThreadFunction func,int socket,
 		  void *data,ThreadDestructor destor) {
+  fprintf(stderr,"WARNING: Thread %s:%d cannot be created as this binary does not suppor threads\n",name,inst);
   return 0;
 }
 
