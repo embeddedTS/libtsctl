@@ -124,7 +124,7 @@ int TEMPLATE(LOCK_CLASS,Unlock)(LOCK_CLASS *ob, unsigned num, int flags) {
 }
 
 __attribute__((always_inline)) 
-static inline int TEMPLATE(LOCK_CLASS,LockReal)(LOCK_CLASS *dio,int flags) {
+int TEMPLATE(LOCK_CLASS,LockReal)(LOCK_CLASS *dio,int flags) {
   //if (flags & SHARED) return ErrorInvalidArgument;
   while (dio->deferlock) {
     dio->sub->Lock(dio->sub,0,0); // or flags
@@ -174,7 +174,7 @@ int TEMPLATE(LOCK_CLASS,Unlock)(LOCK_CLASS *ob, unsigned num, int flags) {
 }
 
 __attribute__((always_inline)) 
-static inline int TEMPLATE(LOCK_CLASS,LockReal)(LOCK_CLASS *dio,int flags) {
+int TEMPLATE(LOCK_CLASS,LockReal)(LOCK_CLASS *dio,int flags) {
   if (flags & SHARED) {
     while (dio->deferlockR) {
       dio->sub->Lock(dio->sub,0,SHARED); // or flags
