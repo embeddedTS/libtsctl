@@ -55,7 +55,7 @@ int main(int argc,char *argv[]) {
   if (i <= 0) { printf("Error %d on ReadWrite\n",i); return 1; }
   i=spi->Unlock(spi,0,0);
   if (i <= 0) { printf("Error %d on Unlock\n",i); }
-  for (i=0;i<14;i++) printf("%02X ",rbuf[i]);
+  //for (i=0;i<14;i++) printf("%02X ",rbuf[i]);
   printf("actual/expected\n");
   for (i=0;i<7;i++) {
     if (!use[i]) continue;
