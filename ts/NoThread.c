@@ -1,3 +1,4 @@
+#include <stdio.h>
 #include <sys/sem.h>
 #include "Thread.h"
 #include "nosig.h"

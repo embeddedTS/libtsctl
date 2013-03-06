@@ -16,7 +16,7 @@ int main(int argc,char *argv[]) {
   int vals[] = { 0x0a6e, 0x0a76, 0x0d35, 0x0629, 0x0a78, 0x0baa, 0x0a70, 0 };
   //char rbuf[14];
   unsigned short *got = (short *)rbuf;
-  int i,bb,model;
+  int i,bb,model,passed=1;
   System *sys = SystemInit(0);
 
   bb = sys->BaseBoardId(sys);
@@ -29,7 +29,7 @@ int main(int argc,char *argv[]) {
   model = sys->ModelId(sys);
   switch (model) {
   case 0x4500:
-    expect[2] = 0;
+    expect[2] = 2.5;
     use[3] = use[4] = 0;
     break;
   case 0x4700:
@@ -62,10 +62,11 @@ int main(int argc,char *argv[]) {
     actual = full[i]*ntohs(got[i])/4096.0;
     //error = 100.0*(expect[i]-actual)/actual;
     error = 100.0 * actual / expect[i];
+    if (error < 90 || error > 110) passed = 0;
     printf("%d. %1.3f / %1.3fV (%1.1f%%)\n",i,
 	   actual, expect[i],error);
 	   //error>0.0?error:-error,
 	   //error>=0.0?"low":"high");
   }
-  exit(0);
+  return (passed == 1) ? 0 : 1;
 }
