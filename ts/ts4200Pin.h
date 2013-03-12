@@ -9,7 +9,7 @@
 
 typedef struct ts4200Pin ts4200Pin;
 struct ts4200Pin {
-	void *FUNC(Init)(ts4200Pin *me,void *bus,void *busb,void *buspmc,void *busc);
+         void *FUNC(Init)(ts4200Pin *me,void *bus,void *busb,void *buspmc,void *busc,void *busa);
 	void FUNC(Fini)(ts4200Pin *me);
 	int FUNC(Lock)(ts4200Pin *me,unsigned num,int flags);
 	int FUNC(Unlock)(ts4200Pin *me,unsigned num,int flags);
@@ -23,9 +23,10 @@ struct ts4200Pin {
 	Bus *piob;
 	Bus *pmc;
 	Bus *pioc;
+	Bus *pioa;
 };
 
-void *ts4200PinInit(ts4200Pin* ob,void *bus,void *busb,void *buspmc,void *busc);
+void *ts4200PinInit(ts4200Pin* ob,void *bus,void *busb,void *buspmc,void *busc,void *busa);
 void ts4200PinFini(ts4200Pin* ob);
 int ts4200PinLock(ts4200Pin* ob,unsigned num,int flags);
 int ts4200PinUnlock(ts4200Pin* ob,unsigned num,int flags);

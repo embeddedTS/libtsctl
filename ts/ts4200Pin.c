@@ -11,13 +11,14 @@ unsigned DIOCount();
 #define LOCK_CLASS ts4200Pin
 #include "TSLock.h"
 
-void *ts4200PinInit(ts4200Pin *pin,void *syscon,void *busb,void *buspmc,void *busc) {
+void *ts4200PinInit(ts4200Pin *pin,void *syscon,void *busb,void *buspmc,void *busc,void *busa) {
   if (pin->InitStatus > 0) return pin;
   LogEnter("%p,%p,%p,%p,%p\n",pin,syscon,busb,buspmc,busc);
   unsigned numlocks = DIOCount();
   Log(LOG_PIN,"%d locks\n",numlocks);
   pin->LockBase = ThreadLockAllocate(numlocks); // 129;
   pin->syscon = syscon;
+  pin->pioa = busa;
   pin->piob = busb;
   pin->pioc = busc;
   pin->pmc = buspmc;
@@ -67,8 +68,48 @@ PinMode ts4200PinModeGet(ts4200Pin *pin,int npin) {
 /*
   clear sbus + 0x16, bit 11 to disable CAN and enable DIO_15
  */
+/*
+30,31 36-45 are CPU UART / DIO
+CN2_78=36=PB4
+CN2_80=37=PB5
+CN2_82=38=PB6
+CN2_84=39=PB7
+CN2_86=40=PB8
+CN2_88=41=PB9
+CN2_90=42=PB10
+CN2_92=43=PB11
+CN2_94=31=PA31
+CN2_96=30=PA30
+CN2_98=44=PB12
+CN2_10=45=PB13
+
+piob=6 @0xFFFFF600
+pmc=12 @0xFFFFFC00
+pioc=8 @0xFFFFF800
+ */
+
 PinResult ts4200PinModeSet(ts4200Pin *pin,int npin,PinMode mode) {
-  if (npin >= 32 && npin <= 35) {
+  if (npin == 30 || npin == 31) {
+    if (mode == MODE_DIO) {
+      pin->pioa->Poke32(pin->pioa,0,1<<(npin-0)); // enable PIO
+      return PinSuccess;
+    } else if (mode == MODE_UART) {
+      pin->pioa->Poke32(pin->pioa,4,1<<(npin-0)); // disable PIO
+      return PinSuccess;
+    } else {
+      return PinErrorModeInvalid;
+    }
+  } else if (npin >= 36 && npin <= 45) {
+    if (mode == MODE_DIO) {
+      pin->piob->Poke32(pin->piob,0,1<<(npin-32)); // enable PIO
+      return PinSuccess;
+    } else if (mode == MODE_UART) {
+      pin->piob->Poke32(pin->piob,4,1<<(npin-32)); // disable PIO
+      return PinSuccess;
+    } else {
+      return PinErrorModeInvalid;
+    }
+  } else if (npin >= 32 && npin <= 35) {
     if (mode == MODE_SPI) {
       pin->pmc->Poke32(pin->pmc,0x10,1<<13); // turn on SPI clock
       pin->piob->Poke32(pin->piob,4,1<<(npin-32)); // disable PIO

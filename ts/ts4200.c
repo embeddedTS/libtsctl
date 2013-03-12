@@ -248,7 +248,8 @@ Time *ts4200__TimeInit0(Time *t,int inst) {
 
 Pin *ts4200__PinInit0(Pin *pin,int inst) {
   return ts4200PinInit(&ts4200Pin0,ts4200__BusInit0(0,0),ts4200__BusInit6(0,6),
-		       ts4200__BusInit12(0,12),ts4200__BusInit8(0,8));
+		       ts4200__BusInit12(0,12),ts4200__BusInit8(0,8),
+		       ts4200__BusInit4(0,4));
 }
 #define ts4200PinInstances 1
 
