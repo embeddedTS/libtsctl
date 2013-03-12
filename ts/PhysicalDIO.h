@@ -30,6 +30,7 @@ struct PhysicalDIO {
 	DIORaw *dio;
 	int gotHUP;
 	unsigned char *Caps;
+	int *dirCache;
 };
 
 void *PhysicalDIOInit(PhysicalDIO* ob,void *bus,void *dio);
