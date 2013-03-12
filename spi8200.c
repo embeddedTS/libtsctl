@@ -62,7 +62,11 @@ int main(int argc,char *argv[]) {
     actual = full[i]*ntohs(got[i])/4096.0;
     //error = 100.0*(expect[i]-actual)/actual;
     error = 100.0 * actual / expect[i];
-    if (error < 90 || error > 110) passed = 0;
+    if (model == 0x4200 && i == 5) {
+      if (error < 90 || error > 130) passed = 0;
+    } else {
+      if (error < 90 || error > 110) passed = 0;
+    }
     printf("%d. %1.3f / %1.3fV (%1.1f%%)\n",i,
 	   actual, expect[i],error);
 	   //error>0.0?error:-error,
