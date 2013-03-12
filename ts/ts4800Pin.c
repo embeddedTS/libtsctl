@@ -79,6 +79,9 @@ PinMode ts4800PinModeGet(ts4800Pin *pin,int npin) {
   if (npin == 3) {
     return pin->bus->BitGet16(pin->bus,2,11) ? MODE_CLK : MODE_DIO;
   }
+  if (npin == 42 || npin == 43 || npin == 44 || npin == 45 || npin == 18 || npin == 127 || npin == 128) {
+    return pin->bus->BitGet16(pin->bus,0x10,7) ? MODE_SPI : MODE_DIO;
+  }
   //return (pin->bus->BitGet32(pin->bus,0x30,pin)) ? MODE_TWI : MODE_DIO;
   return MODE_UNKNOWN;
 }
@@ -86,6 +89,12 @@ PinMode ts4800PinModeGet(ts4800Pin *pin,int npin) {
 PinResult ts4800PinModeSet(ts4800Pin *pin,int npin,PinMode mode) {
   // in the case of CAN, setting either pin of the pair to MODE_CAN
   // automatically sets the other pin as well, so only need to call once.
+
+  if (npin == 42 || npin == 43 || npin == 44 || npin == 45 || npin == 18 || npin == 127 || npin == 128) {
+    if (mode != MODE_SPI && mode != MODE_DIO) return MODE_UNKNOWN;
+    pin->bus->BitAssign16(pin->bus,0x10,7,(MODE_SPI == mode ? 1 : 0));
+  }
+
   if (npin == 20) {
     if (mode == MODE_DIO) {
       pin->bus->BitClear16(pin->bus,0x10,9);

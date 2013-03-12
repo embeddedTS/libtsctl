@@ -396,7 +396,6 @@ SPI *ts4800__SPIInit0(SPI *spi,int inst) {
   dio0 = ts4800__DIOInit0(0,0); // needed by ts4800SPIChipSelect
   ts4800SPI0.LockNum = 7;
   bus = ts4800__BusInit0(0,0);
-  bus->BitSet16(bus,0x10,7);
   return WBSPIInit(&ts4800SPI0,ts4800__BusInit16(0,16),ts4800__BusInit16(0,16),
 		   0,ts4800SPIChipSelect);
 }
