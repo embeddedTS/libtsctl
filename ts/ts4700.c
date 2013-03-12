@@ -258,6 +258,17 @@ CAN *ts4700__CANInit0(CAN *can,int inst) {
 
 static void ts4700SPIChipSelect(WBSPI *ob,unsigned num,int asserted) {
   if (num > 0) {
+    // CS1 = CN2_64 = DIO 101
+    // CS2 = CN2_66 = DIO 100
+    // CS3 = CN2_68 = DIO 99
+    static DIO *dio = 0;
+    if (!dio) dio = ts4700__DIOInit0(0,0);
+    switch (num) {
+    case 1: dio->SetAsync(dio,101,asserted?LOW:INPUT); break;
+    case 2: dio->SetAsync(dio,101,asserted?LOW:INPUT); break;
+    case 3: dio->SetAsync(dio,101,asserted?LOW:INPUT); break;
+    }
+    return;
     num = 0;
     // CS1-3# not available, use CS0 instead
   }
