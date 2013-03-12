@@ -182,7 +182,7 @@ int main(int argc,char *argv[]) {
     }
   }
   switch ((model << 16) + bb) {
-  case 0x42008200: tests = 142; break;
+  case 0x42008200: tests = 186; break;
   case 0x45008200: tests = 188; break;
   case 0x47008200: tests = 180; break;
   case 0x48008200: tests = 174; break;
