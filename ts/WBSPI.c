@@ -1,9 +1,11 @@
 #ifndef WBSPI_c
 #define WBSPI_c
 #include "WBSPI.h"
+#include "Pin.h"
 #include "Thread.h"
 #include "Array.h"
 
+Pin *PinInit(int);
 void *WBSPIInit(WBSPI *spi,void *bus1,void *bus8,int offset,
 		void (*cs)(WBSPI *,unsigned,int)) {
   Bus *bus = bus1;
