@@ -11,7 +11,7 @@ void *AggregateDIOInit(AggregateDIO *dio,unsigned Count,void *pin1,
   int i;
   Pin *pin = pin1;
 
-  if (dio->InitStatus > 0) return dio;
+  if (dio->InitStatus > 0 && Count == dio->nCount) return dio;
 
   dio->Init = (void *)AggregateDIOInit;
   dio->Fini = (void *)AggregateDIOFini;

@@ -48,18 +48,27 @@ unsigned DIOCount() {
 DIO *DIOInit0(AggregateDIO *DIO0) {
   static DIO *ret = 0;
   int i,j,total = 0;
-  DIO **pDIO,*dio;
-  int n = 0,offset, *SubCount;
+  static DIO **pDIO = 0;
+  DIO *dio = 0;
+  static int *SubCount=0;
+  int n = 0,offset;
   
-  if (ret) return ret;
+  //if (ret) return ret;
   dio = DIOInit(1);
   while (dio) {
     total++;
     dio = DIOInit(total+1);
   }
-
-  pDIO = malloc(sizeof(DIO *) * total);
-  SubCount = malloc(sizeof(int) * total);
+  if (pDIO == 0) {
+    pDIO = malloc(sizeof(DIO *) * total);
+  } else {
+    pDIO = realloc(pDIO,sizeof(DIO *) * total);
+  }
+  if (SubCount == 0) {
+    SubCount = malloc(sizeof(int) * total);
+  } else {
+    SubCount = realloc(SubCount,sizeof(int) * total);
+  }
 
   for (i=0;i<total;i++) {
     pDIO[i] = DIOInit(1+i);
