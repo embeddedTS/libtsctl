@@ -1,13 +1,6 @@
-#ifndef LIBTSCTL_VERSION
-#define LIBTSCTL_VERSION "0.97"
-#endif
-#ifndef LIBTSCTL_ORGANIZATION
-#define LIBTSCTL_ORGANIZATION customer
-#endif
-#include "cpp.h"
-#define LIBTSCTL_FULL_VERSION LIBTSCTL_VERSION "-" STRINGIFY(LIBTSCTL_ORGANIZATION)
 #ifndef LocalSystem_c
 #define LocalSystem_c
+#include "cpp.h"
 #include <sys/sysinfo.h> 
 #include <assert.h>
 #include <time.h>

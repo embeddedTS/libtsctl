@@ -24,7 +24,7 @@ tsctl: $(DIR)/tsctl
 
 $(DIR)/tsctl: tsctl.c $(ARCH)/libtsctl-pthread.o 
 	@echo "Building $@"
-	@$(CC) $(CFLAGS) $(CFLAGS_$(patsubst %.c,%,$<)) $< \
+	@$(CC) $(CFLAGS) $(CFLAGS_tsctl) $< \
         $(LDFLAGS) $(ARCH)/libtsctl-pthread.o -lpthread /usr/lib/libreadline.a -lcurses -o $@
 
 libtsctl-pthread.o: $(DIR)/libtsctl-pthread.o
@@ -32,7 +32,7 @@ libtsctl-pthread.o: $(DIR)/libtsctl-pthread.o
 
 $(DIR)/libtsctl-pthread.o: libtsctl.c $(DEPS)
 	@echo "Building $@"
-	@$(CC) -DTHREAD_USE_POSIX -c $(CFLAGS) $(CFLAGS_$(patsubst %.c,%,$<)) $< \
+	@$(CC) -DTHREAD_USE_POSIX -c $(CFLAGS) $(CFLAGS_tsctl) $< \
         $(LDFLAGS) -o $@
 
 libtsctl.o: $(DIR)/libtsctl.o

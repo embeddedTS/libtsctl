@@ -1,6 +1,7 @@
 #ifndef __libtsctl_h
 #define __libtsctl_h
 #include "System.h"
+#include "LocalSystem.h"
 #include "Bus.h"
 #include "CAN.h"
 #include "DIORaw.h"

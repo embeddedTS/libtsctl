@@ -6,6 +6,15 @@
 #else
 #define FUNC(x) x
 #endif
+#include "cpp.h"
+
+#ifndef LIBTSCTL_VERSION
+#define LIBTSCTL_VERSION "0.97"
+#endif
+#ifndef LIBTSCTL_ORGANIZATION
+#define LIBTSCTL_ORGANIZATION customer
+#endif
+#define LIBTSCTL_FULL_VERSION LIBTSCTL_VERSION "-" STRINGIFY(LIBTSCTL_ORGANIZATION)
 
 typedef struct LocalSystem LocalSystem;
 struct LocalSystem {
