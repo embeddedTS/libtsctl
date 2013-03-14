@@ -19,6 +19,7 @@
 
 
 extern ArchInfo ts4200_ArchInfo;
+extern ArchInfo ts4500_ArchInfo;
 extern ArchInfo ts4700_ArchInfo;
 extern ArchInfo ts4800_ArchInfo;
 extern ArchInfo ts81x0_ArchInfo;
@@ -27,7 +28,8 @@ extern ArchInfo ts8900_ArchInfo;
 extern ArchInfo tsrelay8_ArchInfo;
 extern ArchInfo tsdio24_ArchInfo;
 
-ArrayAuto(ArchInfo*,aArchTypeCPU,ARR(&ts4200_ArchInfo,&ts4700_ArchInfo,
+ArrayAuto(ArchInfo*,aArchTypeCPU,ARR(&ts4200_ArchInfo,&ts4500_ArchInfo,
+				     &ts4700_ArchInfo,
 				     &ts4800_ArchInfo));
 ArrayAuto(ArchInfo*,aArchTypeTSSocketBB,ARR(&ts81x0_ArchInfo,
 					    &ts8820_ArchInfo,&ts8900_ArchInfo));
@@ -50,7 +52,7 @@ ArchInfo TS_ArchInfo = {
   .TWIInit=0,
   .CANInit=0,
   .SPIInit=0,
-  //.EDIOInit=0,
+  .EDIOInit=0,
   .AIOInit=0
 };
 

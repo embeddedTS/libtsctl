@@ -1,4 +1,5 @@
 #include "ts4200_dioctl_config.c"
+#include "ts4500_dioctl_config.c"
 #include "ts4700_dioctl_config.c"
 #include "ts4800_dioctl_config.c"
 #include "ts8100_dioctl_config.c"
@@ -11,6 +12,7 @@
 #include "tsdio24_dioctl_config.c"
 #include "tsrelay8_dioctl_config.c"
 #include "ts4200.c"
+#include "ts4500.c"
 #include "ts4700.c"
 #include "ts4800.c"
 #include "ts81x0.c"

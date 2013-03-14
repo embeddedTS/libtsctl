@@ -33,12 +33,14 @@ extern ArchInfo tsdio24_ArchInfo;
 
 //ArrayAuto(ArchInfo*,aArchTypeCPU,ARR(&ts4500_ArchInfo,&ts7552_ArchInfo,
 //				     &ts7553_ArchInfo,&ts7558_ArchInfo));
+/*
 ArrayAuto(ArchInfo*,aArchTypeCPU,ARR(&ts4500_ArchInfo));
 ArrayAuto(ArchInfo*,aArchTypeTSSocketBB,ARR(&ts81x0_ArchInfo,&ts8820_ArchInfo,&ts8900_ArchInfo));
+*/
 //ArrayAuto(ArchInfo*,aArchTypePC104,ARR(&tsrelay8_ArchInfo,&tsdio24_ArchInfo));
+/*
 ArrayAuto(ArchInfo*,aArchTypePC104,ARR(&tsrelay8_ArchInfo));
 ArrayAuto(ArchInfo*,aArchTypeNone,ARR());
-
 ArchInfo TS_ArchInfo = {
   .Instances= { 0,0,0,0,0,0,0,0,0,0 },
   .name="ts",
@@ -55,9 +57,10 @@ ArchInfo TS_ArchInfo = {
   .TWIInit=0,
   .CANInit=0,
   .SPIInit=0,
-  //.EDIOInit=0,
+  .EDIOInit=0,
   .AIOInit=0
 };
+*/
 
 DummyBus altmux;
 MMapBus cpubus,testbus;
