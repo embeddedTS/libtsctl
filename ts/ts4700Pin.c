@@ -132,6 +132,23 @@ PinResult ts4700PinModeSet(ts4700Pin *pin,int npin,PinMode mode) {
       pin->diobus->Unlock(pin->diobus,0,0);
     }
   }
+  if (npin >= 62+0 && npin <= 62+36) { 
+    // 62 to 62+36 = MFP_00 to MFP_36
+    pin->mfpbus->Lock(pin->mfpbus,0,SHARED);
+    pin->mfpbus->Assign32X(pin->mfpbus,0x4c+(npin-62)*4,2,0,0); // alt fcn = 0
+    pin->mfpbus->Unlock(pin->mfpbus,0,SHARED);
+  } else if (npin >= 62+37 && npin <= 62+55) { 
+    // 62+37 to 62+55 = MFP_37 to MFP_55
+    pin->mfpbus->Lock(pin->mfpbus,0,SHARED);
+    pin->mfpbus->Assign32X(pin->mfpbus,(npin-99)*4,2,0,0); // alt fcn = 0
+    pin->mfpbus->Unlock(pin->mfpbus,0,SHARED);
+  } else if (npin >= 62+56 && npin <= 62+122) { 
+    // 62+56 to 62+122 = MFP_56 to MFP_122
+    // TO DO: why does this overlap with 149, 150 (PWR_SDA, PWR_SCL)?
+    pin->mfpbus->Lock(pin->mfpbus,0,SHARED);
+    pin->mfpbus->Assign32X(pin->mfpbus,0xE0+(npin-118)*4,2,0,0); // alt fcn = 0
+    pin->mfpbus->Unlock(pin->mfpbus,0,SHARED);
+  }
   if (npin == 149) { // PWR_SDA (use DIO 149 for DIO mode)
     if (mode == MODE_TWI) {
       pin->mfpbus->Lock(pin->mfpbus,0,0);
