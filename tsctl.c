@@ -402,9 +402,10 @@ int tsctl_shell(Stream *in,Stream *out) {
 	    if (ArrayLength(lu) > 0) { // patch lookups into the req stream
 	      System *sys = SystemInit(0);
 	      char **names;
-	      int val=0,i,j,n;
+	      int val,i,j,n;
 
 	      for (i=0;i<ArrayLength(lu);i++) {
+		val = 0;
 		names = split(lu[i].name,'+');
 		for (j=0;j<ArrayLength(names);j++) {
 		  n = sys->MapLookup(sys,names[j]);
