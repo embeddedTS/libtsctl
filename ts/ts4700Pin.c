@@ -142,7 +142,7 @@ PinResult ts4700PinModeSet(ts4700Pin *pin,int npin,PinMode mode) {
     pin->mfpbus->Lock(pin->mfpbus,0,SHARED);
     pin->mfpbus->Assign32X(pin->mfpbus,(npin-99)*4,2,0,0); // alt fcn = 0
     pin->mfpbus->Unlock(pin->mfpbus,0,SHARED);
-  } else if (npin >= 62+56 && npin <= 62+122) { 
+  } else if (npin >= 62+56 && npin <= 62+122 && npin != 149 && npin != 150) { 
     // 62+56 to 62+122 = MFP_56 to MFP_122
     // TO DO: why does this overlap with 149, 150 (PWR_SDA, PWR_SCL)?
     pin->mfpbus->Lock(pin->mfpbus,0,SHARED);
