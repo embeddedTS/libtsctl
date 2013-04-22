@@ -86,13 +86,13 @@ int WBSPIUnlock(WBSPI *spi,unsigned num,int flags) {
   int CN2_69 = sys->MapLookup(sys,ASCIIZLocal("CN2_69"));
   int CN2_71 = sys->MapLookup(sys,ASCIIZLocal("CN2_71"));
 
-  pin->Lock(pin,CN2_71,0);
-  pin->Lock(pin,CN2_69,0);
-  pin->Lock(pin,CN2_68,0);
-  pin->Lock(pin,CN2_67,0);
-  pin->Lock(pin,CN2_66,0);
-  pin->Lock(pin,CN2_65,0);
-  pin->Lock(pin,CN2_64,0);
+  pin->Unlock(pin,CN2_71,0);
+  pin->Unlock(pin,CN2_69,0);
+  pin->Unlock(pin,CN2_68,0);
+  pin->Unlock(pin,CN2_67,0);
+  pin->Unlock(pin,CN2_66,0);
+  pin->Unlock(pin,CN2_65,0);
+  pin->Unlock(pin,CN2_64,0);
   return ThreadMutexUnlock(spi->LockNum);
 }
 
