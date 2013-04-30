@@ -203,7 +203,7 @@ TWIResult DIOTWIWrite(DIOTWI *twi,int devadrs,int adrslen,int adrs,const char* b
     goto WriteDone;
   }
  WriteDone:
-  return 1;
+  return ret;
 }
 
 TWIResult DIOTWIRead(DIOTWI *twi,int devadrs,int adrslen,int adrs,char* bytes){
@@ -252,7 +252,7 @@ TWIResult DIOTWIRead(DIOTWI *twi,int devadrs,int adrslen,int adrs,char* bytes){
     goto ReadDone;
   }
  ReadDone:
-  return 1;
+  return ret;
 }
 
 int DIOTWILock(DIOTWI *twi,unsigned num,int flags) {
