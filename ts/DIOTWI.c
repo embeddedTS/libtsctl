@@ -241,7 +241,7 @@ TWIResult DIOTWIRead(DIOTWI *twi,int devadrs,int adrslen,int adrs,char* bytes){
   }
 // Now read the actual data
   for (i=0;i<len;i++) {
-    ret = rx(twi,0);
+    ret = rx(twi,i == len-1);
     if (ret < 0) {
       goto ReadDone;
     }
