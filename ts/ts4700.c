@@ -231,7 +231,7 @@ DIO *ts4700__DIOInit2(DIO *dio,int inst) {
 TWI *ts4700__TWIInit0(TWI *twi,int inst) {
   ts4700TWI0.TW_CLK=150;
   ts4700TWI0.TW_DAT=149;
-  ts4700TWI0.Speed=1000000;
+  ts4700TWI0.Speed=100000;
   ts4700TWI0.LockNum=1;
   return DIOTWIInit(&ts4700TWI0,ts4700__DIOInit0(0,0),ts4700__TimeInit0(0,0));
 }
