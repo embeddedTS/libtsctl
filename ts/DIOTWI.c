@@ -184,14 +184,6 @@ TWIResult DIOTWIWrite(DIOTWI *twi,int devadrs,int adrslen,int adrs,const char* b
       adrslen--;
     }
   }
-  // sending a start bit followed by the 7-bit address of the slave 
-  // followed by 0 for write
-  if ((ret = START(twi)) < 0) {
-    goto WriteDone;
-  }
-  if ((ret = tx(twi,devadrs << 1)) < 0) { // send address + WRITE
-    goto WriteDone;
-  }
   // Now send the actual data
   while (len-- > 0) {
     if (tx(twi,*(bytes)++) < 0) {
