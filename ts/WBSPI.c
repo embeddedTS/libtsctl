@@ -46,16 +46,25 @@ void WBSPIFini(WBSPI *spi) {
 
 int WBSPILock(WBSPI *spi,unsigned num,int flags) {
   int ret;
-  System *sys = SystemInit(0);
-  Pin *pin = PinInit(0);
-  int CN2_64 = sys->MapLookup(sys,ASCIIZLocal("CN2_64"));
-  int CN2_65 = sys->MapLookup(sys,ASCIIZLocal("CN2_65"));
-  int CN2_66 = sys->MapLookup(sys,ASCIIZLocal("CN2_66"));
-  int CN2_67 = sys->MapLookup(sys,ASCIIZLocal("CN2_67"));
-  int CN2_68 = sys->MapLookup(sys,ASCIIZLocal("CN2_68"));
-  int CN2_69 = sys->MapLookup(sys,ASCIIZLocal("CN2_69"));
-  int CN2_71 = sys->MapLookup(sys,ASCIIZLocal("CN2_71"));
-
+  static System *sys = 0;
+  if (!sys) sys = SystemInit(0);
+  static Pin *pin = 0;
+  if (!pin) pin = PinInit(0);
+  static int CN2_64 = -1;
+  if (CN2_64 == -1) CN2_64 = sys->MapLookup(sys,ASCIIZLocal("CN2_64"));
+  static int CN2_65 = -1;
+  if (CN2_65 == -1) CN2_65 = sys->MapLookup(sys,ASCIIZLocal("CN2_65"));
+  static int CN2_66 = -1;
+  if (CN2_66 == -1) CN2_66 = sys->MapLookup(sys,ASCIIZLocal("CN2_66"));
+  static int CN2_67 = -1;
+  if (CN2_67 == -1) CN2_67 = sys->MapLookup(sys,ASCIIZLocal("CN2_67"));
+  static int CN2_68 = -1;
+  if (CN2_68 == -1) CN2_68 = sys->MapLookup(sys,ASCIIZLocal("CN2_68"));
+  static int CN2_69 = -1;
+  if (CN2_69 == -1) CN2_69 = sys->MapLookup(sys,ASCIIZLocal("CN2_69"));
+  static int CN2_71 = -1;
+  if (CN2_71 == -1) CN2_71 = sys->MapLookup(sys,ASCIIZLocal("CN2_71"));
+  
   if ((ret = ThreadMutexLock(spi->LockNum,flags)) < 0) return ret;
   pin->Lock(pin,CN2_64,0);
   pin->Lock(pin,CN2_65,0);
@@ -75,17 +84,26 @@ int WBSPILock(WBSPI *spi,unsigned num,int flags) {
 }
 
 int WBSPIUnlock(WBSPI *spi,unsigned num,int flags) {
-  System *sys = SystemInit(0);
-  Pin *pin = PinInit(0);
+  static System *sys = 0;
+  if (!sys) sys = SystemInit(0);
+  static Pin *pin = 0;
+  if (!pin) pin = PinInit(0);
 
-  int CN2_64 = sys->MapLookup(sys,ASCIIZLocal("CN2_64"));
-  int CN2_65 = sys->MapLookup(sys,ASCIIZLocal("CN2_65"));
-  int CN2_66 = sys->MapLookup(sys,ASCIIZLocal("CN2_66"));
-  int CN2_67 = sys->MapLookup(sys,ASCIIZLocal("CN2_67"));
-  int CN2_68 = sys->MapLookup(sys,ASCIIZLocal("CN2_68"));
-  int CN2_69 = sys->MapLookup(sys,ASCIIZLocal("CN2_69"));
-  int CN2_71 = sys->MapLookup(sys,ASCIIZLocal("CN2_71"));
-
+  static int CN2_64 = -1;
+  if (CN2_64 == -1) CN2_64 = sys->MapLookup(sys,ASCIIZLocal("CN2_64"));
+  static int CN2_65 = -1;
+  if (CN2_65 == -1) CN2_65 = sys->MapLookup(sys,ASCIIZLocal("CN2_65"));
+  static int CN2_66 = -1;
+  if (CN2_66 == -1) CN2_66 = sys->MapLookup(sys,ASCIIZLocal("CN2_66"));
+  static int CN2_67 = -1;
+  if (CN2_67 == -1) CN2_67 = sys->MapLookup(sys,ASCIIZLocal("CN2_67"));
+  static int CN2_68 = -1;
+  if (CN2_68 == -1) CN2_68 = sys->MapLookup(sys,ASCIIZLocal("CN2_68"));
+  static int CN2_69 = -1;
+  if (CN2_69 == -1) CN2_69 = sys->MapLookup(sys,ASCIIZLocal("CN2_69"));
+  static int CN2_71 = -1;
+  if (CN2_71 == -1) CN2_71 = sys->MapLookup(sys,ASCIIZLocal("CN2_71"));
+  
   pin->Unlock(pin,CN2_71,0);
   pin->Unlock(pin,CN2_69,0);
   pin->Unlock(pin,CN2_68,0);

@@ -100,7 +100,9 @@ typedef struct {
 } tsctlpage;
 
 int BaseBoardIdGet() {
-  tsctlpage *page = SharedMemoryGet(0x75015001,4096,0);
+  static tsctlpage *page = 0;
+
+  if (!page) page = SharedMemoryGet(0x75015001,4096,0);
   int ret;
 
   if (!page || !page->baseboardid) {
