@@ -483,7 +483,7 @@ int LocalSystemFPGARevision(LocalSystem* ob) {
   Bus *bus = BusInit(0);
 
   bus->Lock(bus,0,0);
-  if (model == 0x4500) {
+  if (model == 0x4500 || (model & 0xFF00 == 0x7500)) {
     ret = bus->BitsGet16(bus,0x62,3,0);
   } else {
     ret = bus->BitsGet16(bus,0x2,3,0);
