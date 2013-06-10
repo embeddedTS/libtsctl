@@ -9,7 +9,7 @@ __attribute__((always_inline))
 static inline void TSMuxBusLockCallback(TSMuxBus *bus,int num) {
   assert(bus->configbus);
   bus->configbus->Lock(bus->configbus,num,0);
-  bus->configbus->Poke16(bus->configbus,bus->cadrs,0x321); // 0x181, 0x321 or ff7f
+  bus->configbus->Poke16(bus->configbus,bus->cadrs,0xe701);// 0x181, 0x321 or ff7f
   bus->configbus->Unlock(bus->configbus,num,0);
 }
 
