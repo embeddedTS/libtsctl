@@ -36,9 +36,11 @@ CAN *tscan1__CANInit0(CAN *can,int inst) {
   tscan1CAN0.baud = 1000000;
   tscan1CAN0.baudparms = baudparms16;
   tscan1CAN0.irq = 194;
-  return SJA1000CANInit(&tscan1CAN0,tscan1__BusInit0(0,0),PinInit(0),TimeInit(0));
+  Bus *bus = tscan1__BusInit0(0,0);
+  if (!bus) return 0;
+  return SJA1000CANInit(&tscan1CAN0,bus,PinInit(0),TimeInit(0));
 }
-/*
+
 CAN *tscan1__CANInit1(CAN *can,int inst) {
   tscan1CAN0.LockBase = 2;
   tscan1CAN0.status = 0;
@@ -51,9 +53,11 @@ CAN *tscan1__CANInit1(CAN *can,int inst) {
   tscan1CAN0.baud = 1000000;
   tscan1CAN0.baudparms = baudparms16;
   tscan1CAN0.irq = 191;
-  return SJA1000CANInit(&tscan1CAN0,tscan1__BusInit1(0,1),PinInit(0),TimeInit(0));
+  Bus *bus = tscan1__BusInit1(0,1);
+  if (!bus) return 0;
+  return SJA1000CANInit(&tscan1CAN0,bus,PinInit(0),TimeInit(0));
 }
-*/
+
 
 #define tscan1CANInstances 1
 #define tscan1SPIInstances 0
