@@ -27,13 +27,14 @@ extern ArchInfo ts8820_ArchInfo;
 extern ArchInfo ts8900_ArchInfo;
 extern ArchInfo tsrelay8_ArchInfo;
 extern ArchInfo tsdio24_ArchInfo;
+extern ArchInfo tscan1_ArchInfo;
 
 ArrayAuto(ArchInfo*,aArchTypeCPU,ARR(&ts4200_ArchInfo,&ts4500_ArchInfo,
 				     &ts4700_ArchInfo,
 				     &ts4800_ArchInfo));
 ArrayAuto(ArchInfo*,aArchTypeTSSocketBB,ARR(&ts81x0_ArchInfo,
 					    &ts8820_ArchInfo,&ts8900_ArchInfo));
-ArrayAuto(ArchInfo*,aArchTypePC104,ARR(&tsrelay8_ArchInfo,&tsdio24_ArchInfo));
+ArrayAuto(ArchInfo*,aArchTypePC104,ARR(&tsrelay8_ArchInfo,&tsdio24_ArchInfo,&tscan1_ArchInfo));
 ArrayAuto(ArchInfo*,aArchTypeNone,ARR());
 
 ArchInfo TS_ArchInfo = {

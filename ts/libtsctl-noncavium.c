@@ -20,4 +20,5 @@
 #include "ts8900.c"
 #include "tsrelay8.c"
 #include "tsdio24.c"
+#include "tscan1.c"
 #include "tsinit.c"
