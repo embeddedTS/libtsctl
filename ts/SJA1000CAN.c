@@ -11,7 +11,7 @@
 #define S11(x) ((char *)x)
 static void BusOff(SJA1000CAN *can) {
   can->bus->Poke8(can->bus,0, 0x1); // Enter reset mode
-  can->bus->Poke8(can->bus,31, 0x80); // Enable PeliCAN mode
+  can->bus->Poke8(can->bus,31, 0xC8); // Enable PeliCAN mode
   can->bus->Poke8(can->bus,4, 0xff); // All interrupts enabled
   can->bus->Poke8(can->bus,13, 96); // Error warning limit
   can->bus->Poke8(can->bus,14, 0); // Reset RX error counter to 0
@@ -85,7 +85,7 @@ int SJA1000CANDetect(SJA1000CAN *can) {
       // unable to enter reset mode, test failed
       error = -1; goto CANDetectDone;
     }
-    can->bus->Poke8(can->bus,31, 0x80); // Enable PeliCAN mode
+    can->bus->Poke8(can->bus,31, 0xC8); // Enable PeliCAN mode
     can->bus->Poke8(can->bus,13, 99); // Error warning limit
     if (can->bus->Peek8(can->bus,13) != 99) {
       // unable to write error warning limit reg, test failed
