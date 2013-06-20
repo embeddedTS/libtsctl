@@ -22,7 +22,7 @@
 // object hierarchy
 DummyBus altmux;
 MMapBus MarvellPXA166DIOBus, ts4700DIOBus, ts4700CANBus, testbus, twiregs,
-  mfpregs, mux8bus, mux16bus, spi8bus, spi16bus;
+  mfpregs, mux8bus, mux16bus, spi8bus, spi16bus, ts4700CANBus1;
 TSMuxBus muxbus;
 CacheBus MarvellPXA166DIOCacheBus, ts4700DIOCacheBus;
 MarvellPXA166DIORaw MarvellPXA166DIORaw0;
@@ -32,12 +32,13 @@ AggregateDIO ts4700DIO0;
 SystemTime ts4700Time0;
 //MarvellPXA166TWI ts4700TWI0;
 DIOTWI ts4700TWI0;
-SJA1000CAN ts4700CAN0;
+SJA1000CAN ts4700CAN0, ts4700CAN1;
 ts4700Pin ts4700Pin0;
 WBSPI ts4700SPI0;
 LocalSystem ts4700sys;
 
 CANConn ts4700CAN0conn[16];
+CANConn ts4700CAN1conn[16];
 
 #define ts4700DIOCacheBusLength 12
 unsigned ts4700DIOCacheBus_WO[ts4700DIOCacheBusLength];
@@ -174,7 +175,11 @@ Bus *ts4700__BusInit11(Bus *bus,int inst) {
 Bus *ts4700__BusInit12(Bus *bus,int inst) {
   return MMapBusInit(&spi16bus,0x80004800,1);
 }
-#define ts4700BusInstances 13
+Bus *ts4700__BusInit13(Bus *bus,int inst) {
+  return MMapBusInit(&ts4700CANBus1,0x81004f00,1);
+}
+
+#define ts4700BusInstances 14
 
 Time *ts4700__TimeInit0(Time *t,int inst) {
   return SystemTimeInit(&ts4700Time0);
@@ -231,13 +236,13 @@ DIO *ts4700__DIOInit2(DIO *dio,int inst) {
 TWI *ts4700__TWIInit0(TWI *twi,int inst) {
   ts4700TWI0.TW_CLK=150;
   ts4700TWI0.TW_DAT=149;
-  ts4700TWI0.Speed=100000;
+  ts4700TWI0.Speed=1000000;
   ts4700TWI0.LockNum=1;
   return DIOTWIInit(&ts4700TWI0,ts4700__DIOInit0(0,0),ts4700__TimeInit0(0,0));
 }
 #define ts4700TWIInstances 1
 
-int ts4700_CANBusNum[1] = { 4 };
+int ts4700_CANBusNum[2] = { 4,13 };
 
 CAN *ts4700__CANInit0(CAN *can,int inst) {
   ts4700CAN0.LockBase = 2;
@@ -254,7 +259,23 @@ CAN *ts4700__CANInit0(CAN *can,int inst) {
   return SJA1000CANInit(&ts4700CAN0,ts4700__BusInit4(0,4),PinInit(0),
 			ts4700__TimeInit0(0,0));
 }
-#define ts4700CANInstances 1
+
+CAN *ts4700__CANInit1(CAN *can,int inst) {
+  ts4700CAN1.LockBase = 2;
+  ts4700CAN1.status = 0;
+  ts4700CAN1.CAN_TX = 10;
+  ts4700CAN1.CAN_RX = 11;
+  ts4700CAN1.D.conn = ts4700CAN1conn;
+  ts4700CAN1.D.maxconn = 16;
+  ts4700CAN1.D.nconn = 0;
+  ts4700CAN1.D.txc = 0;
+  ts4700CAN1.baud = 1000000;
+  ts4700CAN1.baudparms = baudparms25;
+  ts4700CAN1.irq = 66;
+  return SJA1000CANInit(&ts4700CAN1,ts4700__BusInit13(0,13),PinInit(0),
+			ts4700__TimeInit0(0,0));
+}
+#define ts4700CANInstances 2
 
 static void ts4700SPIChipSelect(WBSPI *ob,unsigned num,int asserted) {
   if (num > 0) {
