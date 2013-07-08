@@ -9,6 +9,7 @@
 #include "PhysicalDIO.c"
 #include "ts4700Pin.c"
 #include "ts4700DIORaw.c"
+#include "ts7700DIORaw.c"
 #include "TSMuxBus.c"
 #include "MarvellPXA166DIORaw.c"
 #include "CacheBus.c"
@@ -27,6 +28,7 @@ TSMuxBus muxbus;
 CacheBus MarvellPXA166DIOCacheBus, ts4700DIOCacheBus;
 MarvellPXA166DIORaw MarvellPXA166DIORaw0;
 ts4700DIORaw ts4700DIORaw0;
+ts7700DIORaw ts7700DIORaw0;
 PhysicalDIO MarvellPXA166DIO, ts4700DIO;
 AggregateDIO ts4700DIO0;
 SystemTime ts4700Time0;
@@ -60,6 +62,7 @@ unsigned char MarvellPXA166DIOCapabilities[128];
 unsigned char ts4700DIOCapabilities[62];
 
 char testbusdata[4096];
+int is7700=0;
 
 int ts4700_ArchInit() {
   LogEnter("");
@@ -67,7 +70,8 @@ int ts4700_ArchInit() {
   if (initialized) LogReturn("%d",value);
   initialized = 1;
   int model = TSModelGet();
-  value = ((model & 0xFF00) == 0x4700);
+  is7700 = (model == 0x7700);
+  value = ((model & 0xFF00) == 0x4700) || is7700;
   if (!value) LogReturn("%d",0);
   ThreadInit();
   dioctl_config_add(ts4700_dioctl_config);
@@ -92,7 +96,7 @@ Bus *ts4700__BusInit1(Bus *bus,int inst) {
 Bus *ts4700__BusInit9(Bus *bus,int inst);
 Bus *ts4700__BusInit10(Bus *bus,int inst);
 Bus *ts4700__BusInit2(Bus *bus,int inst) {
-  if (!BaseBoardMuxBusSupport()) return DummyBusInit(&altmux);
+  if (is7700 || !BaseBoardMuxBusSupport()) return DummyBusInit(&altmux);
   return TSMuxBusInit(&muxbus,ts4700__BusInit0(0,0),0x4,
 		      ts4700__BusInit9(0,9),0,ts4700__BusInit10(0,10),0);
 }
@@ -192,7 +196,11 @@ Pin *ts4700__PinInit0(Pin *pin,int inst) {
 #define ts4700PinInstances 1
 
 DIORaw *ts4700__DIORawInit0(DIORaw *dioraw,int inst) {
-  return ts4700DIORawInit(&ts4700DIORaw0,ts4700__BusInit5(0,5));
+  if (is7700) {
+    return ts7700DIORawInit(&ts7700DIORaw0,ts4700__BusInit0(0,0));
+  } else {
+    return ts4700DIORawInit(&ts4700DIORaw0,ts4700__BusInit5(0,5));
+  }
 }
 DIORaw *ts4700__DIORawInit1(DIORaw *dioraw,int inst) {
   return MarvellPXA166DIORawInit(&MarvellPXA166DIORaw0,ts4700__BusInit6(0,6));
@@ -207,7 +215,7 @@ DIO *ts4700__DIOInit0(DIO *dio,int inst) {
 DIO *ts4700__DIOInit1(DIO *dio,int inst) {
   int i,n;
   DIORaw *raw = ts4700__DIORawInit0(0,0);
-
+    
   if (raw) {
     n = raw->Count(raw);
     ts4700DIO.Caps = ts4700DIOCapabilities;
@@ -215,7 +223,7 @@ DIO *ts4700__DIOInit1(DIO *dio,int inst) {
       ts4700DIOCapabilities[i] = DIO_NORMAL;
     }
   }
-  return PhysicalDIOInit(&ts4700DIO,ts4700__BusInit5(0,5),raw);
+  return PhysicalDIOInit(&ts4700DIO,is7700?ts4700__BusInit0(0,0):ts4700__BusInit5(0,5),raw);
 }
 DIO *ts4700__DIOInit2(DIO *dio,int inst) {
   int i,n;
