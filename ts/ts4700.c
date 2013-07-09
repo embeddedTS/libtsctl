@@ -74,7 +74,11 @@ int ts4700_ArchInit() {
   value = ((model & 0xFF00) == 0x4700) || is7700;
   if (!value) LogReturn("%d",0);
   ThreadInit();
-  dioctl_config_add(ts4700_dioctl_config);
+  if (is7700) {
+    dioctl_config_add(ts7700_dioctl_config);
+  } else {
+    dioctl_config_add(ts4700_dioctl_config);
+  }
   LogReturn("%d",1);
 }
 
