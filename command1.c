@@ -482,6 +482,7 @@ int tsctlDoCommand(Stream *out,Stream *in) {
       if (cmd >= NetMode_JSON && cmd < XMode_APICount) {
 	WriteInt16LE(out,class);
 	WriteInt8LE(out,cmd);
+	out->Flush(out);
 	//WriteInt8LE(out,0x80); // end
 	continue;
       }
