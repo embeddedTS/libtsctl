@@ -1,6 +1,7 @@
 #include "ts4200_dioctl_config.c"
 #include "ts4500_dioctl_config.c"
 #include "ts4700_dioctl_config.c"
+#include "ts7700_dioctl_config.c"
 #include "ts4800_dioctl_config.c"
 #include "ts8100_dioctl_config.c"
 #include "ts8160_dioctl_config.c"
