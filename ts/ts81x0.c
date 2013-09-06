@@ -61,14 +61,19 @@ Pin *ts81x0__PinInit0(Pin *pin0,int inst) {
   if (inst == -1) {
     static int entered = 0;
     int CAN_TX1,CAN_TX2,CAN_RX1,CAN_RX2;
-    CAN *can0,*can1;
+    CAN *can0,*can1=0;
     Pin *ret;
 
     if (entered) return (Pin *)&ts81x0pin;
     entered = 1;
     ret = ts81x0PinInit(&ts81x0pin,pin0,BusInit(2));
     can0 = CANInit(0);
-    can1 = CANInit(1);
+    int model = TSModelGet();
+    if (model == 0x4700 || model == 0x4800) {
+      // on 47xx where x != 00, the DMA controller is in this address
+      // space and we absolutely do not want to mess with that!
+      can1 = CANInit(1);
+    }
     ts81x0PinPostInit(&ts81x0pin,can0 ? can0->CAN_TX : -1,
 			can1 ? can1->CAN_TX : -1,
 			can0 ? can0->CAN_RX : -1,
