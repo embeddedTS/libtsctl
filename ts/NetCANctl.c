@@ -29,7 +29,7 @@ int NetCANctlRx(NetCANctl *can,CANMessage *msg){
   int ret;
   if (can->InitStatus < 0) return -1;
   ret = PacketRecv(can->socket,msg,sizeof(CANMessage));
-  return ret; 
+  return (ret == sizeof(CANMessage)) ? CANSuccess : -7; 
 }
 
 int NetCANctlTx(NetCANctl *can,unsigned flags,unsigned id,const char* data) {
