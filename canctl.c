@@ -1,8 +1,13 @@
 #define THREAD_USE_POSIX
-#include "libtsctl.c"
+#include "libtsctl.h"
+#include "opt.h"
 #include <asm/ioctls.h>
 #include <sys/resource.h>
 #include <sys/time.h>
+#include <signal.h>
+#include <sched.h>
+#include <time.h>
+#include "SJA1000CAN.h"
 #include "NetCANctl.c"
 #include "Net.c"
 
@@ -83,7 +88,7 @@ int CANTestRx(CAN *can,int verbose) {
   struct timeval tv1, tv2;
   unsigned char tmp[16];
   unsigned skipped = 0;
-  int idseq = -1, err = 1, i, j, k, n;
+  int idseq = -1, err = 0, i, j, k, n, first=1;
   int corrupts = 0, badlen = 0;
   struct sched_param sched;
   struct rusage ru1, ru2;
@@ -93,7 +98,13 @@ int CANTestRx(CAN *can,int verbose) {
   nice(-20);
   sched.sched_priority = 50;
   sched_setscheduler(0, SCHED_FIFO, &sched);
-  
+
+  {
+    SJA1000CAN *can1 = (SJA1000CAN *)can;
+    can1->bus->Poke8(can1->bus,0, 0x1); // Enter reset mode
+    can1->bus->Poke8(can1->bus,0, 0x0); // leave reset mode
+  }
+
   sa.sa_handler = alarmsig;
   sigemptyset(&sa.sa_mask);
   sa.sa_flags = 0;
@@ -108,8 +119,9 @@ int CANTestRx(CAN *can,int verbose) {
     for (j=0;j<1;j++) {
       if (msg[j].flags & FLAG_BUS_ERROR) printf("errormsg=\"*** bus error\"\n");
       if (msg[j].flags & FLAG_ERROR_PASSIVE) printf("errormsg=\"*** error passive\"\n");
-      if (msg[j].flags & FLAG_DATA_OVERRUN) printf("errormsg=\"*** data overrun error\"\n");
+      if (msg[j].flags & FLAG_DATA_OVERRUN && !first) printf("errormsg=\"*** data overrun error\"\n");
       if (msg[j].flags & FLAG_ERROR_WARNING) printf("errormsg=\"*** error warning\"\n");
+      first = 0;
       if (msg[j].length) {
 	i++;
 	if (idseq == -1) {
@@ -132,7 +144,7 @@ int CANTestRx(CAN *can,int verbose) {
 	    badlen++;
 	  } else  for (k = 0; k < msg[j].length; k++) 
 	    if (msg[j].data[k] != (((msg[j].id<<3)+k+1)&0xff)) {
-	      if (verbose) fprintf(stderr,
+	      if (1 ||verbose) fprintf(stderr,
 		      "errormsg=\""
 		      "data[%d] 0x%x != 0x%x\"\n", 
 		      k, msg[j].data[k], 
@@ -141,7 +153,7 @@ int CANTestRx(CAN *can,int verbose) {
 	    }
 	  idseq = msg[j].id;
 	}
-      }
+      } else if (verbose) fprintf(stderr,"errormsg=\"zero length msg\"\n");
     }
   }
   /* count packets in i */
@@ -201,7 +213,7 @@ void CANMessagePrint(CANMessage *msg) {
 }
 
 int canctl(int argc,char *argv[]) {
-  int OptInst;
+  int OptInst=0;
   unsigned OptAdrs=-1,OptBaud=0,OptPeek=-1,OptPoke=-1,OptTxId=0,OptRTR=0;
   unsigned OptServer=-1,OptDump=0,OptBTR0=-1,OptBTR1=-1;
   unsigned OptTxTest=0,OptRxTest=0,OptExt=1,OptVerbose=0;
@@ -218,7 +230,7 @@ int canctl(int argc,char *argv[]) {
   // whether or not the user meant to specify them first or not.
 
   void CANPrep() {
-    if (!can) can = CANInit(0);
+    if (!can) can = CANInit(OptInst);
     if (!can) {
       fprintf(stderr,"CAN not detected\n");
       exit(3);
