@@ -1,6 +1,6 @@
 #include <stdlib.h>
 #include <stdio.h>
-#include "libtsctl.c"
+#include "libtsctl.h"
 
 CAN *can;
 

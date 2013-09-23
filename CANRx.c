@@ -1,7 +1,8 @@
 #define THREAD_USE_POSIX
-#include "libtsctl.c"
+#include "libtsctl.h"
 #include <stdlib.h>
 #include <stdio.h>
+#include <time.h>
 
 void CANMessagePrint(CANMessage *msg) {
   struct tm * tm;
