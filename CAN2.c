@@ -1,8 +1,7 @@
 #define THREAD_USE_POSIX
-#include "libtsctl.c"
+#include "libtsctl.h"
 #include <stdlib.h>
 #include <stdio.h>
-#include "Array.h"
 
 #include "NetCANctl.c"
 #include "Net.c"
