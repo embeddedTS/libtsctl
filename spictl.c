@@ -1,4 +1,4 @@
-#include "libtsctl.c"
+#include "libtsctl.h"
 #include <assert.h>
 #include <errno.h>
 #include <stdlib.h>
@@ -7,8 +7,15 @@
 #include <unistd.h>
 #include <sys/ipc.h>
 #include <sys/shm.h>
+#include <sys/types.h>
+#include <sys/socket.h>
+#include <netinet/in.h>
+#include <netinet/tcp.h>
+#include <netdb.h>
+#include <fcntl.h>
 #include "spictl-defbin.h"
 #include "opt.h"
+#include "nosig.h"
 
 //Stream protocol:
 #define SPI_CMD_MASK            b1100_0000

@@ -1,7 +1,6 @@
 #include "libtsctl.h"
 #include <stdlib.h>
 #include <stdio.h>
-#include "Array.h"
 
 int main(int argc,char *argv[]) {
   SPI *spi;
@@ -67,8 +66,8 @@ int main(int argc,char *argv[]) {
     } else {
       if (error < 90 || error > 110) passed = 0;
     }
-    printf("%d. %1.3f / %1.3fV (%1.1f%%)\n",i,
-	   actual, expect[i],error);
+    printf("%d. %1.3f / %1.3fV (%1.1f%%) %04X\n",i,
+	   actual, expect[i],error,ntohs(got[i]));
 	   //error>0.0?error:-error,
 	   //error>=0.0?"low":"high");
   }

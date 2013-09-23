@@ -1,24 +1,28 @@
 #define THREAD_USE_POSIX
-#include "mtrace.c"
 #include "libtsctl.h"
-#include "ts/tcp.c"
-#include "ts/http.c"
+#include "tcp.h"
+#include "http.h"
 #include <stdio.h>
 #include <string.h>
 #include <signal.h>
-#include "ts/Array.h"
-#include "ts/Net.h"
-#include "ts/shell.h"
-#include "ts/IteratorHashTable.c"
-#include "ts/Mode.h"
+#include <netdb.h>
+#include <netinet/tcp.h>
+#include <sys/types.h>
+#include <sys/stat.h>
+#include <fcntl.h>
+#include <pthread.h>
+#include "Net.h"
+#include "shell.h"
+#include "IteratorHashTable.c"
+#include "Mode.h"
 
 extern const char compiledate[]; 
 
 #include "command1.h"
-#include "command.c"
-#include "command1.c"
-#include "Stream.c"
-#include "LookupRef.c"
+//#include "command.c"
+//#include "command1.c"
+#include "Stream.h"
+#include "LookupRef.h"
 #ifndef DONT_USE_READLINE
 #include <readline/readline.h>
 #include <readline/history.h>
@@ -487,6 +491,7 @@ void *binaryServer(void *arg) {
   tsctlDoCommand(io,io);
   return 0;
 }
+extern char** classname;
 
 int main(int argc,char *argv[]) {
   struct sigaction sa;
