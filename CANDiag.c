@@ -1,6 +1,11 @@
-#include "libtsctl.c"
+#include "libtsctl.h"
+#include "SJA1000CAN.h"
 #include <stdlib.h>
 #include <stdio.h>
+#include <time.h>
+#include <sys/types.h>
+#include <sys/stat.h>
+#include <fcntl.h>
 
 void CANMessagePrint(CANMessage *msg) {
   struct tm * tm;
