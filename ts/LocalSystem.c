@@ -3,13 +3,15 @@
 #include "cpp.h"
 #include <sys/sysinfo.h> 
 #include <assert.h>
+#include <stdio.h>
 #include <time.h>
 #include "arch.h"
 #include "LocalSystem.h"
 #include "Thread.h"
 #include "ts.h"
-#include "shell.c"
-#include "dioctlConfig.c"
+#include "shell.h"
+#include "dioctlConfig.h"
+#include "ArchArch.h"
 
 int CompareNameValuePair0(const char *a,const char *b) {
   int ret = strncasecmp(a,b,ArrayElementSize(a)*ArrayLength(a));
@@ -21,7 +23,9 @@ int CompareNameValuePair0(const char *a,const char *b) {
 }
 
 int CompareNameValuePair1(const char *a,const char *b) {
-  return strncasecmp(a,b,ArrayElementSize(a)*ArrayLength(a));
+  int ret;
+  ret = strncasecmp(a,b,ArrayElementSize(a)*ArrayLength(a));
+  return ret;
 }
 
 int CompareNameValuePair(const void *a1,const void *b1) {
@@ -248,6 +252,9 @@ int LocalSystemClassCount(LocalSystem *sys) {
 }
 
 int LocalSystemInstanceCount(LocalSystem *sys,int class) {
+#if 1
+  return ArchClassCount(ArchInit(),class,1);
+#else
   int i,n=0;
   ArchInfo *arch = ArchFirst;
 
@@ -259,6 +266,7 @@ int LocalSystemInstanceCount(LocalSystem *sys,int class) {
     arch = arch->next;
   }
   return n;  
+  #endif
 }
 
 int LocalSystemAPICount(LocalSystem *sys,int class) {
@@ -321,6 +329,12 @@ ConnectionWaitInf *LocalSystemConnWaitInfo(LocalSystem *sys) {
 }
 
 SystemResult LocalSystemCANBusGet(LocalSystem *sys,int CANInst) {
+#if 1
+  if ((ArchInit())->CANBusId) {
+    return (ArchInit())->CANBusId(CANInst);
+  }
+  return SystemErrorNoSuchCANInstance;
+#else
   if (CANInst >= LocalSystemInstanceCount(sys,ClassCAN)) {
     return SystemErrorNoSuchCANInstance;
   } else {
@@ -335,6 +349,7 @@ SystemResult LocalSystemCANBusGet(LocalSystem *sys,int CANInst) {
     // BUG: what if CAN instance is not in a primary architecture?
   }
   return SystemErrorNoSuchCANInstance; // should not reach here!
+#endif
 }
 
 extern const char build[];
@@ -368,7 +383,11 @@ unsigned LocalSystemBuildTime(LocalSystem* ob) {
 }
 
 unsigned LocalSystemUptimeServer(LocalSystem* ob) {
+#if 1
+  return 0; // TO DO
+#else
   return time(0) - startuptime;
+#endif
 }
 
 unsigned LocalSystemUptimeHost(LocalSystem* ob) {
@@ -495,5 +514,24 @@ int LocalSystemFPGARevision(LocalSystem* ob) {
 int LocalSystemEchoNumber(LocalSystem* ob,int n) {
   return n;
 }
+
+const char copyright[] 
+__attribute__ ((weak)) 
+  = "Copyright (c) Technologic Systems - " __DATE__ ; 
+//const char hoststring[] __attribute__ ((weak)) = 
+//  "CompileHost - $(shell uname -a)"; 
+const char build[] 
+__attribute__ ((weak)) 
+  =  "$build: 0"; 
+const char compiledate[] 
+__attribute__ ((weak))
+  = "$date: " __DATE__ " " __TIME__;
+const char archstr[] 
+__attribute__ ((weak)) 
+  = ""; 
+
+const int compiletime 
+__attribute__ ((weak)) 
+  = 0;
 
 #endif

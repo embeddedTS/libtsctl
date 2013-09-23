@@ -162,8 +162,8 @@ struct ArchInfo {
 };
 
 extern ArchInfo *ArchLast, *ArchFirst;
+#include "AggregateDIO.h"
+DIO *DIOInit0(AggregateDIO *);
 
 #endif
-#ifdef __AggregateDIO_h
-DIO *DIOInit0(AggregateDIO *);
-#endif
+

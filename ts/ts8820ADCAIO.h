@@ -1,5 +1,8 @@
 #ifndef __ts8820ADCAIO_h
 #define __ts8820ADCAIO_h
+#include "Bus.h"
+#include "DIO.h"
+#include "AIO.h"
 #undef FUNC
 #ifndef SWIGGY
 #define FUNC(x) (*x)

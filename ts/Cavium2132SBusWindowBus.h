@@ -1,5 +1,6 @@
 #ifndef __Cavium2132SBusWindowBus_h
 #define __Cavium2132SBusWindowBus_h
+#include "Bus.h"
 #undef FUNC
 #ifndef SWIGGY
 #define FUNC(x) (*x)

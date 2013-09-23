@@ -1,5 +1,6 @@
 #ifndef __OPT_H
 #define __OPT_H
+#include <unistd.h>
 
 typedef int (*OptionFunction)(char *arg,void *target,int opt);
 

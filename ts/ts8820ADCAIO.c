@@ -1,4 +1,7 @@
 #include "ts8820ADCAIO.h"
+#include "arch.h"
+#include "ArchArch.h"
+#include "Lock.h"
 
 /*
 tsctl Mode Hex \; Bus:2 BitClear16 0x82 1 \; Bus:2 BitSet16 0x82 0 ; Bus:2 BitClear16 0x82 0 \; Bus:2 Peek16 0x82

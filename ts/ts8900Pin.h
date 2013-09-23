@@ -1,5 +1,7 @@
 #ifndef __ts8900Pin_h
 #define __ts8900Pin_h
+#include "Pin.h"
+#include "Bus.h"
 #undef FUNC
 #ifndef SWIGGY
 #define FUNC(x) (*x)

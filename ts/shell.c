@@ -287,6 +287,10 @@ int grep1s(char *str,char *regex) {
   return ret;
 }
 
+int grep1s_pre(char *str,regex_t preg) {
+  return (regexec(&preg,str,0,0,0) == 0);
+}
+
 static int charptrcomp(const void *a,const void *b) {
   return strcmp(* (char * const *) a, * (char * const *) b);
 }

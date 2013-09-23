@@ -1,5 +1,6 @@
 #ifndef __DummyDIO_h
 #define __DummyDIO_h
+#include "DIO.h"
 #undef FUNC
 #ifndef SWIGGY
 #define FUNC(x) (*x)

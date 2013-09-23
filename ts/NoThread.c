@@ -3,6 +3,9 @@
 #include "Thread.h"
 #include "nosig.h"
 
+/*
+#ifndef NoThread_c
+#define NoThread_c
 struct Thread {
   // public, R/W
   void *data;
@@ -12,6 +15,8 @@ struct Thread {
   int socket;
   ThreadFunction f;
 };
+#endif
+*/
 
 static int semid;
 

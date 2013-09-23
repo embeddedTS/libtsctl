@@ -10,10 +10,26 @@ enum {
 typedef void *(*ThreadFunction)(void *);
 typedef void (*ThreadDestructor)(void *);
 
-
+/*
 #ifdef THREAD_USE_POSIX
 #include "PThread.h"
+#else
+#ifndef NoThread_c
+#define NoThread_c
+*/
+#ifndef THREAD_STRUCT_DEFINED
+struct Thread {
+  // public, R/W
+  void *data;
+  // public, RO
+  char *name; int instance;
+  int pid;
+  int socket;
+  ThreadFunction f;
+};
 #endif
+//#endif
+//#endif
 
 int ThreadInit();
 void ThreadFini(void *);

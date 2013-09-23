@@ -1,5 +1,6 @@
 #ifndef __MarvellPXA166DIORaw_h
 #define __MarvellPXA166DIORaw_h
+#include "Bus.h"
 #undef FUNC
 #ifndef SWIGGY
 #define FUNC(x) (*x)

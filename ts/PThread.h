@@ -1,6 +1,8 @@
 #ifndef __PThread_h
 #define __PThread_h
 #include <pthread.h>
+
+#define THREAD_STRUCT_DEFINED
 #include "Thread.h"
 
 struct Thread {

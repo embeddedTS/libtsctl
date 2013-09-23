@@ -1,5 +1,7 @@
 #ifndef __LinuxTWI_h
 #define __LinuxTWI_h
+#include "TWI.h"
+#include "Bus.h"
 #undef FUNC
 #ifndef SWIGGY
 #define FUNC(x) (*x)

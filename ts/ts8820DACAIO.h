@@ -1,5 +1,7 @@
 #ifndef __ts8820DACAIO_h
 #define __ts8820DACAIO_h
+#include "Bus.h"
+#include "AIO.h"
 #undef FUNC
 #ifndef SWIGGY
 #define FUNC(x) (*x)

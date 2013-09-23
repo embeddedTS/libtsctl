@@ -2,6 +2,7 @@
 #define WindowBus_c
 #include "WindowBus.h"
 #include "Bit.h"
+#include "Array.h"
 
 #define LOCK_TYPE_SHARED
 #define LOCK_CLASS WindowBus

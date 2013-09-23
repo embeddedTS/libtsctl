@@ -5,6 +5,9 @@
 #include "DIOTWI.h"
 #include "Thread.h"
 #include "Array.h"
+#include "Lock.h"
+#include "arch.h"
+
 #define IA(x,...) (int[]){x,__VA_ARGS__}
 
 /*

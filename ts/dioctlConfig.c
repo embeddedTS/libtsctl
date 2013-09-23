@@ -1,27 +1,45 @@
 #ifndef __dioctlConfig_c
 #define __dioctlConfig_c
+#include <bzlib.h>
 #include "dioctl.dict.c"
 #include "dioctl_map.c"
-#include "shell.c"
+#include "shell.h"
 #include "Array.h"
 #include "System.h"
+#include "shell.h"
+
 
 int line_type(char *line) {
-  if (grep1(line,"attrib\\.....\\.Wire")) return 11;
+  static int initialized = 0;
+  static regex_t pat1,pat2,pat3,pat4,pat5,pat6,pat7,pat8;
+
+  if (!initialized) {
+    regcomp(&pat1,"attrib\\.....\\.Wire",REG_NOSUB|REG_EXTENDED);
+    regcomp(&pat2,"attrib\\.Connector\\.Name\\.[A-Za-z_0-9]\\+$",REG_NOSUB);
+    regcomp(&pat3,"attrib\\.Connector\\.Count$",REG_NOSUB);
+    regcomp(&pat4,"attrib\\.Connector\\.[0-9]\\+\\.Pins$",REG_NOSUB);
+    regcomp(&pat5,"attrib\\.Connector\\.[0-9]\\+\\.[0-9]\\+$",REG_NOSUB);
+    regcomp(&pat6,"attrib\\.DIO\\.Count$",REG_NOSUB);
+    regcomp(&pat7,"attrib\\.DIO\\.Instances$",REG_NOSUB);
+    regcomp(&pat8,"[A-Za-z0-9_]\\+$",REG_NOSUB);
+    initialized = 1;
+  }
+
+  if (!regexec(&pat1,line,0,0,0)) return 11;
   //3. attrib.Connector.Name._
-  if (grep1s(line,"attrib\\.Connector\\.Name\\.[A-Za-z_0-9]\\+$")) return 3;
+  if (!regexec(&pat2,line,0,0,0)) return 3;
   //2. attribute.Connector.Count
-  if (grep1s(line,"attrib\\.Connector\\.Count$")) return 2;
+  if (!regexec(&pat3,line,0,0,0)) return 2;
   //4. attrib.Connector.#1.Pins
-  if (grep1s(line,"attrib\\.Connector\\.[0-9]\\+\\.Pins$")) return 4;
+  if (!regexec(&pat4,line,0,0,0)) return 4;
   //5. attrib.Connector.#1.#2
-  if (grep1s(line,"attrib\\.Connector\\.[0-9]\\+\\.[0-9]\\+$")) return 5;
+  if (!regexec(&pat5,line,0,0,0)) return 5;
   //9. attrib.DIO.Count
-  if (grep1s(line,"attrib\\.DIO\\.Count$")) return 9;
+  if (!regexec(&pat6,line,0,0,0)) return 9;
   //10. attrib.DIO.Instances
-  if (grep1s(line,"attrib\\.DIO\\.Instances$")) return 10;
+  if (!regexec(&pat7,line,0,0,0)) return 10;
   //1. NAME=# , where NAME does not contain any periods
-  if (grep1s(line,"[A-Za-z0-9_]\\+$")) return 1;
+  if (!regexec(&pat8,line,0,0,0)) return 1;
   if (line[0] && line[0] != '#') {
     //fprintf(stderr,"Warning:no match for '%s'\n",line);
   }
@@ -108,15 +126,17 @@ NameValuePair* dioctladd(NameValuePair ***map,char **config,diostuff *S) {
 #endif
   int type,inst=-1,v,i,j,thisInstance=1,tofree,val1;
   char *str,**conf;
-  char* str2;
+  char* str2, *str2a;
 
   S->DIOCount = S->DIOConns = 0;
   for (i=1;i<=S->DIOInstances;i++) {
     conf = config;
     for (j=0;j<ArrayLength(conf);j++) {
-      str2 = ArrayDup(conf[j]);
-      str = XYZ(str2,&val1);
-      type = line_type(str);
+      str2 = str2a = ArrayDup(conf[j]);
+      while (isspace(*str2)) str2++;
+      if (str2[0] == '#' || !str2[0]) continue;
+      str = XYZ(str2,&val1); 
+      type = line_type(str); 
       //fprintf(stderr,"%s = %d (%d)\n",str,val1,type);
       tofree = 0;
       switch (type) {
@@ -135,7 +155,7 @@ NameValuePair* dioctladd(NameValuePair ***map,char **config,diostuff *S) {
 	}
 	break;
       case 4:  
-	str = add1(str2,S->DIOConn);
+	str = add1(str2,S->DIOConn); 
 	tofree = 1;
 	//ArrayFree(conf[j]);
 	//conf[j] = str;
@@ -159,10 +179,10 @@ NameValuePair* dioctladd(NameValuePair ***map,char **config,diostuff *S) {
 #ifdef TESTME
 	fprintf(fout,"%s=%d\n",str,val1);
 #else
-	**map = _MapConfigLineAssign(**map,str,val1);
+	**map = _MapConfigLineAssign(**map,str,val1); 
 #endif
       }
-      if (tofree) ArrayFree(str);
+      if (tofree) ArrayFree(str2a);
     }
     S->DIOStart += S->DIOCount;
     S->DIOConn += S->DIOConns;
@@ -218,11 +238,22 @@ char* decode(char *str) {
 char** decodearch(char **enc) {
   int i,n = len(enc);
   char** ret = ArrayAlloc(n,sizeof(char*));
-
+  
   for (i=0;i<n;i++) {
     ret[i] = decode(enc[i]);
   }
   return ret;
+}
+
+char** decodearch2(char *enc,int len,int lenout) {
+  char* outarr = ArrayAlloc(lenout,sizeof(char));
+  int ret = BZ2_bzBuffToBuffDecompress(outarr,&lenout,enc,len,0,0);
+  char** arr=0;
+  if (ret == BZ_OK) {
+    arr = split(outarr,'\n');
+  }
+  ArrayFree(outarr);
+  return arr;
 }
 
 void init_diostuff(diostuff *d) {
@@ -255,7 +286,30 @@ NameValuePair *archmap;
 NameValuePair **archmapptr = &archmap;
 int CompareNameValuePair(const void *a1,const void *b1);
 
+void dioctl_config_add2(char *names,int len,int lenout) {
+  static int started = 0;
+  static diostuff d;
+  char** tmp;
+
+  if (!started) {
+    init_diostuff(&d);
+    archmapptr[0] = ArrayAlloc(0,sizeof(NameValuePair));
+    ArraySort(archmapptr[0],CompareNameValuePair); 
+    started = 1;
+  } else {
+    subinit_diostuff(&d); 
+  }
+  if (names) {
+    tmp = decodearch2(names,len,lenout); 
+    dioctladd(&archmapptr,tmp,&d);
+    ArrayFree(tmp);
+  } else {
+    archmapptr[0] = finish_diostuff(archmapptr[0],&d);
+  }
+}
+
 void dioctl_config_add(char **names) {
+  return;
   static int started = 0;
   static diostuff d;
   char** tmp;

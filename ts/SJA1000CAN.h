@@ -1,5 +1,9 @@
 #ifndef __SJA1000CAN_h
 #define __SJA1000CAN_h
+#include "Bus.h"
+#include "Pin.h"
+#include "Time.h"
+#include "CAN.h"
 #undef FUNC
 #ifndef SWIGGY
 #define FUNC(x) (*x)
@@ -18,6 +22,9 @@ struct CANConn {
   unsigned rxtail;
 };
 
+#ifndef BUFLEN
+#define BUFLEN sizeof(CANMessage)*32
+#endif
 struct CANData {
   unsigned char txq[BUFLEN];
   unsigned txhead;

@@ -1,5 +1,6 @@
 #ifndef __Cavium2132Time_h
 #define __Cavium2132Time_h
+#include "Time.h"
 #undef FUNC
 #ifndef SWIGGY
 #define FUNC(x) (*x)

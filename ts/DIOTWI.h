@@ -1,5 +1,8 @@
 #ifndef __DIOTWI_h
 #define __DIOTWI_h
+#include "DIO.h"
+#include "Time.h"
+#include "TWI.h"
 #undef FUNC
 #ifndef SWIGGY
 #define FUNC(x) (*x)

@@ -1,9 +1,12 @@
 #ifndef PhysicalDIO_c
 #define PhysicalDIO_c
 #include <sched.h>
+#include "DIO.h"
 #include "PhysicalDIO.h"
 #include "FPGA.h"
 #include "Array.h"
+#include "Lock.h"
+#include "arch.h"
 
 void *PhysicalDIOInit(PhysicalDIO *dio,void *bus1,void *sub1) {
   Bus *bus = bus1;

@@ -1,5 +1,6 @@
 #ifndef __WindowBus_h
 #define __WindowBus_h
+#include "Bus.h"
 #undef FUNC
 #ifndef SWIGGY
 #define FUNC(x) (*x)

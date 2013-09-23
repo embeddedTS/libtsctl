@@ -2,6 +2,7 @@
 #define WBWindowBus_c
 #include "WBWindowBus.h"
 #include "Bit.h"
+#include "Array.h"
 
 void *WBWindowBusInit(WBWindowBus *bus,void *sub,int adrs,int offset) {
   if (bus->InitStatus > 0) return bus;

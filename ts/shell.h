@@ -36,6 +36,8 @@ int system1(char *cmd);
 
 int grep1(char *str,char *regex);
 int grep1s(char *str,char *regex);
+#include <regex.h>
+int grep1s_pre(char *str,regex_t preg);
 
 extern char *nullstring;
 extern int ShellDryRun,ShellVerbose;

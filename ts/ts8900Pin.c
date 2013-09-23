@@ -1,5 +1,6 @@
 #include "ts8900Pin.h"
 #include "Bus.h"
+#include "Lock.h"
 
 //#define LOCK_TYPE_SHARED
 //#define LOCK_CLASS ts8900Pin

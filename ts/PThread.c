@@ -1,3 +1,13 @@
+#ifndef __USE_UNIX98
+#define __USE_UNIX98
+#endif
+#ifndef _XOPEN_SOURCE
+#define _XOPEN_SOURCE 600
+#endif
+#ifndef _GNU_SOURCE
+#define _GNU_SOURCE
+#endif
+
 #include <pthread.h>
 #include <unistd.h>
 #include <sys/epoll.h>
@@ -157,35 +167,35 @@ int ThreadInit() {
     pthread_mutex_unlock(&mutex2);
     pthread_mutex_unlock(&watchlock);
     ThreadMutexAllocate(1); // reserve 0 for SBus
+ }
+ if (!pthread_getspecific(threadKey)) {
+   Thread *ob = malloc(sizeof(Thread));
 
-    Thread *ob = malloc(sizeof(Thread));
+   ob->tid = pthread_self();;
+   ob->pid = getpid();
+   ob->name = "main()";
+   ob->instance = 0;
+   ob->socket = 0;
+   ob->waitCount = 0;
+   ob->wait4 = 0;
+   ob->wait4n = 0;
+   ob->data = 0;
+   ob->destor = 0;
+   ob->f = 0;
+   pthread_mutex_init(&ob->mutex, NULL);
+   pthread_cond_init(&ob->condition, NULL);
 
-    ob->tid = pthread_self();;
-    ob->pid = getpid();
-    ob->name = "main()";
-    ob->instance = 0;
-    ob->socket = 0;
-    ob->waitCount = 0;
-    ob->wait4 = 0;
-    ob->wait4n = 0;
-    ob->data = 0;
-    ob->destor = 0;
-    ob->f = 0;
-    pthread_mutex_init(&ob->mutex, NULL);
-    pthread_cond_init(&ob->condition, NULL);
-
-    assertf((err=pthread_setspecific(threadKey,ob)) == 0,
+   assertf((err=pthread_setspecific(threadKey,ob)) == 0,
 	    "pthread_setspecific:%m:%d",err);
-    assertf(pthread_getspecific(threadKey),"");
+   assertf(pthread_getspecific(threadKey),"");
 
-    pthread_mutex_lock(&watchlock);
-    ob->next = head_thread;
-    head_thread = ob;
-    if (!rr_thread) rr_thread = ob;
-    pthread_mutex_unlock(&watchlock);
-
-  }
-  return 1;
+   pthread_mutex_lock(&watchlock);
+   ob->next = head_thread;
+   head_thread = ob;
+   if (!rr_thread) rr_thread = ob;
+   pthread_mutex_unlock(&watchlock); 
+ }
+ return 1;
 }
 
 void ThreadFini(void *arg) {

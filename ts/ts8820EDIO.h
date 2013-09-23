@@ -1,5 +1,8 @@
 #ifndef __ts8820EDIO_h
 #define __ts8820EDIO_h
+#include "Pin.h"
+#include "Bus.h"
+#include "EDIO.h"
 #undef FUNC
 #ifndef SWIGGY
 #define FUNC(x) (*x)

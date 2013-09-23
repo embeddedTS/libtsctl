@@ -1,6 +1,9 @@
 #ifndef ts4800Pin_c
 #define ts4800Pin_c
 #include <errno.h>
+#include <sys/types.h>
+#include <sys/stat.h>
+#include <fcntl.h>
 #include "ts4800Pin.h"
 #include "Bus.h"
 #include "Thread.h"

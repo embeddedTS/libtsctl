@@ -1,5 +1,6 @@
 #ifndef __PC104Bus_h
 #define __PC104Bus_h
+#include "Bus.h"
 #undef FUNC
 #ifndef SWIGGY
 #define FUNC(x) (*x)

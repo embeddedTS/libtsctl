@@ -1,5 +1,7 @@
 #ifndef __TSTime_h
 #define __TSTime_h
+#include "Bus.h"
+#include "Time.h"
 #undef FUNC
 #ifndef SWIGGY
 #define FUNC(x) (*x)

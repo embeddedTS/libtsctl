@@ -14,6 +14,9 @@
 #include "EDIO.h"
 #include "Log.h"
 #include "ts.h"
+#include "Array.h"
+#include "Thread.h"
+#include "arch.h"
 //#include "Lock.h"
 //#include "Net.h"
 

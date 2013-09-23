@@ -1,5 +1,7 @@
 #ifndef __PhysicalDIO_h
 #define __PhysicalDIO_h
+#include "Bus.h"
+#include "DIORaw.h"
 #undef FUNC
 #ifndef SWIGGY
 #define FUNC(x) (*x)

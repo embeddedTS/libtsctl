@@ -3,12 +3,7 @@
 #define THREAD_USE_POSIX
 #include "Thread.h"
 #include "socket.h"
-
-typedef struct {
-  ThreadFunction f;
-  void *(*constor)(int socket);
-  ThreadDestructor destor;
-} ServerData;
+#include "tcp.h"
 
 // if th->socket < 0, then it's a port number
 // th->data contains the ThreadFunction to call for each connection

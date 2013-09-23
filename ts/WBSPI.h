@@ -1,5 +1,7 @@
 #ifndef __WBSPI_h
 #define __WBSPI_h
+#include "Bus.h"
+#include "SPI.h"
 #undef FUNC
 #ifndef SWIGGY
 #define FUNC(x) (*x)

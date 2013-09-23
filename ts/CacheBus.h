@@ -1,5 +1,7 @@
 #ifndef __CacheBus_h
 #define __CacheBus_h
+#include "Bus.h"
+
 #undef FUNC
 #ifndef SWIGGY
 #define FUNC(x) (*x)

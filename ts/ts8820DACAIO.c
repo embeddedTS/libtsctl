@@ -1,4 +1,5 @@
 #include "ts8820DACAIO.h"
+#include "arch.h"
 
 System *SystemInit(int);
 

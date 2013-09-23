@@ -16,7 +16,7 @@
 #include "LocalSystem.c"
 #include "SJA1000CAN.c"
 #include "ts4200.h"
-
+#include "ts4200DIO.c"
 
 extern ArchInfo ts4200_ArchInfo;
 extern ArchInfo ts4500_ArchInfo;
@@ -72,14 +72,15 @@ AtmelAT91DIORaw AtmelAT91DIORaw1,
   AtmelAT91DIORaw2,
   AtmelAT91DIORaw3;
 ts4200DIORaw ts4200DIORaw0;
+ts4200DIO allDIO;
 PhysicalDIO AtmelAT91DIO1,
   AtmelAT91DIO2,
   AtmelAT91DIO3,
-  ts4200DIO;
+  ts4200DIOA;
 unsigned char AtmelAT91DIO1Capabilities[32];
 unsigned char AtmelAT91DIO2Capabilities[32];
 unsigned char AtmelAT91DIO3Capabilities[32];
-unsigned char ts4200DIOCapabilities[34];
+unsigned char ts4200DIOCapabilitiesA[34];
 AggregateDIO ts4200DIO0;
 DIOTWI ts4200TWI0;
 DIOSPI ts4200SPI0;
@@ -274,6 +275,7 @@ DIORaw *ts4200__DIORawInit3(DIORaw *dioraw,int inst) {
 DIO *ts4200__DIOInit0(DIO *dio,int inst) {
   return DIOInit0(&ts4200DIO0);
 }
+
 DIO *ts4200__DIOInit1(DIO *dio,int inst) {
   int i;
 
@@ -320,15 +322,20 @@ DIO *ts4200__DIOInit4(DIO *dio,int inst) {
   int i;
 
   for (i=0;i<=31;i++) {
-    ts4200DIOCapabilities[i] = DIO_NORMAL;
+    ts4200DIOCapabilitiesA[i] = DIO_NORMAL;
   }
-  ts4200DIOCapabilities[32] = DIO_OUTPUT_ONLY;
-  ts4200DIOCapabilities[33] = DIO_OUTPUT_ONLY;
-  ts4200DIO.Caps = ts4200DIOCapabilities;
-  return PhysicalDIOInit(&ts4200DIO,ts4200__BusInit3(0,3),
+  ts4200DIOCapabilitiesA[32] = DIO_OUTPUT_ONLY;
+  ts4200DIOCapabilitiesA[33] = DIO_OUTPUT_ONLY;
+  ts4200DIOA.Caps = ts4200DIOCapabilitiesA;
+  return PhysicalDIOInit(&ts4200DIOA,ts4200__BusInit3(0,3),
 			 ts4200__DIORawInit3(0,3));
 }
-#define ts4200DIOInstances 5
+
+DIO *ts4200__DIOInit5(DIO *dio,int inst) {
+  return ts4200DIOInit(&allDIO);
+}
+
+#define ts4200DIOInstances 6
 
 TWI *ts4200__TWIInit0(TWI *twi,int inst) {
   ts4200TWI0.TW_CLK=24;

@@ -1,5 +1,7 @@
 #ifndef __AggregateDIO_h
 #define __AggregateDIO_h
+#include "DIO.h"
+#include "Pin.h"
 #undef FUNC
 #ifndef SWIGGY
 #define FUNC(x) (*x)

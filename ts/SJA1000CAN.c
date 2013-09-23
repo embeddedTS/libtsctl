@@ -4,9 +4,11 @@
 #include <fcntl.h>
 #include <string.h> // memcpy
 #include <netinet/in.h>
+#include <stdio.h>
 #include "SJA1000CAN.h"
 #include "nosig.h"
 #include "Log.h"
+#include "arch.h"
 
 #define S11(x) ((char *)x)
 static void BusOff(SJA1000CAN *can) {
@@ -1013,6 +1015,7 @@ void CANStop() {
 }
 
 #include "socket.c"
+#include "Thread.h"
 
 void *CANStart(void *arg) {
   Thread *th = arg;

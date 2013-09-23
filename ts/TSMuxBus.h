@@ -1,5 +1,7 @@
 #ifndef __TSMuxBus_h
 #define __TSMuxBus_h
+#include "Bus.h"
+
 #undef FUNC
 #ifndef SWIGGY
 #define FUNC(x) (*x)

@@ -1,6 +1,7 @@
 #ifndef SystemTime_c
 #define SystemTime_c
 #include <sys/time.h>
+#include "Time.h"
 #include "SystemTime.h"
 
 __attribute__((always_inline)) 

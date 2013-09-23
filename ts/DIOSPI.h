@@ -1,5 +1,8 @@
 #ifndef __DIOSPI_h
 #define __DIOSPI_h
+#include "DIO.h"
+#include "Time.h"
+#include "SPI.h"
 #undef FUNC
 #ifndef SWIGGY
 #define FUNC(x) (*x)

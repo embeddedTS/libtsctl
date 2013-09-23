@@ -1,5 +1,6 @@
 #ifndef ts4700DIORaw_c
 #define ts4700DIORaw_c
+#include <stdio.h>
 #include "ts4700DIORaw.h"
 
 // Not sure why we need this, as we don't have negative DIOs.
@@ -42,6 +43,7 @@ void ts4700DIORawFini(ts4700DIORaw *dio) {
 }
 
 void ts4700DIORawDirSet(ts4700DIORaw *dio,int Num,int asOutput) {
+  if (I(Num) >= 49 && I(Num) <= 52) printf("DirSet %d %d\n",Num,asOutput);
   if (I(Num) > 59) return;
   ts4700DIORawLockReal(dio,0);
   if (I(Num) <= 14) {
@@ -58,6 +60,7 @@ void ts4700DIORawDirSet(ts4700DIORaw *dio,int Num,int asOutput) {
 }
 
 void ts4700DIORawDataSet(ts4700DIORaw *dio,int Num,int asHigh) {
+  if (I(Num) >= 49 && I(Num) <= 52) printf("DataSet %d %d\n",Num,asHigh);
   if (I(Num) > 61) return;
   ts4700DIORawLockReal(dio,0);
   if (I(Num) <= 14) {

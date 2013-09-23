@@ -1,5 +1,6 @@
 #ifndef __TSCAN1Bus_h
 #define __TSCAN1Bus_h
+#include "Bus.h"
 #undef FUNC
 #ifndef SWIGGY
 #define FUNC(x) (*x)

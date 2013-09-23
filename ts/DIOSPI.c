@@ -3,6 +3,9 @@
 #include "DIO.h"
 #include "Time.h"
 #include "DIOSPI.h"
+#include "Lock.h"
+#include "Array.h"
+#include "arch.h"
 
 void *DIOSPIInit(DIOSPI* ob,DIO *cs0,DIO *cs1,DIO *cs2,DIO *cs3,int SPI_CS0,int SPI_CS1,int SPI_CS2,int SPI_CS3,DIO *mosi,int SPI_MOSI,DIO *miso,int SPI_MISO,DIO *clk,int SPI_CLK,Time *t) {
   if (ob->InitStatus > 0) return ob;

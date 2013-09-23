@@ -2,9 +2,12 @@
 #define AggregateDIO_c
 #include <stdio.h>
 #include <string.h>
+#include "DIO.h"
 #include "AggregateDIO.h"
 #include "Array.h"
 #include "Time.h"
+#include "Lock.h"
+#include "arch.h"
 
 void *AggregateDIOInit(AggregateDIO *dio,unsigned Count,void *pin1,
 		       int *SubCount,DIO **pDIO) {

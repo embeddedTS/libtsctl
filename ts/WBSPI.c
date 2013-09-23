@@ -1,5 +1,7 @@
 #ifndef WBSPI_c
 #define WBSPI_c
+#include "arch.h"
+#include "ArchArch.h"
 #include "WBSPI.h"
 #include "Pin.h"
 #include "Thread.h"

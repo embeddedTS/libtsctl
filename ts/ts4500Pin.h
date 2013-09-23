@@ -1,5 +1,7 @@
 #ifndef __ts4500Pin_h
 #define __ts4500Pin_h
+#include "Pin.h"
+#include "Bus.h"
 #undef FUNC
 #ifndef SWIGGY
 #define FUNC(x) (*x)
