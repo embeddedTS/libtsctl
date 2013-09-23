@@ -1,3 +1,8 @@
+#include "Stream.h"
+#include "libtsctl.h"
+#include "command1.h"
+#include "Mode.h"
+
 int tsctlClassTextToBin(char *str) {
   switch (*str++) {
   case 'A':case 'a': return 9;

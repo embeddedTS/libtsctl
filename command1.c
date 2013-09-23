@@ -1,4 +1,9 @@
 #include "ts/co.h"
+#include "command1.h"
+#include "libtsctl.h"
+#include "Net2.h"
+#include "Mode.h"
+#include "shell.h"
 
 /*
 reply parsing works as follows.
@@ -456,6 +461,13 @@ int WriteUInt32As(coParm,Stream *out,Stream *in,int base,int abase) {
 }
 //ArrayAuto(char*,invalidInstStr,ARR("invalid instance"));
 
+extern void**** docmd;
+extern char** classname;
+extern char*** cmdname;
+extern char**** ArgNames;
+extern int (*tsctlCommand[])(char *);
+extern void**** Args;
+extern char**** RetNames;
 //=================================
 int tsctlDoCommand(Stream *out,Stream *in) {
   int class,inst,cmd;
@@ -958,21 +970,6 @@ int tsctlArgParseArrayReal32(Stream *out,LookupRef* *lu,char *arg) {
 
 #define WAITBYTES(n)  while (in->InputReady(in) < n) coYield(0);
 
-typedef struct {
-  int base,abase;
-  void *(*InitState)(void **);
-  void (*StartArray)(Stream *,void **,int,int,int);
-  void (*EndArray)(Stream *,void **,int,int,int);
-  void (*StartNonArray)(Stream *,void **,int,int,int);
-  void (*EndNonArray)(Stream *,void **,int,int,int);
-  void (*StartStruct)(Stream *,void **,int,int,int);
-  void (*EndStruct)(Stream *,void **,int,int,int);
-  void (*StartValue)(Stream *,void **,int,int);
-  void (*EndValue)(Stream *,void **,int,int,int);
-  void (*Separator)(Stream *,void **,int,int);
-  void (*StartEnum)(Stream *,void **,int,int);
-  void (*EndEnum)(Stream *,void **,int,int);
-} mode;
 // the mode, if needed, should define these functions such that
 // as needed, it tracks the current position in the output 
 // (using Start/End Array/Struct)

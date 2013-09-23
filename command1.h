@@ -57,3 +57,19 @@ int WriteUInt32Esc(coParm,Stream *out,Stream *in,int base,int abase);
 int WriteVoidEsc(coParm,Stream *out,Stream *in,int base,int abase);
 int WriteArrayReal32Esc(coParm,Stream *out,Stream *in,int base,int abase);
 
+typedef struct {
+  int base,abase;
+  void *(*InitState)(void **);
+  void (*StartArray)(Stream *,void **,int,int,int);
+  void (*EndArray)(Stream *,void **,int,int,int);
+  void (*StartNonArray)(Stream *,void **,int,int,int);
+  void (*EndNonArray)(Stream *,void **,int,int,int);
+  void (*StartStruct)(Stream *,void **,int,int,int);
+  void (*EndStruct)(Stream *,void **,int,int,int);
+  void (*StartValue)(Stream *,void **,int,int);
+  void (*EndValue)(Stream *,void **,int,int,int);
+  void (*Separator)(Stream *,void **,int,int);
+  void (*StartEnum)(Stream *,void **,int,int);
+  void (*EndEnum)(Stream *,void **,int,int);
+} mode;
+extern mode ModeAssign, ModeJSON, ModeNL, ModeRaw;
