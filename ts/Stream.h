@@ -1,8 +1,8 @@
 #ifndef __Stream_H
 #define __Stream_H
 #include <stdio.h>
-#include "ts/Array.h"
-#include "ts/types.h"
+#include "Array.h"
+#include "types.h"
 
 typedef struct Stream Stream;
 

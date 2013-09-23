@@ -1,4 +1,4 @@
-#include "ts/Array.h"
+#include "Array.h"
 #include "LookupRef.h"
 
 int LookupRefCompare(const void *a,const void *b) {

@@ -1,6 +1,8 @@
 #include <string.h>
 #include <stdarg.h>
+#include <errno.h>
 #include "Stream.h"
+#include "nosig.h"
 
 int DescriptorReadyRead(int desc) {
   fd_set rfd;
