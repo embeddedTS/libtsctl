@@ -9,6 +9,10 @@
 
 Bus *BusInit(int inst);
 
+#ifdef ARCH_CUSTOM
+#include "ArchCustom.h"
+#endif
+
 TS_CPU TSCPUGet(void) {
   FILE *cpuinfo;
   char buf[4096];
@@ -28,6 +32,11 @@ TS_CPU TSCPUGet(void) {
     bzero(buf, 4096);
     fread(buf, 1, 4095, cpuinfo);
     fclose(cpuinfo);
+#ifdef ARCH_CUSTOM
+    if (cpu = TSCustomCPUGet(buf)) {
+      // already loaded cpu
+    } else
+#endif
     if (strstr(buf, "FA526")) {
       cpu = CPU_CAVIUM;
     } else if (strstr(buf, "ARM920T") && strstr(buf, "crunch")) {

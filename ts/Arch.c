@@ -79,12 +79,17 @@ void ArchPC104Init(Arch *owner) {
   }
 }
 
+#ifdef ARCH_CUSTOM
+#include "ArchCustom.h"
+#endif
+
 Arch *ArchBBInit() {
   static Arch *baseboard=0;
   if (baseboard) return baseboard;
   int model = BaseBoardIdGet();
-#ifdef ARCH_CUSTOM_BB
-#include "custom_bb.c"
+#ifdef ARCH_CUSTOM
+  baseboard = ArchCustomBBInit(model);
+  if (baseboard) return baseboard;
 #endif
   switch (model) {
 #ifdef ARCH_81X0
@@ -121,8 +126,9 @@ Arch *ArchInit() {
   return hardware;
 #endif
   int cpu = TSCPUGet();
-#ifdef ARCH_CUSTOM_CPU
-#include "custom_cpu.c"
+#ifdef ARCH_CUSTOM
+  hardware = ArchCustomInit(cpu);
+  if (hardware) return hardware;
 #endif
   if (cpu == CPU_CAVIUM) {
 #ifdef ARCH_4500
