@@ -7,6 +7,8 @@
 #include <string.h>
 #include <netinet/tcp.h>        // TCP_NODELAY
 #include <fcntl.h>
+#include <stdio.h>
+#include <stdlib.h>
 
 #include "nosig.h"
 

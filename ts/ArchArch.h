@@ -16,6 +16,7 @@ Arch *ts4200ArchInit();
 Arch *ts4500ArchInit();
 Arch *ts4700ArchInit();
 Arch *ts4800ArchInit();
+Arch *ts7670ArchInit();
 Arch *ts81x0ArchInit();
 Arch *ts8200ArchInit();
 Arch *ts8390ArchInit();

@@ -56,7 +56,7 @@ $(DIR)/libts81x0.a: $(addprefix $(DIR)/,ts81x0Arch.o ts8100_dioctl_config.o ts81
 $(DIR)/libts8200.a: $(addprefix $(DIR)/,ts8200Arch.o ts8200_dioctl_config.o)
 	ar -r $@ $^
 
-$(DIR)/libts7670.a: $(addprefix $(DIR)/,ts7670Arch.o)
+$(DIR)/libts7670.a: $(addprefix $(DIR)/,ts7670Arch.o MMapBus.o DummyBus.o LocalSystem.o SystemTime.o ts7670Pin.o ts7670DIORaw.o CacheBus.o PhysicalDIO.o AggregateDIO.o)
 	ar -r $@ $^
 
 $(DIR)/libts8390.a: $(addprefix $(DIR)/,ts8390Arch.o ts8390_dioctl_config.o)

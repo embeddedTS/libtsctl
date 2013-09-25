@@ -83,6 +83,9 @@ Arch *ArchBBInit() {
   static Arch *baseboard=0;
   if (baseboard) return baseboard;
   int model = BaseBoardIdGet();
+#ifdef ARCH_CUSTOM_BB
+#include "custom_bb.c"
+#endif
   switch (model) {
 #ifdef ARCH_81X0
   case 0x8100:
@@ -110,8 +113,17 @@ Arch *ArchBBInit() {
 Arch *ArchInit() {
   static Arch *hardware=0;
   if (hardware) return hardware;
-  ThreadInit(); 
+  ThreadInit();
+#ifdef ARCH_7670
+  // currently 7670 is prototype and we don't have a way to detect it
+  // only include this arch by itself, and only run binary on 7670
+  hardware = ts7670ArchInit();
+  return hardware;
+#endif
   int cpu = TSCPUGet();
+#ifdef ARCH_CUSTOM_CPU
+#include "custom_cpu.c"
+#endif
   if (cpu == CPU_CAVIUM) {
 #ifdef ARCH_4500
     hardware = ts4500ArchInit();

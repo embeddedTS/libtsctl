@@ -1014,7 +1014,7 @@ void CANStop() {
   SJA1000CANRunning = 0;
 }
 
-#include "socket.c"
+#include "socket.h"
 #include "Thread.h"
 
 void *CANStart(void *arg) {
