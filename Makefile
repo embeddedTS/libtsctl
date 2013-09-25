@@ -21,6 +21,11 @@ vpath %.cpp . ts
 vpath %.c . ts
 vpath %.o $(DIR)
 vpath %.a $(DIR)
+ifeq ($(DIR_CUSTOM))
+vpath %.cpp $(DIR_CUSTOM)
+vpath %.c $(DIR_CUSTOM)
+-include $(DIR_CUSTOM)/Makefile
+endif
 
 ifeq ($(DEBUG),)
 CFLAGS+=-Os
