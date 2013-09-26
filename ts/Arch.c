@@ -5,7 +5,7 @@
 #include "FPGA.c"
 #include "HashTable.c"
 #include "BaseBoard.c"
-#include "ts.c"
+#include "ts.h"
 #include "Lock.h"
 #include "ArchArch.h"
 
@@ -119,12 +119,6 @@ Arch *ArchInit() {
   static Arch *hardware=0;
   if (hardware) return hardware;
   ThreadInit();
-#ifdef ARCH_7670
-  // currently 7670 is prototype and we don't have a way to detect it
-  // only include this arch by itself, and only run binary on 7670
-  hardware = ts7670ArchInit();
-  return hardware;
-#endif
   int cpu = TSCPUGet();
 #ifdef ARCH_CUSTOM
   hardware = ArchCustomInit(cpu);
@@ -150,6 +144,9 @@ Arch *ArchInit() {
 #endif
 #ifdef ARCH_4800
     case 0x4800: hardware = ts4800ArchInit(); break;
+#endif
+#ifdef ARCH_7670
+    case 0x7670: hardware = ts7670ArchInit(); break;
 #endif
     }
   }

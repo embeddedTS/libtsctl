@@ -11,6 +11,8 @@
 #include "CacheBus.h"
 #include "PhysicalDIO.h"
 #include "AggregateDIO.h"
+#include "DIOTWI.h"
+
 /*
 #include "SJA1000CAN.h"
 */
@@ -51,7 +53,7 @@ ts7670DIORaw ts7670DIORaw0;
 PhysicalDIO ts7670DIOA;
 AggregateDIO ts7670DIO0;
 unsigned char ts7670DIOCapabilitiesA[160];
-
+DIOTWI ts7670TWI0;
 
 unsigned ts7670DIOCacheBus_WO[147];
 unsigned ts7670DIOCacheBus_IBit[147];
@@ -160,6 +162,14 @@ DIO *ts7670__DIOInit1(DIO *dio,int inst) {
 			 ts7670__DIORawInit0(0,0));
 }
 
+TWI *ts7670__TWIInit0(TWI *twi,int inst) {
+  ts7670TWI0.TW_CLK=3*32+24;
+  ts7670TWI0.TW_DAT=3*32+25;
+  ts7670TWI0.Speed=400000;
+  if (!ts7670TWI0.LockNum) ts7670TWI0.LockNum = ThreadMutexAllocate(1);
+  return DIOTWIInit(&ts7670TWI0,ts7670__DIOInit0(0,0),ts7670__TimeInit0(0,0));
+}
+
 void *ts7670Function(int class,int inst) {
   switch(class) {
   case ClassSystem:
@@ -198,6 +208,7 @@ void *ts7670Function(int class,int inst) {
     }
   case ClassTWI:
     switch (inst) {
+    case 0: return ts7670__TWIInit0;
     default: return 0;
     }
   case ClassCAN:

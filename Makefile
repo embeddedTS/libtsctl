@@ -21,9 +21,10 @@ vpath %.cpp . ts
 vpath %.c . ts
 vpath %.o $(DIR)
 vpath %.a $(DIR)
-ifeq ($(DIR_CUSTOM))
-vpath %.cpp $(DIR_CUSTOM)
-vpath %.c $(DIR_CUSTOM)
+ifeq ($(DIR_CUSTOM),)
+else
+vpath %.cpp . ts $(DIR_CUSTOM)
+vpath %.c . ts $(DIR_CUSTOM)
 -include $(DIR_CUSTOM)/Makefile
 endif
 
@@ -52,7 +53,7 @@ $(DIR)/MapDump: $(addprefix $(DIR)/,MapDump.o Arch.o NoThread.o $(ARCHLIBS)) -lt
 $(DIR)/%.o: %.c
 	$(CC) $(CFLAGS) $(CPPFLAGS) -c -o $@ $<
 
-$(DIR)/libtsctlutil.a: $(addprefix $(DIR)/,Arch.o dioctlConfig.o shell.o opt.o HashTable.o IteratorHashTable.o tcp.o http.o Stream.o socket.o LookupRef.o)
+$(DIR)/libtsctlutil.a: $(addprefix $(DIR)/,Arch.o dioctlConfig.o shell.o opt.o HashTable.o IteratorHashTable.o tcp.o http.o Stream.o socket.o LookupRef.o ts.o)
 	ar -r $@ $^
 
 $(DIR)/libts81x0.a: $(addprefix $(DIR)/,ts81x0Arch.o ts8100_dioctl_config.o ts8160_dioctl_config.o)
@@ -61,7 +62,7 @@ $(DIR)/libts81x0.a: $(addprefix $(DIR)/,ts81x0Arch.o ts8100_dioctl_config.o ts81
 $(DIR)/libts8200.a: $(addprefix $(DIR)/,ts8200Arch.o ts8200_dioctl_config.o)
 	ar -r $@ $^
 
-$(DIR)/libts7670.a: $(addprefix $(DIR)/,ts7670Arch.o MMapBus.o DummyBus.o LocalSystem.o SystemTime.o ts7670Pin.o ts7670DIORaw.o CacheBus.o PhysicalDIO.o AggregateDIO.o)
+$(DIR)/libts7670.a: $(addprefix $(DIR)/,ts7670Arch.o MMapBus.o DummyBus.o LocalSystem.o SystemTime.o ts7670Pin.o ts7670DIORaw.o CacheBus.o PhysicalDIO.o AggregateDIO.o DIOTWI.o)
 	ar -r $@ $^
 
 $(DIR)/libts8390.a: $(addprefix $(DIR)/,ts8390Arch.o ts8390_dioctl_config.o)
