@@ -300,11 +300,14 @@ DIO *ts4200__DIOInit4(DIO *dio,int inst) {
   return PhysicalDIOInit(&ts4200DIOA,ts4200__BusInit3(0,3),
 			 ts4200__DIORawInit3(0,3));
 }
-
+/*
+This DIO causes issues with DIO testing and DIO numbering for base board
+and PC104 banks due to there not being a corresponding DIORaw object.
+Commented out until we can fix the problem.
 DIO *ts4200__DIOInit5(DIO *dio,int inst) {
   return ts4200DIOInit(&allDIO);
 }
-
+*/
 TWI *ts4200__TWIInit0(TWI *twi,int inst) {
   ts4200TWI0.TW_CLK=24;
   ts4200TWI0.TW_DAT=23;
@@ -370,7 +373,7 @@ void *ts4200Function(int class,int inst) {
     case 2: return ts4200__DIOInit2;
     case 3: return ts4200__DIOInit3;
     case 4: return ts4200__DIOInit4;
-    case 5: return ts4200__DIOInit5;
+      //    case 5: return ts4200__DIOInit5;
     default: return 0;
     }
   case ClassTWI:
