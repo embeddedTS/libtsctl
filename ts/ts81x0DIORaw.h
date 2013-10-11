@@ -1,5 +1,6 @@
 #ifndef __ts81x0DIORaw_h
 #define __ts81x0DIORaw_h
+#include "Bus.h"
 #undef FUNC
 #ifndef SWIGGY
 #define FUNC(x) (*x)
