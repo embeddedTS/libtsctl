@@ -8,19 +8,7 @@
 
 void *ts8900PinInit(ts8900Pin *pin,void *parent,void *bus,int start) {
   if (pin->InitStatus > 0) return pin;
-  /*
-  ArchInfo *cur = ts8900_ArchInfo.parent;
-  int i;
 
-  pin->start = 0;
-  while (cur) {
-    for (i=0;i<cur->Instances[CLASS_DIORaw];i++) {
-      DIORaw *raw = cur->DIORawInit(0,i);
-      pin->start += raw->Count(raw);
-    }
-    cur = cur->parent;
-  }
-  */
   pin->LockBase = ((Pin *)parent)->LockBase;
   pin->Init = (void *)ts8900PinInit;
   pin->Fini = (void *)ts8900PinFini;
