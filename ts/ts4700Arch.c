@@ -1,7 +1,6 @@
 #include "Thread.h"
 #include "arch.h"
 #include "ArchArch.h"
-#include "ts4700.h"
 #include "DummyBus.h"
 #include "MMapBus.h"
 #include "SystemTime.h"

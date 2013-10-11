@@ -16,7 +16,6 @@
 #include "DIOSPI.h"
 #include "LocalSystem.h"
 #include "SJA1000CAN.h"
-#include "ts4200.h"
 #include "ts4200DIO.h"
 extern char *ts4200_dioctl_config[];
 #include "ts4200_dioctl_config.c"

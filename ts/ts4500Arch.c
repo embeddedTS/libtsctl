@@ -20,7 +20,6 @@
 #include "DummyBus.h"
 #include "WBSPI.h"
 #include "baudtab.h"
-#include "ts4500.h"
 extern char *ts4500_dioctl_config[];
 #include "ts4500_dioctl_config.c"
 

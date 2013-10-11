@@ -19,7 +19,6 @@
 #include "DummyBus.h"
 #include "WBWindowBus.h"
 #include "LocalSystem.h"
-#include "ts4800.h"
 extern char *ts4800_dioctl_config[];
 #include "ts4800_dioctl_config.c"
 
