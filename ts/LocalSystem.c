@@ -252,21 +252,7 @@ int LocalSystemClassCount(LocalSystem *sys) {
 }
 
 int LocalSystemInstanceCount(LocalSystem *sys,int class) {
-#if 1
   return ArchClassCount(ArchInit(),class,1);
-#else
-  int i,n=0;
-  ArchInfo *arch = ArchFirst;
-
-  if (class < 0 || class >= ClassesCount) return 0;
-  while (arch) {
-    if (arch->ArchInit() > 0) {
-      n += arch->Instances[class];
-    }
-    arch = arch->next;
-  }
-  return n;  
-  #endif
 }
 
 int LocalSystemAPICount(LocalSystem *sys,int class) {
@@ -329,27 +315,10 @@ ConnectionWaitInf *LocalSystemConnWaitInfo(LocalSystem *sys) {
 }
 
 SystemResult LocalSystemCANBusGet(LocalSystem *sys,int CANInst) {
-#if 1
   if ((ArchInit())->CANBusId) {
     return (ArchInit())->CANBusId(CANInst);
   }
   return SystemErrorNoSuchCANInstance;
-#else
-  if (CANInst >= LocalSystemInstanceCount(sys,ClassCAN)) {
-    return SystemErrorNoSuchCANInstance;
-  } else {
-    ArchInfo *arch = ArchFirst;
-    while (arch) {
-      if (arch->Instances[ClassCAN] > CANInst) {
-	return arch->CANBusNum[CANInst];
-      }
-      CANInst -= arch->Instances[ClassCAN];
-      arch = arch->next;
-    }
-    // BUG: what if CAN instance is not in a primary architecture?
-  }
-  return SystemErrorNoSuchCANInstance; // should not reach here!
-#endif
 }
 
 extern const char build[];
