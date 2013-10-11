@@ -2,7 +2,6 @@
 #define AtmelAT91SPI_c
 #include "AtmelAT91SPI.h"
 #include "Thread.h"
-#include "Log.h"
 
 // bus maps the AtmelAT91 SPI registers (p.403) (p.19)
 // SPI0: 0xFFFC8000
