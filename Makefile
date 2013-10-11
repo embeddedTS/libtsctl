@@ -43,7 +43,7 @@ $(shell mkdir -p $(DIR))
 $(DIR)/libtsctl-pthread.a: $(addprefix $(DIR)/,$(ARCHLIBS) PThread.o libtsctlutil.a)
 	ar -r $@ $^
 
-$(DIR)/libtsctl.a: $(addprefix $(DIR)/,$(ARCHLIBS) NoThread.o libtsctlutil.a)
+$(DIR)/libtsctl.a: $(addprefix $(DIR)/,$(ARCHLIBS) Arch.o NoThread.o dioctlConfig.o shell.o opt.o HashTable.o IteratorHashTable.o tcp.o http.o Stream.o socket.o LookupRef.o ts.o)
 	ar -r $@ $^
 
 MapDump: $(DIR)/MapDump
