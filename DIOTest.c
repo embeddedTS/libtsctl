@@ -68,9 +68,15 @@ int main(int argc,char *argv[]) {
   }
   // look up how the DIOs are connected on the base board
   maxconn = Lookup(sys,"attrib.%X.Wire.MaxConnections",bb);
-  //printf("Max connections: %d\n",maxconn);
+  if (maxconn <= 0) {
+    printf("Error: Max connections=%d\n",maxconn);
+    return 1;
+  }
   wires = Lookup(sys,"attrib.%X.Wire.Count",bb);
-  //printf("Wires: %d\n",wires);
+  if (wires <= 0) {
+    printf("Error: Wires=%d\n",wires);
+    return 1;
+  }
   dionum = malloc(sizeof(int) * wires * maxconn);
   dioval = malloc(sizeof(int) * wires * maxconn);
   diocap = malloc(sizeof(int) * wires * maxconn);
