@@ -40,8 +40,6 @@ PRODUCTS=tsctl CAN2 CANTx CANDiag CANRx diotoggle spi8200 ts8160ctl DIOTest canc
 
 $(shell mkdir -p $(DIR))
 
-libtsctl-export.h:
-	cpp -Its -D__NO_SYSTEM_INCLUDES ts/libtsctl.h > libtsctl-export.h
 $(DIR)/libtsctl-pthread.a: $(addprefix $(DIR)/,$(ARCHLIBS) PThread.o libtsctlutil.a)
 	ar -r $@ $^
 
@@ -202,4 +200,4 @@ clean:
 	@rm -rf $(DIR)
 	@rm -f $(PRODUCTS) tsctl_wrap.* *~ *.py
 
-.PHONY: clean libtsctl-export.h
+.PHONY: clean
