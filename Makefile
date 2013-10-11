@@ -40,7 +40,7 @@ PRODUCTS=tsctl CAN2 CANTx CANDiag CANRx diotoggle spi8200 ts8160ctl DIOTest canc
 
 $(shell mkdir -p $(DIR))
 
-$(DIR)/libtsctl-pthread.a: $(addprefix $(DIR)/,$(ARCHLIBS) PThread.o libtsctlutil.a)
+$(DIR)/libtsctl-pthread.a: $(addprefix $(DIR)/,$(ARCHLIBS) PThread.o dioctlConfig.o shell.o opt.o HashTable.o IteratorHashTable.o tcp.o http.o Stream.o socket.o LookupRef.o ts.o)
 	ar -r $@ $^
 
 $(DIR)/libtsctl.a: $(addprefix $(DIR)/,$(ARCHLIBS) Arch.o NoThread.o dioctlConfig.o shell.o opt.o HashTable.o IteratorHashTable.o tcp.o http.o Stream.o socket.o LookupRef.o ts.o)
