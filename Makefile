@@ -32,6 +32,7 @@ ifeq ($(DEBUG),)
 CFLAGS+=-Os
 else
 CFLAGS+=-g
+LDFLAGS+=-g
 endif
 CPPFLAGS=$(CFLAGS)
 
@@ -56,7 +57,7 @@ $(DIR)/%.o: %.c
 $(DIR)/libtsctlutil.a: $(addprefix $(DIR)/,Arch.o dioctlConfig.o shell.o opt.o HashTable.o IteratorHashTable.o tcp.o http.o Stream.o socket.o LookupRef.o ts.o)
 	ar -r $@ $^
 
-$(DIR)/libts81x0.a: $(addprefix $(DIR)/,ts81x0Arch.o ts8100_dioctl_config.o ts8160_dioctl_config.o)
+$(DIR)/libts81x0.a: $(addprefix $(DIR)/,ts81x0Arch.o ts81x0Pin.o ts81x0DIORaw.o ts8100_dioctl_config.o ts8160_dioctl_config.o)
 	ar -r $@ $^
 
 $(DIR)/libts8200.a: $(addprefix $(DIR)/,ts8200Arch.o ts8200_dioctl_config.o)
