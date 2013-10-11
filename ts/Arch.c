@@ -92,7 +92,7 @@ Arch *ArchBBInit() {
   if (baseboard) return baseboard;
 #endif
   switch (model) {
-#ifdef ARCH_81X0
+#ifdef ARCH_81x0
   case 0x8100:
   case 0x8160: baseboard = ts81x0ArchInit(model); break;
 #endif
@@ -119,6 +119,7 @@ Arch *ArchInit() {
   static Arch *hardware=0;
   if (hardware) return hardware;
   ThreadInit();
+  dioctl_config_add2(0,0,0);
   int cpu = TSCPUGet();
 #ifdef ARCH_CUSTOM
   hardware = ArchCustomInit(cpu);
@@ -138,6 +139,7 @@ Arch *ArchInit() {
     case 0x7700:
     case 0x4700: 
     case 0x4710: 
+    case 0x4712: 
     case 0x4720: 
     case 0x4740: 
       hardware = ts4700ArchInit(model); break;
@@ -186,7 +188,7 @@ int ArchClassCount(Arch *hw,unsigned class,int recurse) {
   int i = 0;
 
   while (hw) {
-    while (hw->Function(class,i++));
+    while (hw->Function(class,i)) i++;
     if (!recurse) break;
     hw = hw->NextSubArch();
   }
