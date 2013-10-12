@@ -36,7 +36,7 @@ LDFLAGS+=-g
 endif
 CPPFLAGS=$(CFLAGS)
 
-PRODUCTS=tsctl CAN2 CANTx CANDiag CANRx diotoggle spi8200 ts8160ctl DIOTest canctl spictl NetTest NetTest2
+all: tsctl CAN2 CANTx CANDiag CANRx diotoggle spi8200 ts8160ctl DIOTest canctl spictl NetTest NetTest2
 
 $(shell mkdir -p $(DIR))
 
@@ -49,13 +49,10 @@ $(DIR)/libtsctl.a: $(addprefix $(DIR)/,$(ARCHLIBS) Arch.o NoThread.o dioctlConfi
 MapDump: $(DIR)/MapDump
 	@true
 
-$(DIR)/MapDump: $(addprefix $(DIR)/,MapDump.o Arch.o NoThread.o $(ARCHLIBS)) -ltsctl -lbz2 
+$(DIR)/MapDump: $(addprefix $(DIR)/,MapDump.o Arch.o NoThread.o $(ARCHLIBS) libtsctl.a) -lbz2 
 
 $(DIR)/%.o: %.c
 	$(CC) $(CFLAGS) $(CPPFLAGS) -c -o $@ $<
-
-$(DIR)/libtsctlutil.a: $(addprefix $(DIR)/,Arch.o dioctlConfig.o shell.o opt.o HashTable.o IteratorHashTable.o tcp.o http.o Stream.o socket.o LookupRef.o ts.o)
-	ar -r $@ $^
 
 $(DIR)/libts81x0.a: $(addprefix $(DIR)/,ts81x0Arch.o ts81x0Pin.o ts81x0DIORaw.o ts8100_dioctl_config.o ts8160_dioctl_config.o)
 	ar -r $@ $^
@@ -102,7 +99,7 @@ $(DIR)/libtscan1.a: $(addprefix $(DIR)/,tscan1Arch.o TSCAN1Bus.o SJA1000CAN.o)
 tsctl: $(DIR)/tsctl
 	@true
 
-$(DIR)/tsctl: $(addprefix $(DIR)/,tsctl.o Arch.o PThread.o command.o command1.o $(ARCHLIBS)) -lreadline -lcurses -ltsctlutil -lbz2 -lpthread
+$(DIR)/tsctl: $(addprefix $(DIR)/,tsctl.o Arch.o PThread.o command.o command1.o $(ARCHLIBS)) -lreadline -lcurses $(DIR)/libtsctl.a -lbz2 -lpthread
 
 # /usr/lib/libreadline.a
 
@@ -112,7 +109,7 @@ MapDump2: $(DIR)/MapDump2
 $(DIR)/MapDump2.o: MapDump2.cpp
 	$(CXX) $(CPPFLAGS) $(CXXFLAGS) -c $< -o $@
 
-$(DIR)/MapDump2: $(addprefix $(DIR)/,MapDump2.o Arch.o NoThread.o $(ARCHLIBS)) -ltsctlutil /usr/lib/gst/gstdeps/lib/libbz2.so /usr/lib/libstdc++.so.6
+$(DIR)/MapDump2: $(addprefix $(DIR)/,MapDump2.o Arch.o NoThread.o $(ARCHLIBS) libtsctl.a) /usr/lib/gst/gstdeps/lib/libbz2.so /usr/lib/libstdc++.so.6
 
 # -lstdc++
 
@@ -125,57 +122,57 @@ all: $(PRODUCTS)
 CAN2: $(DIR)/CAN2
 	@true
 
-$(DIR)/CAN2: $(addprefix $(DIR)/,CAN2.o Arch.o PThread.o $(ARCHLIBS)) -ltsctlutil -lbz2 -lpthread
+$(DIR)/CAN2: $(addprefix $(DIR)/,CAN2.o Arch.o PThread.o $(ARCHLIBS) libtsctl.a) -lbz2 -lpthread
 
 CAN3: $(DIR)/CAN3
 	@true
 
-$(DIR)/CAN3: $(addprefix $(DIR)/,CAN3.o Arch.o PThread.o $(ARCHLIBS)) -ltsctlutil -lbz2 -lpthread
+$(DIR)/CAN3: $(addprefix $(DIR)/,CAN3.o Arch.o PThread.o $(ARCHLIBS) libtsctl.a) -lbz2 -lpthread
 
 CANTx: $(DIR)/CANTx
 	@true
 
-$(DIR)/CANTx: $(addprefix $(DIR)/,CANTx.o Arch.o NoThread.o $(ARCHLIBS)) -ltsctlutil -lbz2
+$(DIR)/CANTx: $(addprefix $(DIR)/,CANTx.o Arch.o NoThread.o $(ARCHLIBS) libtsctl.a) -lbz2
 
 CANDiag: $(DIR)/CANDiag
 	@true
 
-$(DIR)/CANDiag: $(addprefix $(DIR)/,CANDiag.o Arch.o NoThread.o $(ARCHLIBS)) -ltsctlutil -lbz2
+$(DIR)/CANDiag: $(addprefix $(DIR)/,CANDiag.o Arch.o NoThread.o $(ARCHLIBS) libtsctl.a) -lbz2
 
 CANRx: $(DIR)/CANRx
 	@true
 
-$(DIR)/CANRx: $(addprefix $(DIR)/,CANRx.o Arch.o PThread.o $(ARCHLIBS)) -ltsctlutil -lbz2 -lpthread
+$(DIR)/CANRx: $(addprefix $(DIR)/,CANRx.o Arch.o PThread.o $(ARCHLIBS) libtsctl.a) -lbz2 -lpthread
 
 diotoggle: $(DIR)/diotoggle
 	@true
 
-$(DIR)/diotoggle: $(addprefix $(DIR)/,diotoggle.o Arch.o NoThread.o $(ARCHLIBS)) -ltsctlutil -lbz2
+$(DIR)/diotoggle: $(addprefix $(DIR)/,diotoggle.o Arch.o NoThread.o $(ARCHLIBS) libtsctl.a) -lbz2
 
 spi8200: $(DIR)/spi8200
 	@true
 
-$(DIR)/spi8200: $(addprefix $(DIR)/,spi8200.o Arch.o NoThread.o $(ARCHLIBS)) -ltsctlutil -lbz2
+$(DIR)/spi8200: $(addprefix $(DIR)/,spi8200.o Arch.o NoThread.o $(ARCHLIBS) libtsctl.a) -lbz2
 
 ts8160ctl: $(DIR)/ts8160ctl
 	@true
 
-$(DIR)/ts8160ctl: $(addprefix $(DIR)/,ts8160ctl.o Arch.o NoThread.o $(ARCHLIBS)) -ltsctlutil -lbz2
+$(DIR)/ts8160ctl: $(addprefix $(DIR)/,ts8160ctl.o Arch.o NoThread.o $(ARCHLIBS) libtsctl.a) -lbz2
 
 DIOTest: $(DIR)/DIOTest
 	@true
 
-$(DIR)/DIOTest: $(addprefix $(DIR)/,DIOTest.o Arch.o NoThread.o $(ARCHLIBS)) -ltsctlutil -lbz2
+$(DIR)/DIOTest: $(addprefix $(DIR)/,DIOTest.o Arch.o NoThread.o $(ARCHLIBS) libtsctl.a) -lbz2
 
 canctl: $(DIR)/canctl
 	@true
 
-$(DIR)/canctl: $(addprefix $(DIR)/,canctl.o Arch.o PThread.o $(ARCHLIBS)) -ltsctlutil -lbz2 -lpthread
+$(DIR)/canctl: $(addprefix $(DIR)/,canctl.o Arch.o PThread.o $(ARCHLIBS) libtsctl.a) -lbz2 -lpthread
 
 spictl: $(DIR)/spictl
 	@true
 
-$(DIR)/spictl: $(addprefix $(DIR)/,spictl.o Arch.o PThread.o $(ARCHLIBS)) -ltsctlutil -lbz2 -lpthread
+$(DIR)/spictl: $(addprefix $(DIR)/,spictl.o Arch.o PThread.o $(ARCHLIBS) libtsctl.a) -lbz2 -lpthread
 
 
 NetTest: $(DIR)/NetTest
