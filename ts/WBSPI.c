@@ -124,7 +124,6 @@ int WBSPIPreempt(WBSPI *spi) {
   */
 }
 
-#define USE_OLD
 /*
 0x40 is this reg:
 * base + 0x0: LUN register (R/W)
