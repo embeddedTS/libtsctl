@@ -5,14 +5,20 @@ ARCH?=noncavium
 DIR?=$(ARCH)
 ifeq ($(ARCH),cavium)
 SUPPORT?=4500 81x0 8200 8390 8820 8900 9490 relay8 dio24 can1
+CFLAGS+=-march=armv4
 endif
 ifeq ($(ARCH),noncavium)
 SUPPORT?=4200 4700 4800 81x0 8200 8390 8820 8900 9490 relay8 dio24 can1
+CFLAGS+=-march=armv4
 endif
+ifeq ($(ARCH),x86)
+SUPPORT=
+else
+endif
+CFLAGS+=-ffunction-sections -fdata-sections -D$(ARCH)=1 -Its
 SUPPORTFLAGS=$(SUPPORT:%=-DARCH_%)
-ARCHLIBS=$(SUPPORT:%=libts%.a)
-ARCHLINK=$(SUPPORT:%=-lts%)
-CFLAGS+=-march=armv4 -ffunction-sections -fdata-sections -D$(ARCH)=1 -Its
+ARCHLIBS=$(SUPPORT:%=libts%.a) libNone.a
+ARCHLINK=$(SUPPORT:%=-lts%) -lNone
 CFLAGS+=$(SUPPORTFLAGS)
 LDFLAGS+=-Wl,-gc-sections -L$(DIR)
 #DEPS=$(shell ls ts/*.[ch])
@@ -40,7 +46,7 @@ all: tsctl CAN2 CANTx CANDiag CANRx diotoggle spi8200 ts8160ctl DIOTest canctl s
 
 $(shell mkdir -p $(DIR))
 
-$(DIR)/libtsctl-pthread.a: $(addprefix $(DIR)/,$(ARCHLIBS) PThread.o dioctlConfig.o shell.o opt.o HashTable.o IteratorHashTable.o tcp.o http.o Stream.o socket.o LookupRef.o ts.o)
+$(DIR)/libtsctl-pthread.a: $(addprefix $(DIR)/,$(ARCHLIBS) Arch.o PThread.o dioctlConfig.o shell.o opt.o HashTable.o IteratorHashTable.o tcp.o http.o Stream.o socket.o LookupRef.o ts.o)
 	ar -r $@ $^
 
 $(DIR)/libtsctl.a: $(addprefix $(DIR)/,$(ARCHLIBS) Arch.o NoThread.o dioctlConfig.o shell.o opt.o HashTable.o IteratorHashTable.o tcp.o http.o Stream.o socket.o LookupRef.o ts.o)
@@ -73,6 +79,9 @@ $(DIR)/libts8900.a: $(addprefix $(DIR)/,ts8900Arch.o ts8900DIORaw.o ts8900Pin.o 
 	ar -r $@ $^
 
 $(DIR)/libts9490.a: $(addprefix $(DIR)/,ts9490Arch.o ts9490_dioctl_config.o)
+	ar -r $@ $^
+
+$(DIR)/libNone.a: $(addprefix $(DIR)/,NoneArch.o SystemTime.o LocalSystem.o)
 	ar -r $@ $^
 
 $(DIR)/libts4200.a: $(addprefix $(DIR)/,ts4200Arch.o DummyBus.o MMapBus.o TSMuxBus.o CacheBus.o ts4200Pin.o AtmelAT91DIORaw.o ts4200DIORaw.o SystemTime.o PhysicalDIO.o AggregateDIO.o DIOTWI.o DIOSPI.o LocalSystem.o SJA1000CAN.o ts4200DIO.o ts4200_dioctl_config.o)
@@ -162,7 +171,7 @@ $(DIR)/ts8160ctl: $(addprefix $(DIR)/,ts8160ctl.o Arch.o NoThread.o $(ARCHLIBS) 
 DIOTest: $(DIR)/DIOTest
 	@true
 
-$(DIR)/DIOTest: $(addprefix $(DIR)/,DIOTest.o Arch.o NoThread.o $(ARCHLIBS) libtsctl.a) -lbz2
+$(DIR)/DIOTest: $(addprefix $(DIR)/,DIOTest2.o Arch.o NoThread.o $(ARCHLIBS) libtsctl.a) -lbz2
 
 canctl: $(DIR)/canctl
 	@true

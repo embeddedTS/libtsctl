@@ -23,6 +23,7 @@ Arch *ts8390ArchInit();
 Arch *ts8820ArchInit();
 Arch *ts8900ArchInit();
 Arch *ts9490ArchInit();
+Arch *NoneArchInit();
 
 unsigned DIOCount();
 int ArchClassCount(Arch *hw,unsigned class,int recurse);

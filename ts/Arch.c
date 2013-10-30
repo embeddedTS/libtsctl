@@ -152,6 +152,7 @@ Arch *ArchInit() {
 #endif
     }
   }
+  if (!hardware) hardware = NoneArchInit();
   return hardware;
 }
 
