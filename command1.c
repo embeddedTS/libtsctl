@@ -1401,7 +1401,7 @@ int coWriteTagged(coParm,void **state,Stream *out,Stream *in,mode **mode,
   //if (!*state && (*mode)->InitState) (*mode)->InitState(state);
   WAITBYTES(1);
   byte = ReadInt8LE(in);
-  if (byte == 0x80) coReturn(-1); // void
+  if ((byte & 0xFF) == 0x80) coReturn(-1); // void
   co(isArray) = ( ((byte & 0x80) == 0) && (byte & 0x40)) ? 1 : 0;
   if (co(isArray)) {
     WAITBYTES(4);
