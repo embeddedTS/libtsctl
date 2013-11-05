@@ -1,7 +1,7 @@
 #include "ts/co.h"
 #include "command1.h"
 #include "libtsctl.h"
-#include "Net2.h"
+#include "NetTsctl.h"
 #include "Mode.h"
 #include "shell.h"
 
@@ -1477,7 +1477,7 @@ int coWriteTagged(coParm,void **state,Stream *out,Stream *in,mode **mode,
 	}
       } else {
 	for (co(j)=0;co(j)<co(width);co(j)++) {
-	  val = val + (ReadInt8LE(in) << (8*co(j)));
+	  val = val + (ReadUInt8LE(in) << (8*co(j)));
 	}
 	if (co(b) == 16) {
 	  WriteASCIIZ(out,"0x");
