@@ -1,7 +1,5 @@
 #ifndef __NetBus_H
 #define __NetBus_H
-#include "Net2.h"
-#include "Stream.h"
 #include "Bus.h"
 
 typedef struct NetBus NetBus;

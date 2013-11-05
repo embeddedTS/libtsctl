@@ -1,7 +1,5 @@
 #ifndef __NetDIO_H
 #define __NetDIO_H
-#include "Net2.h"
-#include "Stream.h"
 #include "DIO.h"
 
 typedef struct NetDIO NetDIO;

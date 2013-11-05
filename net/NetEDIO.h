@@ -1,7 +1,5 @@
 #ifndef __NetEDIO_H
 #define __NetEDIO_H
-#include "Net2.h"
-#include "Stream.h"
 #include "EDIO.h"
 
 typedef struct NetEDIO NetEDIO;

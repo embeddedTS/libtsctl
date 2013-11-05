@@ -1,7 +1,5 @@
 #ifndef __NetSystem_H
 #define __NetSystem_H
-#include "Net2.h"
-#include "Stream.h"
 #include "System.h"
 
 typedef struct NetSystem NetSystem;

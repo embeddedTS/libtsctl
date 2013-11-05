@@ -1,4 +1,5 @@
 #include "NetSPIctl.h"
+#include "Packet.h"
 
 static SPIAPI NetSPIctlAPI =  {
   .Init = (void *)NetSPIctlInit,

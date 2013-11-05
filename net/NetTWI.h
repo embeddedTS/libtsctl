@@ -1,7 +1,5 @@
 #ifndef __NetTWI_H
 #define __NetTWI_H
-#include "Net2.h"
-#include "Stream.h"
 #include "TWI.h"
 
 typedef struct NetTWI NetTWI;

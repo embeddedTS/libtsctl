@@ -1,7 +1,5 @@
 #ifndef __NetDIORaw_H
 #define __NetDIORaw_H
-#include "Net2.h"
-#include "Stream.h"
 #include "DIORaw.h"
 
 typedef struct NetDIORaw NetDIORaw;

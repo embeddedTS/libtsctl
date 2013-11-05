@@ -1,7 +1,5 @@
 #ifndef __NetMode_H
 #define __NetMode_H
-#include "Net2.h"
-#include "Stream.h"
 #include "Mode.h"
 
 typedef struct NetMode NetMode;

@@ -1,7 +1,5 @@
 #ifndef __NetSPI_H
 #define __NetSPI_H
-#include "Net2.h"
-#include "Stream.h"
 #include "SPI.h"
 
 typedef struct NetSPI NetSPI;

@@ -1,7 +1,5 @@
 #ifndef __NetAIO_H
 #define __NetAIO_H
-#include "Net2.h"
-#include "Stream.h"
 #include "AIO.h"
 
 typedef struct NetAIO NetAIO;

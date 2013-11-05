@@ -1,7 +1,5 @@
 #ifndef __NetPin_H
 #define __NetPin_H
-#include "Net2.h"
-#include "Stream.h"
 #include "Pin.h"
 
 typedef struct NetPin NetPin;
