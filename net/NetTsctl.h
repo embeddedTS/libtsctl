@@ -42,6 +42,8 @@ struct tsctl {
   int mode,count;
 };
 tsctl *TsctlClient(char *host,int mode);
+tsctl *TsctlClient2(Stream *st,int mode);
+
 enum {
 	NetSystemClass = 0,
 	NetBusClass = 1,
