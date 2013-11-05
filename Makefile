@@ -15,7 +15,7 @@ ifeq ($(ARCH),x86)
 SUPPORT=
 else
 endif
-CFLAGS+=-ffunction-sections -fdata-sections -D$(ARCH)=1 -Its
+CFLAGS+=-ffunction-sections -fdata-sections -D$(ARCH)=1 -Its -Inet
 SUPPORTFLAGS=$(SUPPORT:%=-DARCH_%)
 ARCHLIBS=$(SUPPORT:%=libts%.a) libNone.a
 ARCHLINK=$(SUPPORT:%=-lts%) -lNone
@@ -24,7 +24,7 @@ LDFLAGS+=-Wl,-gc-sections -L$(DIR)
 #DEPS=$(shell ls ts/*.[ch])
 #DEPS2=$(shell ls net/*.[ch])
 vpath %.cpp . ts
-vpath %.c . ts
+vpath %.c . ts net
 vpath %.o $(DIR)
 vpath %.a $(DIR)
 ifeq ($(DIR_CUSTOM),)
@@ -47,6 +47,9 @@ all: tsctl CAN2 CANTx CANDiag CANRx diotoggle spi8200 ts8160ctl DIOTest canctl s
 $(shell mkdir -p $(DIR))
 
 $(DIR)/libtsctl-pthread.a: $(addprefix $(DIR)/,$(ARCHLIBS) Arch.o PThread.o dioctlConfig.o shell.o opt.o HashTable.o IteratorHashTable.o tcp.o http.o Stream.o socket.o LookupRef.o ts.o)
+	ar -r $@ $^
+
+$(DIR)/libnettsctl.a: $(addprefix $(DIR)/,NetAIO.o NetBus.o NetCAN.o NetDIO.o NetDIORaw.o NetEDIO.o NetPin.o NetSPI.o NetSystem.o NetTime.o NetTsctl.o NetTWI.o)
 	ar -r $@ $^
 
 $(DIR)/libtsctl.a: $(addprefix $(DIR)/,$(ARCHLIBS) Arch.o NoThread.o dioctlConfig.o shell.o opt.o HashTable.o IteratorHashTable.o tcp.o http.o Stream.o socket.o LookupRef.o ts.o)
@@ -108,7 +111,7 @@ $(DIR)/libtscan1.a: $(addprefix $(DIR)/,tscan1Arch.o TSCAN1Bus.o SJA1000CAN.o)
 tsctl: $(DIR)/tsctl
 	@true
 
-$(DIR)/tsctl: $(addprefix $(DIR)/,tsctl.o Arch.o PThread.o command.o command1.o $(ARCHLIBS)) -lreadline -lcurses $(DIR)/libtsctl.a -lbz2 -lpthread
+$(DIR)/tsctl: $(addprefix $(DIR)/,tsctl.o Arch.o PThread.o command.o command1.o $(ARCHLIBS)) -lreadline -lcurses $(DIR)/libtsctl.a -lbz2 -lpthread $(DIR)/libnettsctl.a
 
 # /usr/lib/libreadline.a
 
