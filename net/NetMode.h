@@ -1,5 +1,6 @@
 #ifndef __NetMode_H
 #define __NetMode_H
+#include "NetTsctl.h"
 #include "Mode.h"
 
 typedef struct NetMode NetMode;

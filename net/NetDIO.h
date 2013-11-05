@@ -1,5 +1,6 @@
 #ifndef __NetDIO_H
 #define __NetDIO_H
+#include "NetTsctl.h"
 #include "DIO.h"
 
 typedef struct NetDIO NetDIO;

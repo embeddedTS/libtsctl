@@ -1,5 +1,6 @@
 #ifndef __NetTWI_H
 #define __NetTWI_H
+#include "NetTsctl.h"
 #include "TWI.h"
 
 typedef struct NetTWI NetTWI;

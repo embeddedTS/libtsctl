@@ -1,5 +1,6 @@
 #ifndef __NetSystem_H
 #define __NetSystem_H
+#include "NetTsctl.h"
 #include "System.h"
 
 typedef struct NetSystem NetSystem;

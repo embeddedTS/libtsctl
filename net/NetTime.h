@@ -1,5 +1,6 @@
 #ifndef __NetTime_H
 #define __NetTime_H
+#include "NetTsctl.h"
 #include "Time.h"
 
 typedef struct NetTime NetTime;

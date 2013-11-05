@@ -1,5 +1,6 @@
 #ifndef __NetBus_H
 #define __NetBus_H
+#include "NetTsctl.h"
 #include "Bus.h"
 
 typedef struct NetBus NetBus;

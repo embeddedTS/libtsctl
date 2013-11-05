@@ -1,5 +1,6 @@
 #ifndef __NetAIO_H
 #define __NetAIO_H
+#include "NetTsctl.h"
 #include "AIO.h"
 
 typedef struct NetAIO NetAIO;

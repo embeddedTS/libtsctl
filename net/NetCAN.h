@@ -1,5 +1,6 @@
 #ifndef __NetCAN_H
 #define __NetCAN_H
+#include "NetTsctl.h"
 #include "CAN.h"
 
 typedef struct NetCAN NetCAN;

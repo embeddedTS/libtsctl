@@ -1,5 +1,6 @@
 #ifndef __NetDIORaw_H
 #define __NetDIORaw_H
+#include "NetTsctl.h"
 #include "DIORaw.h"
 
 typedef struct NetDIORaw NetDIORaw;

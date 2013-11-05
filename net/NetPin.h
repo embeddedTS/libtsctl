@@ -1,5 +1,6 @@
 #ifndef __NetPin_H
 #define __NetPin_H
+#include "NetTsctl.h"
 #include "Pin.h"
 
 typedef struct NetPin NetPin;

@@ -69,6 +69,5 @@ enum {
 #include "NetSPI.h"
 #include "NetAIO.h"
 #include "NetEDIO.h"
-#endif
 
 #endif

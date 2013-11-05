@@ -1,5 +1,6 @@
 #ifndef __NetEDIO_H
 #define __NetEDIO_H
+#include "NetTsctl.h"
 #include "EDIO.h"
 
 typedef struct NetEDIO NetEDIO;
