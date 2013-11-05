@@ -16,4 +16,5 @@ static inline int FileBlockingSet(int fd,int on) {
 
 
 int ServerSocketNew(int port);
+int ClientSocketNew(char *host,int port);
 #endif
