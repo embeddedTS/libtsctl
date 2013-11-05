@@ -555,18 +555,18 @@ int8 ReadInt8LE(Stream *st) {
 }
 
 int16 ReadInt16LE(Stream *st) {
-  int byte1,byte2;
-  byte1 = st->ReadChar(st);
-  byte2 = st->ReadChar(st);
+  unsigned int byte1,byte2;
+  byte1 = (st->ReadChar(st) & 0xFF);
+  byte2 = (st->ReadChar(st) & 0xFF);
   return byte1 + 256*byte2;
 }
 
 int32 ReadInt32LE(Stream *st) {
-  int byte1,byte2,byte3,byte4;
-  byte1 = st->ReadChar(st);
-  byte2 = st->ReadChar(st);
-  byte3 = st->ReadChar(st);
-  byte4 = st->ReadChar(st);
+  unsigned int byte1,byte2,byte3,byte4;
+  byte1 = (st->ReadChar(st) & 0xFF);
+  byte2 = (st->ReadChar(st) & 0xFF);
+  byte3 = (st->ReadChar(st) & 0xFF);
+  byte4 = (st->ReadChar(st) & 0xFF);
   return byte1 + 256*byte2 + 256*256*byte3 + 256*256*256*byte4;
 }
 
