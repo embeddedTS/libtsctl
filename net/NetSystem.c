@@ -52,10 +52,10 @@ int32 NetSystemClassCount(NetSystem *ob) {
     }
   }
   if (ReadInt16LE(ob->in) != 0x0000) longjmp(ob->conn->exception,1);
-  if (ReadInt8LE(ob->in) != 0x00) longjmp(ob->conn->exception,2);
-  if (ReadInt8LE(ob->in) != 0x13) longjmp(ob->conn->exception,3);
+  if (ReadUInt8LE(ob->in) != 0x00) longjmp(ob->conn->exception,2);
+  if (ReadUInt8LE(ob->in) != 0x13) longjmp(ob->conn->exception,3);
   ret = ReadInt32LE(out);
-  if (ReadInt8LE(ob->in) != 0x80) longjmp(ob->conn->exception,2);
+  if (ReadUInt8LE(ob->in) != 0x80) longjmp(ob->conn->exception,2);
   return ret;
 } 
 
@@ -75,10 +75,10 @@ int32 NetSystemInstanceCount(NetSystem *ob,int32 ClassNumber) {
     }
   }
   if (ReadInt16LE(ob->in) != 0x0000) longjmp(ob->conn->exception,1);
-  if (ReadInt8LE(ob->in) != 0x01) longjmp(ob->conn->exception,2);
-  if (ReadInt8LE(ob->in) != 0x13) longjmp(ob->conn->exception,3);
+  if (ReadUInt8LE(ob->in) != 0x01) longjmp(ob->conn->exception,2);
+  if (ReadUInt8LE(ob->in) != 0x13) longjmp(ob->conn->exception,3);
   ret = ReadInt32LE(out);
-  if (ReadInt8LE(ob->in) != 0x80) longjmp(ob->conn->exception,2);
+  if (ReadUInt8LE(ob->in) != 0x80) longjmp(ob->conn->exception,2);
   return ret;
 } 
 
@@ -98,10 +98,10 @@ int32 NetSystemAPICount(NetSystem *ob,int32 ClassNumber) {
     }
   }
   if (ReadInt16LE(ob->in) != 0x0000) longjmp(ob->conn->exception,1);
-  if (ReadInt8LE(ob->in) != 0x02) longjmp(ob->conn->exception,2);
-  if (ReadInt8LE(ob->in) != 0x13) longjmp(ob->conn->exception,3);
+  if (ReadUInt8LE(ob->in) != 0x02) longjmp(ob->conn->exception,2);
+  if (ReadUInt8LE(ob->in) != 0x13) longjmp(ob->conn->exception,3);
   ret = ReadInt32LE(out);
-  if (ReadInt8LE(ob->in) != 0x80) longjmp(ob->conn->exception,2);
+  if (ReadUInt8LE(ob->in) != 0x80) longjmp(ob->conn->exception,2);
   return ret;
 } 
 
@@ -120,10 +120,10 @@ int32 NetSystemLockCount(NetSystem *ob) {
     }
   }
   if (ReadInt16LE(ob->in) != 0x0000) longjmp(ob->conn->exception,1);
-  if (ReadInt8LE(ob->in) != 0x03) longjmp(ob->conn->exception,2);
-  if (ReadInt8LE(ob->in) != 0x13) longjmp(ob->conn->exception,3);
+  if (ReadUInt8LE(ob->in) != 0x03) longjmp(ob->conn->exception,2);
+  if (ReadUInt8LE(ob->in) != 0x13) longjmp(ob->conn->exception,3);
   ret = ReadInt32LE(out);
-  if (ReadInt8LE(ob->in) != 0x80) longjmp(ob->conn->exception,2);
+  if (ReadUInt8LE(ob->in) != 0x80) longjmp(ob->conn->exception,2);
   return ret;
 } 
 
@@ -142,20 +142,20 @@ LockHolderInf* NetSystemLockHolderInfo(NetSystem *ob) {
     }
   }
   if (ReadInt16LE(ob->in) != 0x0000) longjmp(ob->conn->exception,1);
-  if (ReadInt8LE(ob->in) != 0x04) longjmp(ob->conn->exception,2);
-  if (ReadInt8LE(ob->in) != 0x70) longjmp(ob->conn->exception,3);
+  if (ReadUInt8LE(ob->in) != 0x04) longjmp(ob->conn->exception,2);
+  if (ReadUInt8LE(ob->in) != 0x70) longjmp(ob->conn->exception,3);
   ret_len = ReadInt32LE(ob->in);
   ret = ArrayAlloc(ret_len,8);
   {
     int i;
     for(i=0;i<ret_len;i++) {
-      if (ReadInt8LE(ob->in) != 0x13) longjmp(ob->conn->exception,3);
+      if (ReadUInt8LE(ob->in) != 0x13) longjmp(ob->conn->exception,3);
       ret[i].pid = ReadInt32LE(out);
-      if (ReadInt8LE(ob->in) != 0x13) longjmp(ob->conn->exception,3);
+      if (ReadUInt8LE(ob->in) != 0x13) longjmp(ob->conn->exception,3);
       ret[i].count = ReadInt32LE(out);
     }
   }
-  if (ReadInt8LE(ob->in) != 0x80) longjmp(ob->conn->exception,2);
+  if (ReadUInt8LE(ob->in) != 0x80) longjmp(ob->conn->exception,2);
   return ret;
 } 
 
@@ -174,20 +174,20 @@ ConnectionWaitInf* NetSystemConnWaitInfo(NetSystem *ob) {
     }
   }
   if (ReadInt16LE(ob->in) != 0x0000) longjmp(ob->conn->exception,1);
-  if (ReadInt8LE(ob->in) != 0x05) longjmp(ob->conn->exception,2);
-  if (ReadInt8LE(ob->in) != 0x70) longjmp(ob->conn->exception,3);
+  if (ReadUInt8LE(ob->in) != 0x05) longjmp(ob->conn->exception,2);
+  if (ReadUInt8LE(ob->in) != 0x70) longjmp(ob->conn->exception,3);
   ret_len = ReadInt32LE(ob->in);
   ret = ArrayAlloc(ret_len,8);
   {
     int i;
     for(i=0;i<ret_len;i++) {
-      if (ReadInt8LE(ob->in) != 0x13) longjmp(ob->conn->exception,3);
+      if (ReadUInt8LE(ob->in) != 0x13) longjmp(ob->conn->exception,3);
       ret[i].pid = ReadInt32LE(out);
-      if (ReadInt8LE(ob->in) != 0x13) longjmp(ob->conn->exception,3);
+      if (ReadUInt8LE(ob->in) != 0x13) longjmp(ob->conn->exception,3);
       ret[i].wait = ReadInt32LE(out);
     }
   }
-  if (ReadInt8LE(ob->in) != 0x80) longjmp(ob->conn->exception,2);
+  if (ReadUInt8LE(ob->in) != 0x80) longjmp(ob->conn->exception,2);
   return ret;
 } 
 
@@ -207,10 +207,10 @@ SystemResult NetSystemCANBusGet(NetSystem *ob,int32 CANInstance) {
     }
   }
   if (ReadInt16LE(ob->in) != 0x0000) longjmp(ob->conn->exception,1);
-  if (ReadInt8LE(ob->in) != 0x06) longjmp(ob->conn->exception,2);
-  if (ReadInt8LE(ob->in) != 0xC0) longjmp(ob->conn->exception,3);
+  if (ReadUInt8LE(ob->in) != 0x06) longjmp(ob->conn->exception,2);
+  if (ReadUInt8LE(ob->in) != 0xC0) longjmp(ob->conn->exception,3);
   ret = ReadInt32LE(out);
-  if (ReadInt8LE(ob->in) != 0x80) longjmp(ob->conn->exception,2);
+  if (ReadUInt8LE(ob->in) != 0x80) longjmp(ob->conn->exception,2);
   return ret;
 } 
 
@@ -229,10 +229,10 @@ uint32 NetSystemBuildTime(NetSystem *ob) {
     }
   }
   if (ReadInt16LE(ob->in) != 0x0000) longjmp(ob->conn->exception,1);
-  if (ReadInt8LE(ob->in) != 0x07) longjmp(ob->conn->exception,2);
-  if (ReadInt8LE(ob->in) != 0x03) longjmp(ob->conn->exception,3);
+  if (ReadUInt8LE(ob->in) != 0x07) longjmp(ob->conn->exception,2);
+  if (ReadUInt8LE(ob->in) != 0x03) longjmp(ob->conn->exception,3);
   ret = ReadUInt32LE(out);
-  if (ReadInt8LE(ob->in) != 0x80) longjmp(ob->conn->exception,2);
+  if (ReadUInt8LE(ob->in) != 0x80) longjmp(ob->conn->exception,2);
   return ret;
 } 
 
@@ -251,10 +251,10 @@ int32 NetSystemModelId(NetSystem *ob) {
     }
   }
   if (ReadInt16LE(ob->in) != 0x0000) longjmp(ob->conn->exception,1);
-  if (ReadInt8LE(ob->in) != 0x08) longjmp(ob->conn->exception,2);
-  if (ReadInt8LE(ob->in) != 0x13) longjmp(ob->conn->exception,3);
+  if (ReadUInt8LE(ob->in) != 0x08) longjmp(ob->conn->exception,2);
+  if (ReadUInt8LE(ob->in) != 0x13) longjmp(ob->conn->exception,3);
   ret = ReadInt32LE(out);
-  if (ReadInt8LE(ob->in) != 0x80) longjmp(ob->conn->exception,2);
+  if (ReadUInt8LE(ob->in) != 0x80) longjmp(ob->conn->exception,2);
   return ret;
 } 
 
@@ -273,10 +273,10 @@ int32 NetSystemBaseBoardId(NetSystem *ob) {
     }
   }
   if (ReadInt16LE(ob->in) != 0x0000) longjmp(ob->conn->exception,1);
-  if (ReadInt8LE(ob->in) != 0x09) longjmp(ob->conn->exception,2);
-  if (ReadInt8LE(ob->in) != 0x13) longjmp(ob->conn->exception,3);
+  if (ReadUInt8LE(ob->in) != 0x09) longjmp(ob->conn->exception,2);
+  if (ReadUInt8LE(ob->in) != 0x13) longjmp(ob->conn->exception,3);
   ret = ReadInt32LE(out);
-  if (ReadInt8LE(ob->in) != 0x80) longjmp(ob->conn->exception,2);
+  if (ReadUInt8LE(ob->in) != 0x80) longjmp(ob->conn->exception,2);
   return ret;
 } 
 
@@ -295,10 +295,10 @@ int32 NetSystemMapLength(NetSystem *ob) {
     }
   }
   if (ReadInt16LE(ob->in) != 0x0000) longjmp(ob->conn->exception,1);
-  if (ReadInt8LE(ob->in) != 0x0A) longjmp(ob->conn->exception,2);
-  if (ReadInt8LE(ob->in) != 0x13) longjmp(ob->conn->exception,3);
+  if (ReadUInt8LE(ob->in) != 0x0A) longjmp(ob->conn->exception,2);
+  if (ReadUInt8LE(ob->in) != 0x13) longjmp(ob->conn->exception,3);
   ret = ReadInt32LE(out);
-  if (ReadInt8LE(ob->in) != 0x80) longjmp(ob->conn->exception,2);
+  if (ReadUInt8LE(ob->in) != 0x80) longjmp(ob->conn->exception,2);
   return ret;
 } 
 
@@ -318,8 +318,8 @@ int8* NetSystemMapGet(NetSystem *ob,int32 MapIndex,int32 Value[1]) {
     }
   }
   if (ReadInt16LE(ob->in) != 0x0000) longjmp(ob->conn->exception,1);
-  if (ReadInt8LE(ob->in) != 0x0B) longjmp(ob->conn->exception,2);
-  if (ReadInt8LE(ob->in) != 0x50) longjmp(ob->conn->exception,3);
+  if (ReadUInt8LE(ob->in) != 0x0B) longjmp(ob->conn->exception,2);
+  if (ReadUInt8LE(ob->in) != 0x50) longjmp(ob->conn->exception,3);
   ret_len = ReadInt32LE(ob->in);
   ret = ArrayAlloc(ret_len,1);
   {
@@ -328,7 +328,7 @@ int8* NetSystemMapGet(NetSystem *ob,int32 MapIndex,int32 Value[1]) {
       ret[i] = ReadInt8LE(out);
     }
   }
-  if (ReadInt8LE(ob->in) != 0x53) longjmp(ob->conn->exception,3);
+  if (ReadUInt8LE(ob->in) != 0x53) longjmp(ob->conn->exception,3);
   ReadInt32LE(out);
   {
     int i;
@@ -336,7 +336,7 @@ int8* NetSystemMapGet(NetSystem *ob,int32 MapIndex,int32 Value[1]) {
       Value[i] = ReadInt32LE(out);
     }
   }
-  if (ReadInt8LE(ob->in) != 0x80) longjmp(ob->conn->exception,2);
+  if (ReadUInt8LE(ob->in) != 0x80) longjmp(ob->conn->exception,2);
   return ret;
 } 
 
@@ -360,10 +360,10 @@ int32 NetSystemMapLookup(NetSystem *ob,const int8* String) {
     }
   }
   if (ReadInt16LE(ob->in) != 0x0000) longjmp(ob->conn->exception,1);
-  if (ReadInt8LE(ob->in) != 0x0C) longjmp(ob->conn->exception,2);
-  if (ReadInt8LE(ob->in) != 0x13) longjmp(ob->conn->exception,3);
+  if (ReadUInt8LE(ob->in) != 0x0C) longjmp(ob->conn->exception,2);
+  if (ReadUInt8LE(ob->in) != 0x13) longjmp(ob->conn->exception,3);
   ret = ReadInt32LE(out);
-  if (ReadInt8LE(ob->in) != 0x80) longjmp(ob->conn->exception,2);
+  if (ReadUInt8LE(ob->in) != 0x80) longjmp(ob->conn->exception,2);
   return ret;
 } 
 
@@ -388,8 +388,8 @@ int8* NetSystemMapLookupPartial(NetSystem *ob,const int8* StringPrefix,int32 Val
     }
   }
   if (ReadInt16LE(ob->in) != 0x0000) longjmp(ob->conn->exception,1);
-  if (ReadInt8LE(ob->in) != 0x0D) longjmp(ob->conn->exception,2);
-  if (ReadInt8LE(ob->in) != 0x50) longjmp(ob->conn->exception,3);
+  if (ReadUInt8LE(ob->in) != 0x0D) longjmp(ob->conn->exception,2);
+  if (ReadUInt8LE(ob->in) != 0x50) longjmp(ob->conn->exception,3);
   ret_len = ReadInt32LE(ob->in);
   ret = ArrayAlloc(ret_len,1);
   {
@@ -398,7 +398,7 @@ int8* NetSystemMapLookupPartial(NetSystem *ob,const int8* StringPrefix,int32 Val
       ret[i] = ReadInt8LE(out);
     }
   }
-  if (ReadInt8LE(ob->in) != 0x80) longjmp(ob->conn->exception,2);
+  if (ReadUInt8LE(ob->in) != 0x80) longjmp(ob->conn->exception,2);
   return ret;
 } 
 
@@ -423,10 +423,10 @@ SystemResult NetSystemMapAdd(NetSystem *ob,const int8* String,int32 Value) {
     }
   }
   if (ReadInt16LE(ob->in) != 0x0000) longjmp(ob->conn->exception,1);
-  if (ReadInt8LE(ob->in) != 0x0E) longjmp(ob->conn->exception,2);
-  if (ReadInt8LE(ob->in) != 0xC0) longjmp(ob->conn->exception,3);
+  if (ReadUInt8LE(ob->in) != 0x0E) longjmp(ob->conn->exception,2);
+  if (ReadUInt8LE(ob->in) != 0xC0) longjmp(ob->conn->exception,3);
   ret = ReadInt32LE(out);
-  if (ReadInt8LE(ob->in) != 0x80) longjmp(ob->conn->exception,2);
+  if (ReadUInt8LE(ob->in) != 0x80) longjmp(ob->conn->exception,2);
   return ret;
 } 
 
@@ -450,10 +450,10 @@ SystemResult NetSystemMapDelete(NetSystem *ob,const int8* String) {
     }
   }
   if (ReadInt16LE(ob->in) != 0x0000) longjmp(ob->conn->exception,1);
-  if (ReadInt8LE(ob->in) != 0x0F) longjmp(ob->conn->exception,2);
-  if (ReadInt8LE(ob->in) != 0xC0) longjmp(ob->conn->exception,3);
+  if (ReadUInt8LE(ob->in) != 0x0F) longjmp(ob->conn->exception,2);
+  if (ReadUInt8LE(ob->in) != 0xC0) longjmp(ob->conn->exception,3);
   ret = ReadInt32LE(out);
-  if (ReadInt8LE(ob->in) != 0x80) longjmp(ob->conn->exception,2);
+  if (ReadUInt8LE(ob->in) != 0x80) longjmp(ob->conn->exception,2);
   return ret;
 } 
 
@@ -477,8 +477,8 @@ int8* NetSystemNote(NetSystem *ob,const int8* Message) {
     }
   }
   if (ReadInt16LE(ob->in) != 0x0000) longjmp(ob->conn->exception,1);
-  if (ReadInt8LE(ob->in) != 0x10) longjmp(ob->conn->exception,2);
-  if (ReadInt8LE(ob->in) != 0x50) longjmp(ob->conn->exception,3);
+  if (ReadUInt8LE(ob->in) != 0x10) longjmp(ob->conn->exception,2);
+  if (ReadUInt8LE(ob->in) != 0x50) longjmp(ob->conn->exception,3);
   ret_len = ReadInt32LE(ob->in);
   ret = ArrayAlloc(ret_len,1);
   {
@@ -487,7 +487,7 @@ int8* NetSystemNote(NetSystem *ob,const int8* Message) {
       ret[i] = ReadInt8LE(out);
     }
   }
-  if (ReadInt8LE(ob->in) != 0x80) longjmp(ob->conn->exception,2);
+  if (ReadUInt8LE(ob->in) != 0x80) longjmp(ob->conn->exception,2);
   return ret;
 } 
 
@@ -506,8 +506,8 @@ int8* NetSystemVersion(NetSystem *ob) {
     }
   }
   if (ReadInt16LE(ob->in) != 0x0000) longjmp(ob->conn->exception,1);
-  if (ReadInt8LE(ob->in) != 0x11) longjmp(ob->conn->exception,2);
-  if (ReadInt8LE(ob->in) != 0x50) longjmp(ob->conn->exception,3);
+  if (ReadUInt8LE(ob->in) != 0x11) longjmp(ob->conn->exception,2);
+  if (ReadUInt8LE(ob->in) != 0x50) longjmp(ob->conn->exception,3);
   ret_len = ReadInt32LE(ob->in);
   ret = ArrayAlloc(ret_len,1);
   {
@@ -516,7 +516,7 @@ int8* NetSystemVersion(NetSystem *ob) {
       ret[i] = ReadInt8LE(out);
     }
   }
-  if (ReadInt8LE(ob->in) != 0x80) longjmp(ob->conn->exception,2);
+  if (ReadUInt8LE(ob->in) != 0x80) longjmp(ob->conn->exception,2);
   return ret;
 } 
 
@@ -535,10 +535,10 @@ uint32 NetSystemUptimeServer(NetSystem *ob) {
     }
   }
   if (ReadInt16LE(ob->in) != 0x0000) longjmp(ob->conn->exception,1);
-  if (ReadInt8LE(ob->in) != 0x12) longjmp(ob->conn->exception,2);
-  if (ReadInt8LE(ob->in) != 0x03) longjmp(ob->conn->exception,3);
+  if (ReadUInt8LE(ob->in) != 0x12) longjmp(ob->conn->exception,2);
+  if (ReadUInt8LE(ob->in) != 0x03) longjmp(ob->conn->exception,3);
   ret = ReadUInt32LE(out);
-  if (ReadInt8LE(ob->in) != 0x80) longjmp(ob->conn->exception,2);
+  if (ReadUInt8LE(ob->in) != 0x80) longjmp(ob->conn->exception,2);
   return ret;
 } 
 
@@ -557,10 +557,10 @@ uint32 NetSystemUptimeHost(NetSystem *ob) {
     }
   }
   if (ReadInt16LE(ob->in) != 0x0000) longjmp(ob->conn->exception,1);
-  if (ReadInt8LE(ob->in) != 0x13) longjmp(ob->conn->exception,2);
-  if (ReadInt8LE(ob->in) != 0x03) longjmp(ob->conn->exception,3);
+  if (ReadUInt8LE(ob->in) != 0x13) longjmp(ob->conn->exception,2);
+  if (ReadUInt8LE(ob->in) != 0x03) longjmp(ob->conn->exception,3);
   ret = ReadUInt32LE(out);
-  if (ReadInt8LE(ob->in) != 0x80) longjmp(ob->conn->exception,2);
+  if (ReadUInt8LE(ob->in) != 0x80) longjmp(ob->conn->exception,2);
   return ret;
 } 
 
@@ -579,10 +579,10 @@ int32 NetSystemFPGARevision(NetSystem *ob) {
     }
   }
   if (ReadInt16LE(ob->in) != 0x0000) longjmp(ob->conn->exception,1);
-  if (ReadInt8LE(ob->in) != 0x14) longjmp(ob->conn->exception,2);
-  if (ReadInt8LE(ob->in) != 0x13) longjmp(ob->conn->exception,3);
+  if (ReadUInt8LE(ob->in) != 0x14) longjmp(ob->conn->exception,2);
+  if (ReadUInt8LE(ob->in) != 0x13) longjmp(ob->conn->exception,3);
   ret = ReadInt32LE(out);
-  if (ReadInt8LE(ob->in) != 0x80) longjmp(ob->conn->exception,2);
+  if (ReadUInt8LE(ob->in) != 0x80) longjmp(ob->conn->exception,2);
   return ret;
 } 
 
@@ -602,10 +602,10 @@ int32 NetSystemEchoNumber(NetSystem *ob,int32 n) {
     }
   }
   if (ReadInt16LE(ob->in) != 0x0000) longjmp(ob->conn->exception,1);
-  if (ReadInt8LE(ob->in) != 0x15) longjmp(ob->conn->exception,2);
-  if (ReadInt8LE(ob->in) != 0x13) longjmp(ob->conn->exception,3);
+  if (ReadUInt8LE(ob->in) != 0x15) longjmp(ob->conn->exception,2);
+  if (ReadUInt8LE(ob->in) != 0x13) longjmp(ob->conn->exception,3);
   ret = ReadInt32LE(out);
-  if (ReadInt8LE(ob->in) != 0x80) longjmp(ob->conn->exception,2);
+  if (ReadUInt8LE(ob->in) != 0x80) longjmp(ob->conn->exception,2);
   return ret;
 } 
 

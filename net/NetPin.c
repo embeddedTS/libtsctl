@@ -37,10 +37,10 @@ int32 NetPinLock(NetPin *ob,uint32 num,int32 flags) {
     }
   }
   if (ReadInt16LE(ob->in) != 0x0003) longjmp(ob->conn->exception,1);
-  if (ReadInt8LE(ob->in) != 0x00) longjmp(ob->conn->exception,2);
-  if (ReadInt8LE(ob->in) != 0x13) longjmp(ob->conn->exception,3);
+  if (ReadUInt8LE(ob->in) != 0x00) longjmp(ob->conn->exception,2);
+  if (ReadUInt8LE(ob->in) != 0x13) longjmp(ob->conn->exception,3);
   ret = ReadInt32LE(out);
-  if (ReadInt8LE(ob->in) != 0x80) longjmp(ob->conn->exception,2);
+  if (ReadUInt8LE(ob->in) != 0x80) longjmp(ob->conn->exception,2);
   return ret;
 } 
 
@@ -61,10 +61,10 @@ int32 NetPinUnlock(NetPin *ob,uint32 num,int32 flags) {
     }
   }
   if (ReadInt16LE(ob->in) != 0x0003) longjmp(ob->conn->exception,1);
-  if (ReadInt8LE(ob->in) != 0x01) longjmp(ob->conn->exception,2);
-  if (ReadInt8LE(ob->in) != 0x13) longjmp(ob->conn->exception,3);
+  if (ReadUInt8LE(ob->in) != 0x01) longjmp(ob->conn->exception,2);
+  if (ReadUInt8LE(ob->in) != 0x13) longjmp(ob->conn->exception,3);
   ret = ReadInt32LE(out);
-  if (ReadInt8LE(ob->in) != 0x80) longjmp(ob->conn->exception,2);
+  if (ReadUInt8LE(ob->in) != 0x80) longjmp(ob->conn->exception,2);
   return ret;
 } 
 
@@ -83,10 +83,10 @@ int32 NetPinPreempt(NetPin *ob) {
     }
   }
   if (ReadInt16LE(ob->in) != 0x0003) longjmp(ob->conn->exception,1);
-  if (ReadInt8LE(ob->in) != 0x02) longjmp(ob->conn->exception,2);
-  if (ReadInt8LE(ob->in) != 0x13) longjmp(ob->conn->exception,3);
+  if (ReadUInt8LE(ob->in) != 0x02) longjmp(ob->conn->exception,2);
+  if (ReadUInt8LE(ob->in) != 0x13) longjmp(ob->conn->exception,3);
   ret = ReadInt32LE(out);
-  if (ReadInt8LE(ob->in) != 0x80) longjmp(ob->conn->exception,2);
+  if (ReadUInt8LE(ob->in) != 0x80) longjmp(ob->conn->exception,2);
   return ret;
 } 
 
@@ -106,10 +106,10 @@ PinMode NetPinModeGet(NetPin *ob,int32 PinNumber) {
     }
   }
   if (ReadInt16LE(ob->in) != 0x0003) longjmp(ob->conn->exception,1);
-  if (ReadInt8LE(ob->in) != 0x03) longjmp(ob->conn->exception,2);
-  if (ReadInt8LE(ob->in) != 0xC2) longjmp(ob->conn->exception,3);
+  if (ReadUInt8LE(ob->in) != 0x03) longjmp(ob->conn->exception,2);
+  if (ReadUInt8LE(ob->in) != 0xC2) longjmp(ob->conn->exception,3);
   ret = ReadInt32LE(out);
-  if (ReadInt8LE(ob->in) != 0x80) longjmp(ob->conn->exception,2);
+  if (ReadUInt8LE(ob->in) != 0x80) longjmp(ob->conn->exception,2);
   return ret;
 } 
 
@@ -130,10 +130,10 @@ PinResult NetPinModeSet(NetPin *ob,int32 PinNumber,PinMode Mode) {
     }
   }
   if (ReadInt16LE(ob->in) != 0x0003) longjmp(ob->conn->exception,1);
-  if (ReadInt8LE(ob->in) != 0x04) longjmp(ob->conn->exception,2);
-  if (ReadInt8LE(ob->in) != 0xC3) longjmp(ob->conn->exception,3);
+  if (ReadUInt8LE(ob->in) != 0x04) longjmp(ob->conn->exception,2);
+  if (ReadUInt8LE(ob->in) != 0xC3) longjmp(ob->conn->exception,3);
   ret = ReadInt32LE(out);
-  if (ReadInt8LE(ob->in) != 0x80) longjmp(ob->conn->exception,2);
+  if (ReadUInt8LE(ob->in) != 0x80) longjmp(ob->conn->exception,2);
   return ret;
 } 
 

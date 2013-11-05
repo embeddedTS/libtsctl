@@ -66,10 +66,10 @@ int32 NetBusLock(NetBus *ob,uint32 num,int32 flags) {
     }
   }
   if (ReadInt16LE(ob->in) != 0x0001) longjmp(ob->conn->exception,1);
-  if (ReadInt8LE(ob->in) != 0x00) longjmp(ob->conn->exception,2);
-  if (ReadInt8LE(ob->in) != 0x13) longjmp(ob->conn->exception,3);
+  if (ReadUInt8LE(ob->in) != 0x00) longjmp(ob->conn->exception,2);
+  if (ReadUInt8LE(ob->in) != 0x13) longjmp(ob->conn->exception,3);
   ret = ReadInt32LE(out);
-  if (ReadInt8LE(ob->in) != 0x80) longjmp(ob->conn->exception,2);
+  if (ReadUInt8LE(ob->in) != 0x80) longjmp(ob->conn->exception,2);
   return ret;
 } 
 
@@ -90,10 +90,10 @@ int32 NetBusUnlock(NetBus *ob,uint32 num,int32 flags) {
     }
   }
   if (ReadInt16LE(ob->in) != 0x0001) longjmp(ob->conn->exception,1);
-  if (ReadInt8LE(ob->in) != 0x01) longjmp(ob->conn->exception,2);
-  if (ReadInt8LE(ob->in) != 0x13) longjmp(ob->conn->exception,3);
+  if (ReadUInt8LE(ob->in) != 0x01) longjmp(ob->conn->exception,2);
+  if (ReadUInt8LE(ob->in) != 0x13) longjmp(ob->conn->exception,3);
   ret = ReadInt32LE(out);
-  if (ReadInt8LE(ob->in) != 0x80) longjmp(ob->conn->exception,2);
+  if (ReadUInt8LE(ob->in) != 0x80) longjmp(ob->conn->exception,2);
   return ret;
 } 
 
@@ -112,10 +112,10 @@ int32 NetBusPreempt(NetBus *ob) {
     }
   }
   if (ReadInt16LE(ob->in) != 0x0001) longjmp(ob->conn->exception,1);
-  if (ReadInt8LE(ob->in) != 0x02) longjmp(ob->conn->exception,2);
-  if (ReadInt8LE(ob->in) != 0x13) longjmp(ob->conn->exception,3);
+  if (ReadUInt8LE(ob->in) != 0x02) longjmp(ob->conn->exception,2);
+  if (ReadUInt8LE(ob->in) != 0x13) longjmp(ob->conn->exception,3);
   ret = ReadInt32LE(out);
-  if (ReadInt8LE(ob->in) != 0x80) longjmp(ob->conn->exception,2);
+  if (ReadUInt8LE(ob->in) != 0x80) longjmp(ob->conn->exception,2);
   return ret;
 } 
 
@@ -135,10 +135,10 @@ uint8 NetBusPeek8(NetBus *ob,int32 Address) {
     }
   }
   if (ReadInt16LE(ob->in) != 0x0001) longjmp(ob->conn->exception,1);
-  if (ReadInt8LE(ob->in) != 0x03) longjmp(ob->conn->exception,2);
-  if (ReadInt8LE(ob->in) != 0x00) longjmp(ob->conn->exception,3);
+  if (ReadUInt8LE(ob->in) != 0x03) longjmp(ob->conn->exception,2);
+  if (ReadUInt8LE(ob->in) != 0x00) longjmp(ob->conn->exception,3);
   ret = ReadUInt8LE(out);
-  if (ReadInt8LE(ob->in) != 0x80) longjmp(ob->conn->exception,2);
+  if (ReadUInt8LE(ob->in) != 0x80) longjmp(ob->conn->exception,2);
   return ret;
 } 
 
@@ -154,8 +154,8 @@ void NetBusPoke8(NetBus *ob,int32 Address,uint8 Value) {
   if (ob->conn->mode < 2)  ob->out->Flush(ob->out);
   if (ob->conn->mode > 0) return;
   if (ReadInt16LE(ob->in) != 0x0001) longjmp(ob->conn->exception,1);
-  if (ReadInt8LE(ob->in) != 0x04) longjmp(ob->conn->exception,2);
-  if (ReadInt8LE(ob->in) != 0x80) longjmp(ob->conn->exception,2);
+  if (ReadUInt8LE(ob->in) != 0x04) longjmp(ob->conn->exception,2);
+  if (ReadUInt8LE(ob->in) != 0x80) longjmp(ob->conn->exception,2);
 } 
 
 uint16 NetBusPeek16(NetBus *ob,int32 Address) {
@@ -174,10 +174,10 @@ uint16 NetBusPeek16(NetBus *ob,int32 Address) {
     }
   }
   if (ReadInt16LE(ob->in) != 0x0001) longjmp(ob->conn->exception,1);
-  if (ReadInt8LE(ob->in) != 0x05) longjmp(ob->conn->exception,2);
-  if (ReadInt8LE(ob->in) != 0x01) longjmp(ob->conn->exception,3);
+  if (ReadUInt8LE(ob->in) != 0x05) longjmp(ob->conn->exception,2);
+  if (ReadUInt8LE(ob->in) != 0x01) longjmp(ob->conn->exception,3);
   ret = ReadUInt16LE(out);
-  if (ReadInt8LE(ob->in) != 0x80) longjmp(ob->conn->exception,2);
+  if (ReadUInt8LE(ob->in) != 0x80) longjmp(ob->conn->exception,2);
   return ret;
 } 
 
@@ -193,8 +193,8 @@ void NetBusPoke16(NetBus *ob,int32 Address,uint16 Value) {
   if (ob->conn->mode < 2)  ob->out->Flush(ob->out);
   if (ob->conn->mode > 0) return;
   if (ReadInt16LE(ob->in) != 0x0001) longjmp(ob->conn->exception,1);
-  if (ReadInt8LE(ob->in) != 0x06) longjmp(ob->conn->exception,2);
-  if (ReadInt8LE(ob->in) != 0x80) longjmp(ob->conn->exception,2);
+  if (ReadUInt8LE(ob->in) != 0x06) longjmp(ob->conn->exception,2);
+  if (ReadUInt8LE(ob->in) != 0x80) longjmp(ob->conn->exception,2);
 } 
 
 uint32 NetBusPeek32(NetBus *ob,int32 Address) {
@@ -213,10 +213,10 @@ uint32 NetBusPeek32(NetBus *ob,int32 Address) {
     }
   }
   if (ReadInt16LE(ob->in) != 0x0001) longjmp(ob->conn->exception,1);
-  if (ReadInt8LE(ob->in) != 0x07) longjmp(ob->conn->exception,2);
-  if (ReadInt8LE(ob->in) != 0x03) longjmp(ob->conn->exception,3);
+  if (ReadUInt8LE(ob->in) != 0x07) longjmp(ob->conn->exception,2);
+  if (ReadUInt8LE(ob->in) != 0x03) longjmp(ob->conn->exception,3);
   ret = ReadUInt32LE(out);
-  if (ReadInt8LE(ob->in) != 0x80) longjmp(ob->conn->exception,2);
+  if (ReadUInt8LE(ob->in) != 0x80) longjmp(ob->conn->exception,2);
   return ret;
 } 
 
@@ -232,8 +232,8 @@ void NetBusPoke32(NetBus *ob,int32 Address,uint32 Value) {
   if (ob->conn->mode < 2)  ob->out->Flush(ob->out);
   if (ob->conn->mode > 0) return;
   if (ReadInt16LE(ob->in) != 0x0001) longjmp(ob->conn->exception,1);
-  if (ReadInt8LE(ob->in) != 0x08) longjmp(ob->conn->exception,2);
-  if (ReadInt8LE(ob->in) != 0x80) longjmp(ob->conn->exception,2);
+  if (ReadUInt8LE(ob->in) != 0x08) longjmp(ob->conn->exception,2);
+  if (ReadUInt8LE(ob->in) != 0x80) longjmp(ob->conn->exception,2);
 } 
 
 int32 NetBusBitGet8(NetBus *ob,int32 Address,int32 BitNumber) {
@@ -253,10 +253,10 @@ int32 NetBusBitGet8(NetBus *ob,int32 Address,int32 BitNumber) {
     }
   }
   if (ReadInt16LE(ob->in) != 0x0001) longjmp(ob->conn->exception,1);
-  if (ReadInt8LE(ob->in) != 0x09) longjmp(ob->conn->exception,2);
-  if (ReadInt8LE(ob->in) != 0x13) longjmp(ob->conn->exception,3);
+  if (ReadUInt8LE(ob->in) != 0x09) longjmp(ob->conn->exception,2);
+  if (ReadUInt8LE(ob->in) != 0x13) longjmp(ob->conn->exception,3);
   ret = ReadInt32LE(out);
-  if (ReadInt8LE(ob->in) != 0x80) longjmp(ob->conn->exception,2);
+  if (ReadUInt8LE(ob->in) != 0x80) longjmp(ob->conn->exception,2);
   return ret;
 } 
 
@@ -273,8 +273,8 @@ void NetBusBitAssign8(NetBus *ob,int32 Address,int32 BitNumber,int32 Value) {
   if (ob->conn->mode < 2)  ob->out->Flush(ob->out);
   if (ob->conn->mode > 0) return;
   if (ReadInt16LE(ob->in) != 0x0001) longjmp(ob->conn->exception,1);
-  if (ReadInt8LE(ob->in) != 0x0A) longjmp(ob->conn->exception,2);
-  if (ReadInt8LE(ob->in) != 0x80) longjmp(ob->conn->exception,2);
+  if (ReadUInt8LE(ob->in) != 0x0A) longjmp(ob->conn->exception,2);
+  if (ReadUInt8LE(ob->in) != 0x80) longjmp(ob->conn->exception,2);
 } 
 
 void NetBusBitSet8(NetBus *ob,int32 Address,int32 BitNumber) {
@@ -289,8 +289,8 @@ void NetBusBitSet8(NetBus *ob,int32 Address,int32 BitNumber) {
   if (ob->conn->mode < 2)  ob->out->Flush(ob->out);
   if (ob->conn->mode > 0) return;
   if (ReadInt16LE(ob->in) != 0x0001) longjmp(ob->conn->exception,1);
-  if (ReadInt8LE(ob->in) != 0x0B) longjmp(ob->conn->exception,2);
-  if (ReadInt8LE(ob->in) != 0x80) longjmp(ob->conn->exception,2);
+  if (ReadUInt8LE(ob->in) != 0x0B) longjmp(ob->conn->exception,2);
+  if (ReadUInt8LE(ob->in) != 0x80) longjmp(ob->conn->exception,2);
 } 
 
 void NetBusBitClear8(NetBus *ob,int32 Address,int32 BitNumber) {
@@ -305,8 +305,8 @@ void NetBusBitClear8(NetBus *ob,int32 Address,int32 BitNumber) {
   if (ob->conn->mode < 2)  ob->out->Flush(ob->out);
   if (ob->conn->mode > 0) return;
   if (ReadInt16LE(ob->in) != 0x0001) longjmp(ob->conn->exception,1);
-  if (ReadInt8LE(ob->in) != 0x0C) longjmp(ob->conn->exception,2);
-  if (ReadInt8LE(ob->in) != 0x80) longjmp(ob->conn->exception,2);
+  if (ReadUInt8LE(ob->in) != 0x0C) longjmp(ob->conn->exception,2);
+  if (ReadUInt8LE(ob->in) != 0x80) longjmp(ob->conn->exception,2);
 } 
 
 int32 NetBusBitGet16(NetBus *ob,int32 Address,int32 BitNumber) {
@@ -326,10 +326,10 @@ int32 NetBusBitGet16(NetBus *ob,int32 Address,int32 BitNumber) {
     }
   }
   if (ReadInt16LE(ob->in) != 0x0001) longjmp(ob->conn->exception,1);
-  if (ReadInt8LE(ob->in) != 0x0D) longjmp(ob->conn->exception,2);
-  if (ReadInt8LE(ob->in) != 0x13) longjmp(ob->conn->exception,3);
+  if (ReadUInt8LE(ob->in) != 0x0D) longjmp(ob->conn->exception,2);
+  if (ReadUInt8LE(ob->in) != 0x13) longjmp(ob->conn->exception,3);
   ret = ReadInt32LE(out);
-  if (ReadInt8LE(ob->in) != 0x80) longjmp(ob->conn->exception,2);
+  if (ReadUInt8LE(ob->in) != 0x80) longjmp(ob->conn->exception,2);
   return ret;
 } 
 
@@ -346,8 +346,8 @@ void NetBusBitAssign16(NetBus *ob,int32 Address,int32 BitNumber,int32 Value) {
   if (ob->conn->mode < 2)  ob->out->Flush(ob->out);
   if (ob->conn->mode > 0) return;
   if (ReadInt16LE(ob->in) != 0x0001) longjmp(ob->conn->exception,1);
-  if (ReadInt8LE(ob->in) != 0x0E) longjmp(ob->conn->exception,2);
-  if (ReadInt8LE(ob->in) != 0x80) longjmp(ob->conn->exception,2);
+  if (ReadUInt8LE(ob->in) != 0x0E) longjmp(ob->conn->exception,2);
+  if (ReadUInt8LE(ob->in) != 0x80) longjmp(ob->conn->exception,2);
 } 
 
 void NetBusBitSet16(NetBus *ob,int32 Address,int32 BitNumber) {
@@ -362,8 +362,8 @@ void NetBusBitSet16(NetBus *ob,int32 Address,int32 BitNumber) {
   if (ob->conn->mode < 2)  ob->out->Flush(ob->out);
   if (ob->conn->mode > 0) return;
   if (ReadInt16LE(ob->in) != 0x0001) longjmp(ob->conn->exception,1);
-  if (ReadInt8LE(ob->in) != 0x0F) longjmp(ob->conn->exception,2);
-  if (ReadInt8LE(ob->in) != 0x80) longjmp(ob->conn->exception,2);
+  if (ReadUInt8LE(ob->in) != 0x0F) longjmp(ob->conn->exception,2);
+  if (ReadUInt8LE(ob->in) != 0x80) longjmp(ob->conn->exception,2);
 } 
 
 void NetBusBitClear16(NetBus *ob,int32 Address,int32 BitNumber) {
@@ -378,8 +378,8 @@ void NetBusBitClear16(NetBus *ob,int32 Address,int32 BitNumber) {
   if (ob->conn->mode < 2)  ob->out->Flush(ob->out);
   if (ob->conn->mode > 0) return;
   if (ReadInt16LE(ob->in) != 0x0001) longjmp(ob->conn->exception,1);
-  if (ReadInt8LE(ob->in) != 0x10) longjmp(ob->conn->exception,2);
-  if (ReadInt8LE(ob->in) != 0x80) longjmp(ob->conn->exception,2);
+  if (ReadUInt8LE(ob->in) != 0x10) longjmp(ob->conn->exception,2);
+  if (ReadUInt8LE(ob->in) != 0x80) longjmp(ob->conn->exception,2);
 } 
 
 int32 NetBusBitGet32(NetBus *ob,int32 Address,int32 BitNumber) {
@@ -399,10 +399,10 @@ int32 NetBusBitGet32(NetBus *ob,int32 Address,int32 BitNumber) {
     }
   }
   if (ReadInt16LE(ob->in) != 0x0001) longjmp(ob->conn->exception,1);
-  if (ReadInt8LE(ob->in) != 0x11) longjmp(ob->conn->exception,2);
-  if (ReadInt8LE(ob->in) != 0x13) longjmp(ob->conn->exception,3);
+  if (ReadUInt8LE(ob->in) != 0x11) longjmp(ob->conn->exception,2);
+  if (ReadUInt8LE(ob->in) != 0x13) longjmp(ob->conn->exception,3);
   ret = ReadInt32LE(out);
-  if (ReadInt8LE(ob->in) != 0x80) longjmp(ob->conn->exception,2);
+  if (ReadUInt8LE(ob->in) != 0x80) longjmp(ob->conn->exception,2);
   return ret;
 } 
 
@@ -419,8 +419,8 @@ void NetBusBitAssign32(NetBus *ob,int32 Address,int32 BitNumber,int32 Value) {
   if (ob->conn->mode < 2)  ob->out->Flush(ob->out);
   if (ob->conn->mode > 0) return;
   if (ReadInt16LE(ob->in) != 0x0001) longjmp(ob->conn->exception,1);
-  if (ReadInt8LE(ob->in) != 0x12) longjmp(ob->conn->exception,2);
-  if (ReadInt8LE(ob->in) != 0x80) longjmp(ob->conn->exception,2);
+  if (ReadUInt8LE(ob->in) != 0x12) longjmp(ob->conn->exception,2);
+  if (ReadUInt8LE(ob->in) != 0x80) longjmp(ob->conn->exception,2);
 } 
 
 void NetBusBitSet32(NetBus *ob,int32 Address,int32 BitNumber) {
@@ -435,8 +435,8 @@ void NetBusBitSet32(NetBus *ob,int32 Address,int32 BitNumber) {
   if (ob->conn->mode < 2)  ob->out->Flush(ob->out);
   if (ob->conn->mode > 0) return;
   if (ReadInt16LE(ob->in) != 0x0001) longjmp(ob->conn->exception,1);
-  if (ReadInt8LE(ob->in) != 0x13) longjmp(ob->conn->exception,2);
-  if (ReadInt8LE(ob->in) != 0x80) longjmp(ob->conn->exception,2);
+  if (ReadUInt8LE(ob->in) != 0x13) longjmp(ob->conn->exception,2);
+  if (ReadUInt8LE(ob->in) != 0x80) longjmp(ob->conn->exception,2);
 } 
 
 void NetBusBitClear32(NetBus *ob,int32 Address,int32 BitNumber) {
@@ -451,8 +451,8 @@ void NetBusBitClear32(NetBus *ob,int32 Address,int32 BitNumber) {
   if (ob->conn->mode < 2)  ob->out->Flush(ob->out);
   if (ob->conn->mode > 0) return;
   if (ReadInt16LE(ob->in) != 0x0001) longjmp(ob->conn->exception,1);
-  if (ReadInt8LE(ob->in) != 0x14) longjmp(ob->conn->exception,2);
-  if (ReadInt8LE(ob->in) != 0x80) longjmp(ob->conn->exception,2);
+  if (ReadUInt8LE(ob->in) != 0x14) longjmp(ob->conn->exception,2);
+  if (ReadUInt8LE(ob->in) != 0x80) longjmp(ob->conn->exception,2);
 } 
 
 void NetBusPeekStream(NetBus *ob,int32 address,int32 direction,int8* dest) {
@@ -472,8 +472,8 @@ void NetBusPeekStream(NetBus *ob,int32 address,int32 direction,int8* dest) {
     }
   }
   if (ReadInt16LE(ob->in) != 0x0001) longjmp(ob->conn->exception,1);
-  if (ReadInt8LE(ob->in) != 0x15) longjmp(ob->conn->exception,2);
-  if (ReadInt8LE(ob->in) != 0x50) longjmp(ob->conn->exception,3);
+  if (ReadUInt8LE(ob->in) != 0x15) longjmp(ob->conn->exception,2);
+  if (ReadUInt8LE(ob->in) != 0x50) longjmp(ob->conn->exception,3);
   if (ReadInt32LE(ob->in)!=ArrayLength(dest)) longjmp(ob->conn->exception,5);
   {
     int i;
@@ -481,7 +481,7 @@ void NetBusPeekStream(NetBus *ob,int32 address,int32 direction,int8* dest) {
       dest[i] = ReadInt8LE(out);
     }
   }
-  if (ReadInt8LE(ob->in) != 0x80) longjmp(ob->conn->exception,2);
+  if (ReadUInt8LE(ob->in) != 0x80) longjmp(ob->conn->exception,2);
 } 
 
 void NetBusPokeStream(NetBus *ob,int32 address,int32 direction,const int8* data) {
@@ -501,8 +501,8 @@ void NetBusPokeStream(NetBus *ob,int32 address,int32 direction,const int8* data)
   if (ob->conn->mode < 2)  ob->out->Flush(ob->out);
   if (ob->conn->mode > 0) return;
   if (ReadInt16LE(ob->in) != 0x0001) longjmp(ob->conn->exception,1);
-  if (ReadInt8LE(ob->in) != 0x16) longjmp(ob->conn->exception,2);
-  if (ReadInt8LE(ob->in) != 0x80) longjmp(ob->conn->exception,2);
+  if (ReadUInt8LE(ob->in) != 0x16) longjmp(ob->conn->exception,2);
+  if (ReadUInt8LE(ob->in) != 0x80) longjmp(ob->conn->exception,2);
 } 
 
 void NetBusRefresh(NetBus *ob) {
@@ -515,8 +515,8 @@ void NetBusRefresh(NetBus *ob) {
   if (ob->conn->mode < 2)  ob->out->Flush(ob->out);
   if (ob->conn->mode > 0) return;
   if (ReadInt16LE(ob->in) != 0x0001) longjmp(ob->conn->exception,1);
-  if (ReadInt8LE(ob->in) != 0x17) longjmp(ob->conn->exception,2);
-  if (ReadInt8LE(ob->in) != 0x80) longjmp(ob->conn->exception,2);
+  if (ReadUInt8LE(ob->in) != 0x17) longjmp(ob->conn->exception,2);
+  if (ReadUInt8LE(ob->in) != 0x80) longjmp(ob->conn->exception,2);
 } 
 
 void NetBusCommit(NetBus *ob,int32 ForceAll) {
@@ -530,8 +530,8 @@ void NetBusCommit(NetBus *ob,int32 ForceAll) {
   if (ob->conn->mode < 2)  ob->out->Flush(ob->out);
   if (ob->conn->mode > 0) return;
   if (ReadInt16LE(ob->in) != 0x0001) longjmp(ob->conn->exception,1);
-  if (ReadInt8LE(ob->in) != 0x18) longjmp(ob->conn->exception,2);
-  if (ReadInt8LE(ob->in) != 0x80) longjmp(ob->conn->exception,2);
+  if (ReadUInt8LE(ob->in) != 0x18) longjmp(ob->conn->exception,2);
+  if (ReadUInt8LE(ob->in) != 0x80) longjmp(ob->conn->exception,2);
 } 
 
 int32 NetBusBitToggle8(NetBus *ob,int32 Address,int32 BitNumber) {
@@ -551,10 +551,10 @@ int32 NetBusBitToggle8(NetBus *ob,int32 Address,int32 BitNumber) {
     }
   }
   if (ReadInt16LE(ob->in) != 0x0001) longjmp(ob->conn->exception,1);
-  if (ReadInt8LE(ob->in) != 0x19) longjmp(ob->conn->exception,2);
-  if (ReadInt8LE(ob->in) != 0x13) longjmp(ob->conn->exception,3);
+  if (ReadUInt8LE(ob->in) != 0x19) longjmp(ob->conn->exception,2);
+  if (ReadUInt8LE(ob->in) != 0x13) longjmp(ob->conn->exception,3);
   ret = ReadInt32LE(out);
-  if (ReadInt8LE(ob->in) != 0x80) longjmp(ob->conn->exception,2);
+  if (ReadUInt8LE(ob->in) != 0x80) longjmp(ob->conn->exception,2);
   return ret;
 } 
 
@@ -575,10 +575,10 @@ int32 NetBusBitToggle16(NetBus *ob,int32 Address,int32 BitNumber) {
     }
   }
   if (ReadInt16LE(ob->in) != 0x0001) longjmp(ob->conn->exception,1);
-  if (ReadInt8LE(ob->in) != 0x1A) longjmp(ob->conn->exception,2);
-  if (ReadInt8LE(ob->in) != 0x13) longjmp(ob->conn->exception,3);
+  if (ReadUInt8LE(ob->in) != 0x1A) longjmp(ob->conn->exception,2);
+  if (ReadUInt8LE(ob->in) != 0x13) longjmp(ob->conn->exception,3);
   ret = ReadInt32LE(out);
-  if (ReadInt8LE(ob->in) != 0x80) longjmp(ob->conn->exception,2);
+  if (ReadUInt8LE(ob->in) != 0x80) longjmp(ob->conn->exception,2);
   return ret;
 } 
 
@@ -599,10 +599,10 @@ int32 NetBusBitToggle32(NetBus *ob,int32 Address,int32 BitNumber) {
     }
   }
   if (ReadInt16LE(ob->in) != 0x0001) longjmp(ob->conn->exception,1);
-  if (ReadInt8LE(ob->in) != 0x1B) longjmp(ob->conn->exception,2);
-  if (ReadInt8LE(ob->in) != 0x13) longjmp(ob->conn->exception,3);
+  if (ReadUInt8LE(ob->in) != 0x1B) longjmp(ob->conn->exception,2);
+  if (ReadUInt8LE(ob->in) != 0x13) longjmp(ob->conn->exception,3);
   ret = ReadInt32LE(out);
-  if (ReadInt8LE(ob->in) != 0x80) longjmp(ob->conn->exception,2);
+  if (ReadUInt8LE(ob->in) != 0x80) longjmp(ob->conn->exception,2);
   return ret;
 } 
 
@@ -625,10 +625,10 @@ uint8 NetBusAssign8X(NetBus *ob,int32 Address,int32 BitMSB,int32 BitLSB,int32 Va
     }
   }
   if (ReadInt16LE(ob->in) != 0x0001) longjmp(ob->conn->exception,1);
-  if (ReadInt8LE(ob->in) != 0x1C) longjmp(ob->conn->exception,2);
-  if (ReadInt8LE(ob->in) != 0x00) longjmp(ob->conn->exception,3);
+  if (ReadUInt8LE(ob->in) != 0x1C) longjmp(ob->conn->exception,2);
+  if (ReadUInt8LE(ob->in) != 0x00) longjmp(ob->conn->exception,3);
   ret = ReadUInt8LE(out);
-  if (ReadInt8LE(ob->in) != 0x80) longjmp(ob->conn->exception,2);
+  if (ReadUInt8LE(ob->in) != 0x80) longjmp(ob->conn->exception,2);
   return ret;
 } 
 
@@ -651,10 +651,10 @@ uint16 NetBusAssign16X(NetBus *ob,int32 Address,int32 BitMSB,int32 BitLSB,int32 
     }
   }
   if (ReadInt16LE(ob->in) != 0x0001) longjmp(ob->conn->exception,1);
-  if (ReadInt8LE(ob->in) != 0x1D) longjmp(ob->conn->exception,2);
-  if (ReadInt8LE(ob->in) != 0x01) longjmp(ob->conn->exception,3);
+  if (ReadUInt8LE(ob->in) != 0x1D) longjmp(ob->conn->exception,2);
+  if (ReadUInt8LE(ob->in) != 0x01) longjmp(ob->conn->exception,3);
   ret = ReadUInt16LE(out);
-  if (ReadInt8LE(ob->in) != 0x80) longjmp(ob->conn->exception,2);
+  if (ReadUInt8LE(ob->in) != 0x80) longjmp(ob->conn->exception,2);
   return ret;
 } 
 
@@ -677,10 +677,10 @@ uint32 NetBusAssign32X(NetBus *ob,int32 Address,int32 BitMSB,int32 BitLSB,int32 
     }
   }
   if (ReadInt16LE(ob->in) != 0x0001) longjmp(ob->conn->exception,1);
-  if (ReadInt8LE(ob->in) != 0x1E) longjmp(ob->conn->exception,2);
-  if (ReadInt8LE(ob->in) != 0x03) longjmp(ob->conn->exception,3);
+  if (ReadUInt8LE(ob->in) != 0x1E) longjmp(ob->conn->exception,2);
+  if (ReadUInt8LE(ob->in) != 0x03) longjmp(ob->conn->exception,3);
   ret = ReadUInt32LE(out);
-  if (ReadInt8LE(ob->in) != 0x80) longjmp(ob->conn->exception,2);
+  if (ReadUInt8LE(ob->in) != 0x80) longjmp(ob->conn->exception,2);
   return ret;
 } 
 
@@ -702,10 +702,10 @@ uint8 NetBusBitsGet8(NetBus *ob,int32 Address,int32 BitMSB,int32 BitLSB) {
     }
   }
   if (ReadInt16LE(ob->in) != 0x0001) longjmp(ob->conn->exception,1);
-  if (ReadInt8LE(ob->in) != 0x1F) longjmp(ob->conn->exception,2);
-  if (ReadInt8LE(ob->in) != 0x00) longjmp(ob->conn->exception,3);
+  if (ReadUInt8LE(ob->in) != 0x1F) longjmp(ob->conn->exception,2);
+  if (ReadUInt8LE(ob->in) != 0x00) longjmp(ob->conn->exception,3);
   ret = ReadUInt8LE(out);
-  if (ReadInt8LE(ob->in) != 0x80) longjmp(ob->conn->exception,2);
+  if (ReadUInt8LE(ob->in) != 0x80) longjmp(ob->conn->exception,2);
   return ret;
 } 
 
@@ -727,10 +727,10 @@ uint16 NetBusBitsGet16(NetBus *ob,int32 Address,int32 BitMSB,int32 BitLSB) {
     }
   }
   if (ReadInt16LE(ob->in) != 0x0001) longjmp(ob->conn->exception,1);
-  if (ReadInt8LE(ob->in) != 0x20) longjmp(ob->conn->exception,2);
-  if (ReadInt8LE(ob->in) != 0x01) longjmp(ob->conn->exception,3);
+  if (ReadUInt8LE(ob->in) != 0x20) longjmp(ob->conn->exception,2);
+  if (ReadUInt8LE(ob->in) != 0x01) longjmp(ob->conn->exception,3);
   ret = ReadUInt16LE(out);
-  if (ReadInt8LE(ob->in) != 0x80) longjmp(ob->conn->exception,2);
+  if (ReadUInt8LE(ob->in) != 0x80) longjmp(ob->conn->exception,2);
   return ret;
 } 
 
@@ -752,10 +752,10 @@ uint32 NetBusBitsGet32(NetBus *ob,int32 Address,int32 BitMSB,int32 BitLSB) {
     }
   }
   if (ReadInt16LE(ob->in) != 0x0001) longjmp(ob->conn->exception,1);
-  if (ReadInt8LE(ob->in) != 0x21) longjmp(ob->conn->exception,2);
-  if (ReadInt8LE(ob->in) != 0x03) longjmp(ob->conn->exception,3);
+  if (ReadUInt8LE(ob->in) != 0x21) longjmp(ob->conn->exception,2);
+  if (ReadUInt8LE(ob->in) != 0x03) longjmp(ob->conn->exception,3);
   ret = ReadUInt32LE(out);
-  if (ReadInt8LE(ob->in) != 0x80) longjmp(ob->conn->exception,2);
+  if (ReadUInt8LE(ob->in) != 0x80) longjmp(ob->conn->exception,2);
   return ret;
 } 
 

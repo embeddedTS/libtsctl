@@ -40,10 +40,10 @@ int32 NetSPILock(NetSPI *ob,uint32 num,int32 flags) {
     }
   }
   if (ReadInt16LE(ob->in) != 0x0008) longjmp(ob->conn->exception,1);
-  if (ReadInt8LE(ob->in) != 0x00) longjmp(ob->conn->exception,2);
-  if (ReadInt8LE(ob->in) != 0x13) longjmp(ob->conn->exception,3);
+  if (ReadUInt8LE(ob->in) != 0x00) longjmp(ob->conn->exception,2);
+  if (ReadUInt8LE(ob->in) != 0x13) longjmp(ob->conn->exception,3);
   ret = ReadInt32LE(out);
-  if (ReadInt8LE(ob->in) != 0x80) longjmp(ob->conn->exception,2);
+  if (ReadUInt8LE(ob->in) != 0x80) longjmp(ob->conn->exception,2);
   return ret;
 } 
 
@@ -64,10 +64,10 @@ int32 NetSPIUnlock(NetSPI *ob,uint32 num,int32 flags) {
     }
   }
   if (ReadInt16LE(ob->in) != 0x0008) longjmp(ob->conn->exception,1);
-  if (ReadInt8LE(ob->in) != 0x01) longjmp(ob->conn->exception,2);
-  if (ReadInt8LE(ob->in) != 0x13) longjmp(ob->conn->exception,3);
+  if (ReadUInt8LE(ob->in) != 0x01) longjmp(ob->conn->exception,2);
+  if (ReadUInt8LE(ob->in) != 0x13) longjmp(ob->conn->exception,3);
   ret = ReadInt32LE(out);
-  if (ReadInt8LE(ob->in) != 0x80) longjmp(ob->conn->exception,2);
+  if (ReadUInt8LE(ob->in) != 0x80) longjmp(ob->conn->exception,2);
   return ret;
 } 
 
@@ -86,10 +86,10 @@ int32 NetSPIPreempt(NetSPI *ob) {
     }
   }
   if (ReadInt16LE(ob->in) != 0x0008) longjmp(ob->conn->exception,1);
-  if (ReadInt8LE(ob->in) != 0x02) longjmp(ob->conn->exception,2);
-  if (ReadInt8LE(ob->in) != 0x13) longjmp(ob->conn->exception,3);
+  if (ReadUInt8LE(ob->in) != 0x02) longjmp(ob->conn->exception,2);
+  if (ReadUInt8LE(ob->in) != 0x13) longjmp(ob->conn->exception,3);
   ret = ReadInt32LE(out);
-  if (ReadInt8LE(ob->in) != 0x80) longjmp(ob->conn->exception,2);
+  if (ReadUInt8LE(ob->in) != 0x80) longjmp(ob->conn->exception,2);
   return ret;
 } 
 
@@ -114,10 +114,10 @@ SPIResult NetSPIWrite(NetSPI *ob,int32 adrs,const uint8* buf) {
     }
   }
   if (ReadInt16LE(ob->in) != 0x0008) longjmp(ob->conn->exception,1);
-  if (ReadInt8LE(ob->in) != 0x03) longjmp(ob->conn->exception,2);
-  if (ReadInt8LE(ob->in) != 0xCC) longjmp(ob->conn->exception,3);
+  if (ReadUInt8LE(ob->in) != 0x03) longjmp(ob->conn->exception,2);
+  if (ReadUInt8LE(ob->in) != 0xCC) longjmp(ob->conn->exception,3);
   ret = ReadInt32LE(out);
-  if (ReadInt8LE(ob->in) != 0x80) longjmp(ob->conn->exception,2);
+  if (ReadUInt8LE(ob->in) != 0x80) longjmp(ob->conn->exception,2);
   return ret;
 } 
 
@@ -138,10 +138,10 @@ SPIResult NetSPIRead(NetSPI *ob,int32 adrs,uint8* buf) {
     }
   }
   if (ReadInt16LE(ob->in) != 0x0008) longjmp(ob->conn->exception,1);
-  if (ReadInt8LE(ob->in) != 0x04) longjmp(ob->conn->exception,2);
-  if (ReadInt8LE(ob->in) != 0xCC) longjmp(ob->conn->exception,3);
+  if (ReadUInt8LE(ob->in) != 0x04) longjmp(ob->conn->exception,2);
+  if (ReadUInt8LE(ob->in) != 0xCC) longjmp(ob->conn->exception,3);
   ret = ReadInt32LE(out);
-  if (ReadInt8LE(ob->in) != 0x40) longjmp(ob->conn->exception,3);
+  if (ReadUInt8LE(ob->in) != 0x40) longjmp(ob->conn->exception,3);
   if (ReadInt32LE(ob->in)!=ArrayLength(buf)) longjmp(ob->conn->exception,5);
   {
     int i;
@@ -149,7 +149,7 @@ SPIResult NetSPIRead(NetSPI *ob,int32 adrs,uint8* buf) {
       buf[i] = ReadUInt8LE(out);
     }
   }
-  if (ReadInt8LE(ob->in) != 0x80) longjmp(ob->conn->exception,2);
+  if (ReadUInt8LE(ob->in) != 0x80) longjmp(ob->conn->exception,2);
   return ret;
 } 
 
@@ -175,10 +175,10 @@ SPIResult NetSPIReadWrite(NetSPI *ob,int32 adrs,const uint8* wbuf,uint8* rbuf) {
     }
   }
   if (ReadInt16LE(ob->in) != 0x0008) longjmp(ob->conn->exception,1);
-  if (ReadInt8LE(ob->in) != 0x05) longjmp(ob->conn->exception,2);
-  if (ReadInt8LE(ob->in) != 0xCC) longjmp(ob->conn->exception,3);
+  if (ReadUInt8LE(ob->in) != 0x05) longjmp(ob->conn->exception,2);
+  if (ReadUInt8LE(ob->in) != 0xCC) longjmp(ob->conn->exception,3);
   ret = ReadInt32LE(out);
-  if (ReadInt8LE(ob->in) != 0x40) longjmp(ob->conn->exception,3);
+  if (ReadUInt8LE(ob->in) != 0x40) longjmp(ob->conn->exception,3);
   if (ReadInt32LE(ob->in)!=ArrayLength(rbuf)) longjmp(ob->conn->exception,5);
   {
     int i;
@@ -186,7 +186,7 @@ SPIResult NetSPIReadWrite(NetSPI *ob,int32 adrs,const uint8* wbuf,uint8* rbuf) {
       rbuf[i] = ReadUInt8LE(out);
     }
   }
-  if (ReadInt8LE(ob->in) != 0x80) longjmp(ob->conn->exception,2);
+  if (ReadUInt8LE(ob->in) != 0x80) longjmp(ob->conn->exception,2);
   return ret;
 } 
 
@@ -206,10 +206,10 @@ SPIResult NetSPIClockSet(NetSPI *ob,uint32 hz) {
     }
   }
   if (ReadInt16LE(ob->in) != 0x0008) longjmp(ob->conn->exception,1);
-  if (ReadInt8LE(ob->in) != 0x06) longjmp(ob->conn->exception,2);
-  if (ReadInt8LE(ob->in) != 0xCC) longjmp(ob->conn->exception,3);
+  if (ReadUInt8LE(ob->in) != 0x06) longjmp(ob->conn->exception,2);
+  if (ReadUInt8LE(ob->in) != 0xCC) longjmp(ob->conn->exception,3);
   ret = ReadInt32LE(out);
-  if (ReadInt8LE(ob->in) != 0x80) longjmp(ob->conn->exception,2);
+  if (ReadUInt8LE(ob->in) != 0x80) longjmp(ob->conn->exception,2);
   return ret;
 } 
 
@@ -229,10 +229,10 @@ SPIResult NetSPIEdgeSet(NetSPI *ob,int32 posedge) {
     }
   }
   if (ReadInt16LE(ob->in) != 0x0008) longjmp(ob->conn->exception,1);
-  if (ReadInt8LE(ob->in) != 0x07) longjmp(ob->conn->exception,2);
-  if (ReadInt8LE(ob->in) != 0xCC) longjmp(ob->conn->exception,3);
+  if (ReadUInt8LE(ob->in) != 0x07) longjmp(ob->conn->exception,2);
+  if (ReadUInt8LE(ob->in) != 0xCC) longjmp(ob->conn->exception,3);
   ret = ReadInt32LE(out);
-  if (ReadInt8LE(ob->in) != 0x80) longjmp(ob->conn->exception,2);
+  if (ReadUInt8LE(ob->in) != 0x80) longjmp(ob->conn->exception,2);
   return ret;
 } 
 

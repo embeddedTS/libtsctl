@@ -37,10 +37,10 @@ int32 NetTWILock(NetTWI *ob,uint32 num,int32 flags) {
     }
   }
   if (ReadInt16LE(ob->in) != 0x0006) longjmp(ob->conn->exception,1);
-  if (ReadInt8LE(ob->in) != 0x00) longjmp(ob->conn->exception,2);
-  if (ReadInt8LE(ob->in) != 0x13) longjmp(ob->conn->exception,3);
+  if (ReadUInt8LE(ob->in) != 0x00) longjmp(ob->conn->exception,2);
+  if (ReadUInt8LE(ob->in) != 0x13) longjmp(ob->conn->exception,3);
   ret = ReadInt32LE(out);
-  if (ReadInt8LE(ob->in) != 0x80) longjmp(ob->conn->exception,2);
+  if (ReadUInt8LE(ob->in) != 0x80) longjmp(ob->conn->exception,2);
   return ret;
 } 
 
@@ -61,10 +61,10 @@ int32 NetTWIUnlock(NetTWI *ob,uint32 num,int32 flags) {
     }
   }
   if (ReadInt16LE(ob->in) != 0x0006) longjmp(ob->conn->exception,1);
-  if (ReadInt8LE(ob->in) != 0x01) longjmp(ob->conn->exception,2);
-  if (ReadInt8LE(ob->in) != 0x13) longjmp(ob->conn->exception,3);
+  if (ReadUInt8LE(ob->in) != 0x01) longjmp(ob->conn->exception,2);
+  if (ReadUInt8LE(ob->in) != 0x13) longjmp(ob->conn->exception,3);
   ret = ReadInt32LE(out);
-  if (ReadInt8LE(ob->in) != 0x80) longjmp(ob->conn->exception,2);
+  if (ReadUInt8LE(ob->in) != 0x80) longjmp(ob->conn->exception,2);
   return ret;
 } 
 
@@ -83,10 +83,10 @@ int32 NetTWIPreempt(NetTWI *ob) {
     }
   }
   if (ReadInt16LE(ob->in) != 0x0006) longjmp(ob->conn->exception,1);
-  if (ReadInt8LE(ob->in) != 0x02) longjmp(ob->conn->exception,2);
-  if (ReadInt8LE(ob->in) != 0x13) longjmp(ob->conn->exception,3);
+  if (ReadUInt8LE(ob->in) != 0x02) longjmp(ob->conn->exception,2);
+  if (ReadUInt8LE(ob->in) != 0x13) longjmp(ob->conn->exception,3);
   ret = ReadInt32LE(out);
-  if (ReadInt8LE(ob->in) != 0x80) longjmp(ob->conn->exception,2);
+  if (ReadUInt8LE(ob->in) != 0x80) longjmp(ob->conn->exception,2);
   return ret;
 } 
 
@@ -113,10 +113,10 @@ TWIResult NetTWIWrite(NetTWI *ob,int32 devadr,int32 adrslen,int32 adrs,const int
     }
   }
   if (ReadInt16LE(ob->in) != 0x0006) longjmp(ob->conn->exception,1);
-  if (ReadInt8LE(ob->in) != 0x03) longjmp(ob->conn->exception,2);
-  if (ReadInt8LE(ob->in) != 0xC7) longjmp(ob->conn->exception,3);
+  if (ReadUInt8LE(ob->in) != 0x03) longjmp(ob->conn->exception,2);
+  if (ReadUInt8LE(ob->in) != 0xC7) longjmp(ob->conn->exception,3);
   ret = ReadInt32LE(out);
-  if (ReadInt8LE(ob->in) != 0x80) longjmp(ob->conn->exception,2);
+  if (ReadUInt8LE(ob->in) != 0x80) longjmp(ob->conn->exception,2);
   return ret;
 } 
 
@@ -139,10 +139,10 @@ TWIResult NetTWIRead(NetTWI *ob,int32 devadr,int32 adrslen,int32 adrs,int8* byte
     }
   }
   if (ReadInt16LE(ob->in) != 0x0006) longjmp(ob->conn->exception,1);
-  if (ReadInt8LE(ob->in) != 0x04) longjmp(ob->conn->exception,2);
-  if (ReadInt8LE(ob->in) != 0xC7) longjmp(ob->conn->exception,3);
+  if (ReadUInt8LE(ob->in) != 0x04) longjmp(ob->conn->exception,2);
+  if (ReadUInt8LE(ob->in) != 0xC7) longjmp(ob->conn->exception,3);
   ret = ReadInt32LE(out);
-  if (ReadInt8LE(ob->in) != 0x50) longjmp(ob->conn->exception,3);
+  if (ReadUInt8LE(ob->in) != 0x50) longjmp(ob->conn->exception,3);
   if (ReadInt32LE(ob->in)!=ArrayLength(bytes)) longjmp(ob->conn->exception,5);
   {
     int i;
@@ -150,7 +150,7 @@ TWIResult NetTWIRead(NetTWI *ob,int32 devadr,int32 adrslen,int32 adrs,int8* byte
       bytes[i] = ReadInt8LE(out);
     }
   }
-  if (ReadInt8LE(ob->in) != 0x80) longjmp(ob->conn->exception,2);
+  if (ReadUInt8LE(ob->in) != 0x80) longjmp(ob->conn->exception,2);
   return ret;
 } 
 

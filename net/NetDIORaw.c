@@ -40,10 +40,10 @@ int32 NetDIORawLock(NetDIORaw *ob,uint32 num,int32 flags) {
     }
   }
   if (ReadInt16LE(ob->in) != 0x0004) longjmp(ob->conn->exception,1);
-  if (ReadInt8LE(ob->in) != 0x00) longjmp(ob->conn->exception,2);
-  if (ReadInt8LE(ob->in) != 0x13) longjmp(ob->conn->exception,3);
+  if (ReadUInt8LE(ob->in) != 0x00) longjmp(ob->conn->exception,2);
+  if (ReadUInt8LE(ob->in) != 0x13) longjmp(ob->conn->exception,3);
   ret = ReadInt32LE(out);
-  if (ReadInt8LE(ob->in) != 0x80) longjmp(ob->conn->exception,2);
+  if (ReadUInt8LE(ob->in) != 0x80) longjmp(ob->conn->exception,2);
   return ret;
 } 
 
@@ -64,10 +64,10 @@ int32 NetDIORawUnlock(NetDIORaw *ob,uint32 num,int32 flags) {
     }
   }
   if (ReadInt16LE(ob->in) != 0x0004) longjmp(ob->conn->exception,1);
-  if (ReadInt8LE(ob->in) != 0x01) longjmp(ob->conn->exception,2);
-  if (ReadInt8LE(ob->in) != 0x13) longjmp(ob->conn->exception,3);
+  if (ReadUInt8LE(ob->in) != 0x01) longjmp(ob->conn->exception,2);
+  if (ReadUInt8LE(ob->in) != 0x13) longjmp(ob->conn->exception,3);
   ret = ReadInt32LE(out);
-  if (ReadInt8LE(ob->in) != 0x80) longjmp(ob->conn->exception,2);
+  if (ReadUInt8LE(ob->in) != 0x80) longjmp(ob->conn->exception,2);
   return ret;
 } 
 
@@ -86,10 +86,10 @@ int32 NetDIORawPreempt(NetDIORaw *ob) {
     }
   }
   if (ReadInt16LE(ob->in) != 0x0004) longjmp(ob->conn->exception,1);
-  if (ReadInt8LE(ob->in) != 0x02) longjmp(ob->conn->exception,2);
-  if (ReadInt8LE(ob->in) != 0x13) longjmp(ob->conn->exception,3);
+  if (ReadUInt8LE(ob->in) != 0x02) longjmp(ob->conn->exception,2);
+  if (ReadUInt8LE(ob->in) != 0x13) longjmp(ob->conn->exception,3);
   ret = ReadInt32LE(out);
-  if (ReadInt8LE(ob->in) != 0x80) longjmp(ob->conn->exception,2);
+  if (ReadUInt8LE(ob->in) != 0x80) longjmp(ob->conn->exception,2);
   return ret;
 } 
 
@@ -105,8 +105,8 @@ void NetDIORawDirSet(NetDIORaw *ob,int32 num,int32 asOutput) {
   if (ob->conn->mode < 2)  ob->out->Flush(ob->out);
   if (ob->conn->mode > 0) return;
   if (ReadInt16LE(ob->in) != 0x0004) longjmp(ob->conn->exception,1);
-  if (ReadInt8LE(ob->in) != 0x03) longjmp(ob->conn->exception,2);
-  if (ReadInt8LE(ob->in) != 0x80) longjmp(ob->conn->exception,2);
+  if (ReadUInt8LE(ob->in) != 0x03) longjmp(ob->conn->exception,2);
+  if (ReadUInt8LE(ob->in) != 0x80) longjmp(ob->conn->exception,2);
 } 
 
 void NetDIORawDataSet(NetDIORaw *ob,int32 num,int32 asHigh) {
@@ -121,8 +121,8 @@ void NetDIORawDataSet(NetDIORaw *ob,int32 num,int32 asHigh) {
   if (ob->conn->mode < 2)  ob->out->Flush(ob->out);
   if (ob->conn->mode > 0) return;
   if (ReadInt16LE(ob->in) != 0x0004) longjmp(ob->conn->exception,1);
-  if (ReadInt8LE(ob->in) != 0x04) longjmp(ob->conn->exception,2);
-  if (ReadInt8LE(ob->in) != 0x80) longjmp(ob->conn->exception,2);
+  if (ReadUInt8LE(ob->in) != 0x04) longjmp(ob->conn->exception,2);
+  if (ReadUInt8LE(ob->in) != 0x80) longjmp(ob->conn->exception,2);
 } 
 
 int32 NetDIORawDirGet(NetDIORaw *ob,int32 num) {
@@ -141,10 +141,10 @@ int32 NetDIORawDirGet(NetDIORaw *ob,int32 num) {
     }
   }
   if (ReadInt16LE(ob->in) != 0x0004) longjmp(ob->conn->exception,1);
-  if (ReadInt8LE(ob->in) != 0x05) longjmp(ob->conn->exception,2);
-  if (ReadInt8LE(ob->in) != 0x13) longjmp(ob->conn->exception,3);
+  if (ReadUInt8LE(ob->in) != 0x05) longjmp(ob->conn->exception,2);
+  if (ReadUInt8LE(ob->in) != 0x13) longjmp(ob->conn->exception,3);
   ret = ReadInt32LE(out);
-  if (ReadInt8LE(ob->in) != 0x80) longjmp(ob->conn->exception,2);
+  if (ReadUInt8LE(ob->in) != 0x80) longjmp(ob->conn->exception,2);
   return ret;
 } 
 
@@ -164,10 +164,10 @@ int32 NetDIORawDataGet(NetDIORaw *ob,int32 num) {
     }
   }
   if (ReadInt16LE(ob->in) != 0x0004) longjmp(ob->conn->exception,1);
-  if (ReadInt8LE(ob->in) != 0x06) longjmp(ob->conn->exception,2);
-  if (ReadInt8LE(ob->in) != 0x13) longjmp(ob->conn->exception,3);
+  if (ReadUInt8LE(ob->in) != 0x06) longjmp(ob->conn->exception,2);
+  if (ReadUInt8LE(ob->in) != 0x13) longjmp(ob->conn->exception,3);
   ret = ReadInt32LE(out);
-  if (ReadInt8LE(ob->in) != 0x80) longjmp(ob->conn->exception,2);
+  if (ReadUInt8LE(ob->in) != 0x80) longjmp(ob->conn->exception,2);
   return ret;
 } 
 
@@ -186,10 +186,10 @@ uint32 NetDIORawCount(NetDIORaw *ob) {
     }
   }
   if (ReadInt16LE(ob->in) != 0x0004) longjmp(ob->conn->exception,1);
-  if (ReadInt8LE(ob->in) != 0x07) longjmp(ob->conn->exception,2);
-  if (ReadInt8LE(ob->in) != 0x03) longjmp(ob->conn->exception,3);
+  if (ReadUInt8LE(ob->in) != 0x07) longjmp(ob->conn->exception,2);
+  if (ReadUInt8LE(ob->in) != 0x03) longjmp(ob->conn->exception,3);
   ret = ReadUInt32LE(out);
-  if (ReadInt8LE(ob->in) != 0x80) longjmp(ob->conn->exception,2);
+  if (ReadUInt8LE(ob->in) != 0x80) longjmp(ob->conn->exception,2);
   return ret;
 } 
 

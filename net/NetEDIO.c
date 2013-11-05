@@ -44,10 +44,10 @@ int32 NetEDIOLock(NetEDIO *ob,uint32 num,int32 flags) {
     }
   }
   if (ReadInt16LE(ob->in) != 0x000A) longjmp(ob->conn->exception,1);
-  if (ReadInt8LE(ob->in) != 0x00) longjmp(ob->conn->exception,2);
-  if (ReadInt8LE(ob->in) != 0x13) longjmp(ob->conn->exception,3);
+  if (ReadUInt8LE(ob->in) != 0x00) longjmp(ob->conn->exception,2);
+  if (ReadUInt8LE(ob->in) != 0x13) longjmp(ob->conn->exception,3);
   ret = ReadInt32LE(out);
-  if (ReadInt8LE(ob->in) != 0x80) longjmp(ob->conn->exception,2);
+  if (ReadUInt8LE(ob->in) != 0x80) longjmp(ob->conn->exception,2);
   return ret;
 } 
 
@@ -68,10 +68,10 @@ int32 NetEDIOUnlock(NetEDIO *ob,uint32 num,int32 flags) {
     }
   }
   if (ReadInt16LE(ob->in) != 0x000A) longjmp(ob->conn->exception,1);
-  if (ReadInt8LE(ob->in) != 0x01) longjmp(ob->conn->exception,2);
-  if (ReadInt8LE(ob->in) != 0x13) longjmp(ob->conn->exception,3);
+  if (ReadUInt8LE(ob->in) != 0x01) longjmp(ob->conn->exception,2);
+  if (ReadUInt8LE(ob->in) != 0x13) longjmp(ob->conn->exception,3);
   ret = ReadInt32LE(out);
-  if (ReadInt8LE(ob->in) != 0x80) longjmp(ob->conn->exception,2);
+  if (ReadUInt8LE(ob->in) != 0x80) longjmp(ob->conn->exception,2);
   return ret;
 } 
 
@@ -90,10 +90,10 @@ int32 NetEDIOPreempt(NetEDIO *ob) {
     }
   }
   if (ReadInt16LE(ob->in) != 0x000A) longjmp(ob->conn->exception,1);
-  if (ReadInt8LE(ob->in) != 0x02) longjmp(ob->conn->exception,2);
-  if (ReadInt8LE(ob->in) != 0x13) longjmp(ob->conn->exception,3);
+  if (ReadUInt8LE(ob->in) != 0x02) longjmp(ob->conn->exception,2);
+  if (ReadUInt8LE(ob->in) != 0x13) longjmp(ob->conn->exception,3);
   ret = ReadInt32LE(out);
-  if (ReadInt8LE(ob->in) != 0x80) longjmp(ob->conn->exception,2);
+  if (ReadUInt8LE(ob->in) != 0x80) longjmp(ob->conn->exception,2);
   return ret;
 } 
 
@@ -113,8 +113,8 @@ int32* NetEDIOQueryFunction(NetEDIO *ob,EDIOType type) {
     }
   }
   if (ReadInt16LE(ob->in) != 0x000A) longjmp(ob->conn->exception,1);
-  if (ReadInt8LE(ob->in) != 0x03) longjmp(ob->conn->exception,2);
-  if (ReadInt8LE(ob->in) != 0x53) longjmp(ob->conn->exception,3);
+  if (ReadUInt8LE(ob->in) != 0x03) longjmp(ob->conn->exception,2);
+  if (ReadUInt8LE(ob->in) != 0x53) longjmp(ob->conn->exception,3);
   ret_len = ReadInt32LE(ob->in);
   ret = ArrayAlloc(ret_len,4);
   {
@@ -123,7 +123,7 @@ int32* NetEDIOQueryFunction(NetEDIO *ob,EDIOType type) {
       ret[i] = ReadInt32LE(out);
     }
   }
-  if (ReadInt8LE(ob->in) != 0x80) longjmp(ob->conn->exception,2);
+  if (ReadUInt8LE(ob->in) != 0x80) longjmp(ob->conn->exception,2);
   return ret;
 } 
 
@@ -145,10 +145,10 @@ int32 NetEDIOPWM(NetEDIO *ob,int32 num,uint32 periodHigh,uint32 periodLow) {
     }
   }
   if (ReadInt16LE(ob->in) != 0x000A) longjmp(ob->conn->exception,1);
-  if (ReadInt8LE(ob->in) != 0x04) longjmp(ob->conn->exception,2);
-  if (ReadInt8LE(ob->in) != 0x13) longjmp(ob->conn->exception,3);
+  if (ReadUInt8LE(ob->in) != 0x04) longjmp(ob->conn->exception,2);
+  if (ReadUInt8LE(ob->in) != 0x13) longjmp(ob->conn->exception,3);
   ret = ReadInt32LE(out);
-  if (ReadInt8LE(ob->in) != 0x80) longjmp(ob->conn->exception,2);
+  if (ReadUInt8LE(ob->in) != 0x80) longjmp(ob->conn->exception,2);
   return ret;
 } 
 
@@ -168,10 +168,10 @@ int32 NetEDIOQueryPWM(NetEDIO *ob,int32 num,uint32 periodHigh[1],uint32 periodLo
     }
   }
   if (ReadInt16LE(ob->in) != 0x000A) longjmp(ob->conn->exception,1);
-  if (ReadInt8LE(ob->in) != 0x05) longjmp(ob->conn->exception,2);
-  if (ReadInt8LE(ob->in) != 0x13) longjmp(ob->conn->exception,3);
+  if (ReadUInt8LE(ob->in) != 0x05) longjmp(ob->conn->exception,2);
+  if (ReadUInt8LE(ob->in) != 0x13) longjmp(ob->conn->exception,3);
   ret = ReadInt32LE(out);
-  if (ReadInt8LE(ob->in) != 0x43) longjmp(ob->conn->exception,3);
+  if (ReadUInt8LE(ob->in) != 0x43) longjmp(ob->conn->exception,3);
   ReadInt32LE(out);
   {
     int i;
@@ -179,7 +179,7 @@ int32 NetEDIOQueryPWM(NetEDIO *ob,int32 num,uint32 periodHigh[1],uint32 periodLo
       periodHigh[i] = ReadUInt32LE(out);
     }
   }
-  if (ReadInt8LE(ob->in) != 0x43) longjmp(ob->conn->exception,3);
+  if (ReadUInt8LE(ob->in) != 0x43) longjmp(ob->conn->exception,3);
   ReadInt32LE(out);
   {
     int i;
@@ -187,7 +187,7 @@ int32 NetEDIOQueryPWM(NetEDIO *ob,int32 num,uint32 periodHigh[1],uint32 periodLo
       periodLow[i] = ReadUInt32LE(out);
     }
   }
-  if (ReadInt8LE(ob->in) != 0x80) longjmp(ob->conn->exception,2);
+  if (ReadUInt8LE(ob->in) != 0x80) longjmp(ob->conn->exception,2);
   return ret;
 } 
 
@@ -209,10 +209,10 @@ int32 NetEDIOPWMfd(NetEDIO *ob,int32 num,uint32 freq,uint32 DC) {
     }
   }
   if (ReadInt16LE(ob->in) != 0x000A) longjmp(ob->conn->exception,1);
-  if (ReadInt8LE(ob->in) != 0x06) longjmp(ob->conn->exception,2);
-  if (ReadInt8LE(ob->in) != 0x13) longjmp(ob->conn->exception,3);
+  if (ReadUInt8LE(ob->in) != 0x06) longjmp(ob->conn->exception,2);
+  if (ReadUInt8LE(ob->in) != 0x13) longjmp(ob->conn->exception,3);
   ret = ReadInt32LE(out);
-  if (ReadInt8LE(ob->in) != 0x80) longjmp(ob->conn->exception,2);
+  if (ReadUInt8LE(ob->in) != 0x80) longjmp(ob->conn->exception,2);
   return ret;
 } 
 
@@ -232,10 +232,10 @@ int32 NetEDIOQueryPWMfd(NetEDIO *ob,int32 num,uint32 freq[1],uint32 DC[1]) {
     }
   }
   if (ReadInt16LE(ob->in) != 0x000A) longjmp(ob->conn->exception,1);
-  if (ReadInt8LE(ob->in) != 0x07) longjmp(ob->conn->exception,2);
-  if (ReadInt8LE(ob->in) != 0x13) longjmp(ob->conn->exception,3);
+  if (ReadUInt8LE(ob->in) != 0x07) longjmp(ob->conn->exception,2);
+  if (ReadUInt8LE(ob->in) != 0x13) longjmp(ob->conn->exception,3);
   ret = ReadInt32LE(out);
-  if (ReadInt8LE(ob->in) != 0x43) longjmp(ob->conn->exception,3);
+  if (ReadUInt8LE(ob->in) != 0x43) longjmp(ob->conn->exception,3);
   ReadInt32LE(out);
   {
     int i;
@@ -243,7 +243,7 @@ int32 NetEDIOQueryPWMfd(NetEDIO *ob,int32 num,uint32 freq[1],uint32 DC[1]) {
       freq[i] = ReadUInt32LE(out);
     }
   }
-  if (ReadInt8LE(ob->in) != 0x43) longjmp(ob->conn->exception,3);
+  if (ReadUInt8LE(ob->in) != 0x43) longjmp(ob->conn->exception,3);
   ReadInt32LE(out);
   {
     int i;
@@ -251,7 +251,7 @@ int32 NetEDIOQueryPWMfd(NetEDIO *ob,int32 num,uint32 freq[1],uint32 DC[1]) {
       DC[i] = ReadUInt32LE(out);
     }
   }
-  if (ReadInt8LE(ob->in) != 0x80) longjmp(ob->conn->exception,2);
+  if (ReadUInt8LE(ob->in) != 0x80) longjmp(ob->conn->exception,2);
   return ret;
 } 
 
@@ -271,10 +271,10 @@ int32 NetEDIOQuadratureCount(NetEDIO *ob,int32 num) {
     }
   }
   if (ReadInt16LE(ob->in) != 0x000A) longjmp(ob->conn->exception,1);
-  if (ReadInt8LE(ob->in) != 0x08) longjmp(ob->conn->exception,2);
-  if (ReadInt8LE(ob->in) != 0x13) longjmp(ob->conn->exception,3);
+  if (ReadUInt8LE(ob->in) != 0x08) longjmp(ob->conn->exception,2);
+  if (ReadUInt8LE(ob->in) != 0x13) longjmp(ob->conn->exception,3);
   ret = ReadInt32LE(out);
-  if (ReadInt8LE(ob->in) != 0x80) longjmp(ob->conn->exception,2);
+  if (ReadUInt8LE(ob->in) != 0x80) longjmp(ob->conn->exception,2);
   return ret;
 } 
 
@@ -295,10 +295,10 @@ uint32 NetEDIOEdgeCount(NetEDIO *ob,int32 num,int32 edge) {
     }
   }
   if (ReadInt16LE(ob->in) != 0x000A) longjmp(ob->conn->exception,1);
-  if (ReadInt8LE(ob->in) != 0x09) longjmp(ob->conn->exception,2);
-  if (ReadInt8LE(ob->in) != 0x03) longjmp(ob->conn->exception,3);
+  if (ReadUInt8LE(ob->in) != 0x09) longjmp(ob->conn->exception,2);
+  if (ReadUInt8LE(ob->in) != 0x03) longjmp(ob->conn->exception,3);
   ret = ReadUInt32LE(out);
-  if (ReadInt8LE(ob->in) != 0x80) longjmp(ob->conn->exception,2);
+  if (ReadUInt8LE(ob->in) != 0x80) longjmp(ob->conn->exception,2);
   return ret;
 } 
 
@@ -318,10 +318,10 @@ int32 NetEDIOGlitched(NetEDIO *ob,int32 num) {
     }
   }
   if (ReadInt16LE(ob->in) != 0x000A) longjmp(ob->conn->exception,1);
-  if (ReadInt8LE(ob->in) != 0x0A) longjmp(ob->conn->exception,2);
-  if (ReadInt8LE(ob->in) != 0x13) longjmp(ob->conn->exception,3);
+  if (ReadUInt8LE(ob->in) != 0x0A) longjmp(ob->conn->exception,2);
+  if (ReadUInt8LE(ob->in) != 0x13) longjmp(ob->conn->exception,3);
   ret = ReadInt32LE(out);
-  if (ReadInt8LE(ob->in) != 0x80) longjmp(ob->conn->exception,2);
+  if (ReadUInt8LE(ob->in) != 0x80) longjmp(ob->conn->exception,2);
   return ret;
 } 
 
@@ -342,10 +342,10 @@ int32 NetEDIOHBridge(NetEDIO *ob,int32 num,HBState state) {
     }
   }
   if (ReadInt16LE(ob->in) != 0x000A) longjmp(ob->conn->exception,1);
-  if (ReadInt8LE(ob->in) != 0x0B) longjmp(ob->conn->exception,2);
-  if (ReadInt8LE(ob->in) != 0x13) longjmp(ob->conn->exception,3);
+  if (ReadUInt8LE(ob->in) != 0x0B) longjmp(ob->conn->exception,2);
+  if (ReadUInt8LE(ob->in) != 0x13) longjmp(ob->conn->exception,3);
   ret = ReadInt32LE(out);
-  if (ReadInt8LE(ob->in) != 0x80) longjmp(ob->conn->exception,2);
+  if (ReadUInt8LE(ob->in) != 0x80) longjmp(ob->conn->exception,2);
   return ret;
 } 
 

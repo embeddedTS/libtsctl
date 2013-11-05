@@ -38,8 +38,8 @@ void NetModeJSON(NetMode *ob) {
   if (ob->conn->mode < 2)  ob->out->Flush(ob->out);
   if (ob->conn->mode > 0) return;
   if (ReadInt16LE(ob->in) != 0x000B) longjmp(ob->conn->exception,1);
-  if (ReadInt8LE(ob->in) != 0x00) longjmp(ob->conn->exception,2);
-  if (ReadInt8LE(ob->in) != 0x80) longjmp(ob->conn->exception,2);
+  if (ReadUInt8LE(ob->in) != 0x00) longjmp(ob->conn->exception,2);
+  if (ReadUInt8LE(ob->in) != 0x80) longjmp(ob->conn->exception,2);
 } 
 
 void NetModeAssign(NetMode *ob) {
@@ -52,8 +52,8 @@ void NetModeAssign(NetMode *ob) {
   if (ob->conn->mode < 2)  ob->out->Flush(ob->out);
   if (ob->conn->mode > 0) return;
   if (ReadInt16LE(ob->in) != 0x000B) longjmp(ob->conn->exception,1);
-  if (ReadInt8LE(ob->in) != 0x01) longjmp(ob->conn->exception,2);
-  if (ReadInt8LE(ob->in) != 0x80) longjmp(ob->conn->exception,2);
+  if (ReadUInt8LE(ob->in) != 0x01) longjmp(ob->conn->exception,2);
+  if (ReadUInt8LE(ob->in) != 0x80) longjmp(ob->conn->exception,2);
 } 
 
 void NetModeNoAssign(NetMode *ob) {
@@ -66,8 +66,8 @@ void NetModeNoAssign(NetMode *ob) {
   if (ob->conn->mode < 2)  ob->out->Flush(ob->out);
   if (ob->conn->mode > 0) return;
   if (ReadInt16LE(ob->in) != 0x000B) longjmp(ob->conn->exception,1);
-  if (ReadInt8LE(ob->in) != 0x02) longjmp(ob->conn->exception,2);
-  if (ReadInt8LE(ob->in) != 0x80) longjmp(ob->conn->exception,2);
+  if (ReadUInt8LE(ob->in) != 0x02) longjmp(ob->conn->exception,2);
+  if (ReadUInt8LE(ob->in) != 0x80) longjmp(ob->conn->exception,2);
 } 
 
 void NetModeHex(NetMode *ob) {
@@ -80,8 +80,8 @@ void NetModeHex(NetMode *ob) {
   if (ob->conn->mode < 2)  ob->out->Flush(ob->out);
   if (ob->conn->mode > 0) return;
   if (ReadInt16LE(ob->in) != 0x000B) longjmp(ob->conn->exception,1);
-  if (ReadInt8LE(ob->in) != 0x03) longjmp(ob->conn->exception,2);
-  if (ReadInt8LE(ob->in) != 0x80) longjmp(ob->conn->exception,2);
+  if (ReadUInt8LE(ob->in) != 0x03) longjmp(ob->conn->exception,2);
+  if (ReadUInt8LE(ob->in) != 0x80) longjmp(ob->conn->exception,2);
 } 
 
 void NetModeDec(NetMode *ob) {
@@ -94,8 +94,8 @@ void NetModeDec(NetMode *ob) {
   if (ob->conn->mode < 2)  ob->out->Flush(ob->out);
   if (ob->conn->mode > 0) return;
   if (ReadInt16LE(ob->in) != 0x000B) longjmp(ob->conn->exception,1);
-  if (ReadInt8LE(ob->in) != 0x04) longjmp(ob->conn->exception,2);
-  if (ReadInt8LE(ob->in) != 0x80) longjmp(ob->conn->exception,2);
+  if (ReadUInt8LE(ob->in) != 0x04) longjmp(ob->conn->exception,2);
+  if (ReadUInt8LE(ob->in) != 0x80) longjmp(ob->conn->exception,2);
 } 
 
 void NetModeOct(NetMode *ob) {
@@ -108,8 +108,8 @@ void NetModeOct(NetMode *ob) {
   if (ob->conn->mode < 2)  ob->out->Flush(ob->out);
   if (ob->conn->mode > 0) return;
   if (ReadInt16LE(ob->in) != 0x000B) longjmp(ob->conn->exception,1);
-  if (ReadInt8LE(ob->in) != 0x05) longjmp(ob->conn->exception,2);
-  if (ReadInt8LE(ob->in) != 0x80) longjmp(ob->conn->exception,2);
+  if (ReadUInt8LE(ob->in) != 0x05) longjmp(ob->conn->exception,2);
+  if (ReadUInt8LE(ob->in) != 0x80) longjmp(ob->conn->exception,2);
 } 
 
 void NetModeAStr(NetMode *ob) {
@@ -122,8 +122,8 @@ void NetModeAStr(NetMode *ob) {
   if (ob->conn->mode < 2)  ob->out->Flush(ob->out);
   if (ob->conn->mode > 0) return;
   if (ReadInt16LE(ob->in) != 0x000B) longjmp(ob->conn->exception,1);
-  if (ReadInt8LE(ob->in) != 0x06) longjmp(ob->conn->exception,2);
-  if (ReadInt8LE(ob->in) != 0x80) longjmp(ob->conn->exception,2);
+  if (ReadUInt8LE(ob->in) != 0x06) longjmp(ob->conn->exception,2);
+  if (ReadUInt8LE(ob->in) != 0x80) longjmp(ob->conn->exception,2);
 } 
 
 void NetModeAHex(NetMode *ob) {
@@ -136,8 +136,8 @@ void NetModeAHex(NetMode *ob) {
   if (ob->conn->mode < 2)  ob->out->Flush(ob->out);
   if (ob->conn->mode > 0) return;
   if (ReadInt16LE(ob->in) != 0x000B) longjmp(ob->conn->exception,1);
-  if (ReadInt8LE(ob->in) != 0x07) longjmp(ob->conn->exception,2);
-  if (ReadInt8LE(ob->in) != 0x80) longjmp(ob->conn->exception,2);
+  if (ReadUInt8LE(ob->in) != 0x07) longjmp(ob->conn->exception,2);
+  if (ReadUInt8LE(ob->in) != 0x80) longjmp(ob->conn->exception,2);
 } 
 
 void NetModeADec(NetMode *ob) {
@@ -150,8 +150,8 @@ void NetModeADec(NetMode *ob) {
   if (ob->conn->mode < 2)  ob->out->Flush(ob->out);
   if (ob->conn->mode > 0) return;
   if (ReadInt16LE(ob->in) != 0x000B) longjmp(ob->conn->exception,1);
-  if (ReadInt8LE(ob->in) != 0x08) longjmp(ob->conn->exception,2);
-  if (ReadInt8LE(ob->in) != 0x80) longjmp(ob->conn->exception,2);
+  if (ReadUInt8LE(ob->in) != 0x08) longjmp(ob->conn->exception,2);
+  if (ReadUInt8LE(ob->in) != 0x80) longjmp(ob->conn->exception,2);
 } 
 
 void NetModeAOct(NetMode *ob) {
@@ -164,8 +164,8 @@ void NetModeAOct(NetMode *ob) {
   if (ob->conn->mode < 2)  ob->out->Flush(ob->out);
   if (ob->conn->mode > 0) return;
   if (ReadInt16LE(ob->in) != 0x000B) longjmp(ob->conn->exception,1);
-  if (ReadInt8LE(ob->in) != 0x09) longjmp(ob->conn->exception,2);
-  if (ReadInt8LE(ob->in) != 0x80) longjmp(ob->conn->exception,2);
+  if (ReadUInt8LE(ob->in) != 0x09) longjmp(ob->conn->exception,2);
+  if (ReadUInt8LE(ob->in) != 0x80) longjmp(ob->conn->exception,2);
 } 
 
 void NetModeABinOct(NetMode *ob) {
@@ -178,8 +178,8 @@ void NetModeABinOct(NetMode *ob) {
   if (ob->conn->mode < 2)  ob->out->Flush(ob->out);
   if (ob->conn->mode > 0) return;
   if (ReadInt16LE(ob->in) != 0x000B) longjmp(ob->conn->exception,1);
-  if (ReadInt8LE(ob->in) != 0x0A) longjmp(ob->conn->exception,2);
-  if (ReadInt8LE(ob->in) != 0x80) longjmp(ob->conn->exception,2);
+  if (ReadUInt8LE(ob->in) != 0x0A) longjmp(ob->conn->exception,2);
+  if (ReadUInt8LE(ob->in) != 0x80) longjmp(ob->conn->exception,2);
 } 
 
 void NetModeABinHex(NetMode *ob) {
@@ -192,8 +192,8 @@ void NetModeABinHex(NetMode *ob) {
   if (ob->conn->mode < 2)  ob->out->Flush(ob->out);
   if (ob->conn->mode > 0) return;
   if (ReadInt16LE(ob->in) != 0x000B) longjmp(ob->conn->exception,1);
-  if (ReadInt8LE(ob->in) != 0x0B) longjmp(ob->conn->exception,2);
-  if (ReadInt8LE(ob->in) != 0x80) longjmp(ob->conn->exception,2);
+  if (ReadUInt8LE(ob->in) != 0x0B) longjmp(ob->conn->exception,2);
+  if (ReadUInt8LE(ob->in) != 0x80) longjmp(ob->conn->exception,2);
 } 
 
 void NetModeABinUni(NetMode *ob) {
@@ -206,7 +206,7 @@ void NetModeABinUni(NetMode *ob) {
   if (ob->conn->mode < 2)  ob->out->Flush(ob->out);
   if (ob->conn->mode > 0) return;
   if (ReadInt16LE(ob->in) != 0x000B) longjmp(ob->conn->exception,1);
-  if (ReadInt8LE(ob->in) != 0x0C) longjmp(ob->conn->exception,2);
-  if (ReadInt8LE(ob->in) != 0x80) longjmp(ob->conn->exception,2);
+  if (ReadUInt8LE(ob->in) != 0x0C) longjmp(ob->conn->exception,2);
+  if (ReadUInt8LE(ob->in) != 0x80) longjmp(ob->conn->exception,2);
 } 
 

@@ -62,10 +62,10 @@ int32 NetAIOLock(NetAIO *ob,uint32 num,int32 flags) {
     }
   }
   if (ReadInt16LE(ob->in) != 0x0009) longjmp(ob->conn->exception,1);
-  if (ReadInt8LE(ob->in) != 0x00) longjmp(ob->conn->exception,2);
-  if (ReadInt8LE(ob->in) != 0x13) longjmp(ob->conn->exception,3);
+  if (ReadUInt8LE(ob->in) != 0x00) longjmp(ob->conn->exception,2);
+  if (ReadUInt8LE(ob->in) != 0x13) longjmp(ob->conn->exception,3);
   ret = ReadInt32LE(out);
-  if (ReadInt8LE(ob->in) != 0x80) longjmp(ob->conn->exception,2);
+  if (ReadUInt8LE(ob->in) != 0x80) longjmp(ob->conn->exception,2);
   return ret;
 } 
 
@@ -86,10 +86,10 @@ int32 NetAIOUnlock(NetAIO *ob,uint32 num,int32 flags) {
     }
   }
   if (ReadInt16LE(ob->in) != 0x0009) longjmp(ob->conn->exception,1);
-  if (ReadInt8LE(ob->in) != 0x01) longjmp(ob->conn->exception,2);
-  if (ReadInt8LE(ob->in) != 0x13) longjmp(ob->conn->exception,3);
+  if (ReadUInt8LE(ob->in) != 0x01) longjmp(ob->conn->exception,2);
+  if (ReadUInt8LE(ob->in) != 0x13) longjmp(ob->conn->exception,3);
   ret = ReadInt32LE(out);
-  if (ReadInt8LE(ob->in) != 0x80) longjmp(ob->conn->exception,2);
+  if (ReadUInt8LE(ob->in) != 0x80) longjmp(ob->conn->exception,2);
   return ret;
 } 
 
@@ -108,10 +108,10 @@ int32 NetAIOPreempt(NetAIO *ob) {
     }
   }
   if (ReadInt16LE(ob->in) != 0x0009) longjmp(ob->conn->exception,1);
-  if (ReadInt8LE(ob->in) != 0x02) longjmp(ob->conn->exception,2);
-  if (ReadInt8LE(ob->in) != 0x13) longjmp(ob->conn->exception,3);
+  if (ReadUInt8LE(ob->in) != 0x02) longjmp(ob->conn->exception,2);
+  if (ReadUInt8LE(ob->in) != 0x13) longjmp(ob->conn->exception,3);
   ret = ReadInt32LE(out);
-  if (ReadInt8LE(ob->in) != 0x80) longjmp(ob->conn->exception,2);
+  if (ReadUInt8LE(ob->in) != 0x80) longjmp(ob->conn->exception,2);
   return ret;
 } 
 
@@ -130,10 +130,10 @@ AIOType NetAIOType(NetAIO *ob) {
     }
   }
   if (ReadInt16LE(ob->in) != 0x0009) longjmp(ob->conn->exception,1);
-  if (ReadInt8LE(ob->in) != 0x03) longjmp(ob->conn->exception,2);
-  if (ReadInt8LE(ob->in) != 0xCD) longjmp(ob->conn->exception,3);
+  if (ReadUInt8LE(ob->in) != 0x03) longjmp(ob->conn->exception,2);
+  if (ReadUInt8LE(ob->in) != 0xCD) longjmp(ob->conn->exception,3);
   ret = ReadInt32LE(out);
-  if (ReadInt8LE(ob->in) != 0x80) longjmp(ob->conn->exception,2);
+  if (ReadUInt8LE(ob->in) != 0x80) longjmp(ob->conn->exception,2);
   return ret;
 } 
 
@@ -152,30 +152,30 @@ VoltageRange* NetAIOVoltageRangeList(NetAIO *ob) {
     }
   }
   if (ReadInt16LE(ob->in) != 0x0009) longjmp(ob->conn->exception,1);
-  if (ReadInt8LE(ob->in) != 0x04) longjmp(ob->conn->exception,2);
-  if (ReadInt8LE(ob->in) != 0x70) longjmp(ob->conn->exception,3);
+  if (ReadUInt8LE(ob->in) != 0x04) longjmp(ob->conn->exception,2);
+  if (ReadUInt8LE(ob->in) != 0x70) longjmp(ob->conn->exception,3);
   ret_len = ReadInt32LE(ob->in);
   ret = ArrayAlloc(ret_len,24);
   {
     int i;
     for(i=0;i<ret_len;i++) {
-      if (ReadInt8LE(ob->in) != 0x31) longjmp(ob->conn->exception,3);
-        if (ReadInt8LE(ob->in) != 0x23) longjmp(ob->conn->exception,3);
+      if (ReadUInt8LE(ob->in) != 0x31) longjmp(ob->conn->exception,3);
+        if (ReadUInt8LE(ob->in) != 0x23) longjmp(ob->conn->exception,3);
         ret[i].low.start = ReadReal32LE(out);
-        if (ReadInt8LE(ob->in) != 0x23) longjmp(ob->conn->exception,3);
+        if (ReadUInt8LE(ob->in) != 0x23) longjmp(ob->conn->exception,3);
         ret[i].low.step = ReadReal32LE(out);
-        if (ReadInt8LE(ob->in) != 0x03) longjmp(ob->conn->exception,3);
+        if (ReadUInt8LE(ob->in) != 0x03) longjmp(ob->conn->exception,3);
         ret[i].low.count = ReadUInt32LE(out);
-      if (ReadInt8LE(ob->in) != 0x31) longjmp(ob->conn->exception,3);
-        if (ReadInt8LE(ob->in) != 0x23) longjmp(ob->conn->exception,3);
+      if (ReadUInt8LE(ob->in) != 0x31) longjmp(ob->conn->exception,3);
+        if (ReadUInt8LE(ob->in) != 0x23) longjmp(ob->conn->exception,3);
         ret[i].high.start = ReadReal32LE(out);
-        if (ReadInt8LE(ob->in) != 0x23) longjmp(ob->conn->exception,3);
+        if (ReadUInt8LE(ob->in) != 0x23) longjmp(ob->conn->exception,3);
         ret[i].high.step = ReadReal32LE(out);
-        if (ReadInt8LE(ob->in) != 0x03) longjmp(ob->conn->exception,3);
+        if (ReadUInt8LE(ob->in) != 0x03) longjmp(ob->conn->exception,3);
         ret[i].high.count = ReadUInt32LE(out);
     }
   }
-  if (ReadInt8LE(ob->in) != 0x80) longjmp(ob->conn->exception,2);
+  if (ReadUInt8LE(ob->in) != 0x80) longjmp(ob->conn->exception,2);
   return ret;
 } 
 
@@ -194,10 +194,10 @@ int32 NetAIOPrecisionList(NetAIO *ob) {
     }
   }
   if (ReadInt16LE(ob->in) != 0x0009) longjmp(ob->conn->exception,1);
-  if (ReadInt8LE(ob->in) != 0x05) longjmp(ob->conn->exception,2);
-  if (ReadInt8LE(ob->in) != 0x13) longjmp(ob->conn->exception,3);
+  if (ReadUInt8LE(ob->in) != 0x05) longjmp(ob->conn->exception,2);
+  if (ReadUInt8LE(ob->in) != 0x13) longjmp(ob->conn->exception,3);
   ret = ReadInt32LE(out);
-  if (ReadInt8LE(ob->in) != 0x80) longjmp(ob->conn->exception,2);
+  if (ReadUInt8LE(ob->in) != 0x80) longjmp(ob->conn->exception,2);
   return ret;
 } 
 
@@ -216,22 +216,22 @@ PeriodRange* NetAIOPeriodRangeList(NetAIO *ob) {
     }
   }
   if (ReadInt16LE(ob->in) != 0x0009) longjmp(ob->conn->exception,1);
-  if (ReadInt8LE(ob->in) != 0x06) longjmp(ob->conn->exception,2);
-  if (ReadInt8LE(ob->in) != 0x71) longjmp(ob->conn->exception,3);
+  if (ReadUInt8LE(ob->in) != 0x06) longjmp(ob->conn->exception,2);
+  if (ReadUInt8LE(ob->in) != 0x71) longjmp(ob->conn->exception,3);
   ret_len = ReadInt32LE(ob->in);
   ret = ArrayAlloc(ret_len,12);
   {
     int i;
     for(i=0;i<ret_len;i++) {
-      if (ReadInt8LE(ob->in) != 0x03) longjmp(ob->conn->exception,3);
+      if (ReadUInt8LE(ob->in) != 0x03) longjmp(ob->conn->exception,3);
       ret[i].start = ReadUInt32LE(out);
-      if (ReadInt8LE(ob->in) != 0x03) longjmp(ob->conn->exception,3);
+      if (ReadUInt8LE(ob->in) != 0x03) longjmp(ob->conn->exception,3);
       ret[i].step = ReadUInt32LE(out);
-      if (ReadInt8LE(ob->in) != 0x03) longjmp(ob->conn->exception,3);
+      if (ReadUInt8LE(ob->in) != 0x03) longjmp(ob->conn->exception,3);
       ret[i].count = ReadUInt32LE(out);
     }
   }
-  if (ReadInt8LE(ob->in) != 0x80) longjmp(ob->conn->exception,2);
+  if (ReadUInt8LE(ob->in) != 0x80) longjmp(ob->conn->exception,2);
   return ret;
 } 
 
@@ -250,8 +250,8 @@ int32* NetAIOTriggerList(NetAIO *ob) {
     }
   }
   if (ReadInt16LE(ob->in) != 0x0009) longjmp(ob->conn->exception,1);
-  if (ReadInt8LE(ob->in) != 0x07) longjmp(ob->conn->exception,2);
-  if (ReadInt8LE(ob->in) != 0x53) longjmp(ob->conn->exception,3);
+  if (ReadUInt8LE(ob->in) != 0x07) longjmp(ob->conn->exception,2);
+  if (ReadUInt8LE(ob->in) != 0x53) longjmp(ob->conn->exception,3);
   ret_len = ReadInt32LE(ob->in);
   ret = ArrayAlloc(ret_len,4);
   {
@@ -260,7 +260,7 @@ int32* NetAIOTriggerList(NetAIO *ob) {
       ret[i] = ReadInt32LE(out);
     }
   }
-  if (ReadInt8LE(ob->in) != 0x80) longjmp(ob->conn->exception,2);
+  if (ReadUInt8LE(ob->in) != 0x80) longjmp(ob->conn->exception,2);
   return ret;
 } 
 
@@ -279,10 +279,10 @@ int32 NetAIOChannels(NetAIO *ob) {
     }
   }
   if (ReadInt16LE(ob->in) != 0x0009) longjmp(ob->conn->exception,1);
-  if (ReadInt8LE(ob->in) != 0x08) longjmp(ob->conn->exception,2);
-  if (ReadInt8LE(ob->in) != 0x13) longjmp(ob->conn->exception,3);
+  if (ReadUInt8LE(ob->in) != 0x08) longjmp(ob->conn->exception,2);
+  if (ReadUInt8LE(ob->in) != 0x13) longjmp(ob->conn->exception,3);
   ret = ReadInt32LE(out);
-  if (ReadInt8LE(ob->in) != 0x80) longjmp(ob->conn->exception,2);
+  if (ReadUInt8LE(ob->in) != 0x80) longjmp(ob->conn->exception,2);
   return ret;
 } 
 
@@ -296,8 +296,8 @@ void NetAIOReset(NetAIO *ob) {
   if (ob->conn->mode < 2)  ob->out->Flush(ob->out);
   if (ob->conn->mode > 0) return;
   if (ReadInt16LE(ob->in) != 0x0009) longjmp(ob->conn->exception,1);
-  if (ReadInt8LE(ob->in) != 0x09) longjmp(ob->conn->exception,2);
-  if (ReadInt8LE(ob->in) != 0x80) longjmp(ob->conn->exception,2);
+  if (ReadUInt8LE(ob->in) != 0x09) longjmp(ob->conn->exception,2);
+  if (ReadUInt8LE(ob->in) != 0x80) longjmp(ob->conn->exception,2);
 } 
 
 int32 NetAIOChannelEnable(NetAIO *ob,int32 ch,int32 flag) {
@@ -317,10 +317,10 @@ int32 NetAIOChannelEnable(NetAIO *ob,int32 ch,int32 flag) {
     }
   }
   if (ReadInt16LE(ob->in) != 0x0009) longjmp(ob->conn->exception,1);
-  if (ReadInt8LE(ob->in) != 0x0A) longjmp(ob->conn->exception,2);
-  if (ReadInt8LE(ob->in) != 0x13) longjmp(ob->conn->exception,3);
+  if (ReadUInt8LE(ob->in) != 0x0A) longjmp(ob->conn->exception,2);
+  if (ReadUInt8LE(ob->in) != 0x13) longjmp(ob->conn->exception,3);
   ret = ReadInt32LE(out);
-  if (ReadInt8LE(ob->in) != 0x80) longjmp(ob->conn->exception,2);
+  if (ReadUInt8LE(ob->in) != 0x80) longjmp(ob->conn->exception,2);
   return ret;
 } 
 
@@ -341,10 +341,10 @@ uint32 NetAIOChannelSamplePeriod(NetAIO *ob,int32 ch,uint32 ns) {
     }
   }
   if (ReadInt16LE(ob->in) != 0x0009) longjmp(ob->conn->exception,1);
-  if (ReadInt8LE(ob->in) != 0x0B) longjmp(ob->conn->exception,2);
-  if (ReadInt8LE(ob->in) != 0x03) longjmp(ob->conn->exception,3);
+  if (ReadUInt8LE(ob->in) != 0x0B) longjmp(ob->conn->exception,2);
+  if (ReadUInt8LE(ob->in) != 0x03) longjmp(ob->conn->exception,3);
   ret = ReadUInt32LE(out);
-  if (ReadInt8LE(ob->in) != 0x80) longjmp(ob->conn->exception,2);
+  if (ReadUInt8LE(ob->in) != 0x80) longjmp(ob->conn->exception,2);
   return ret;
 } 
 
@@ -365,10 +365,10 @@ int32 NetAIOChannelPrecision(NetAIO *ob,int32 ch,int32 prec) {
     }
   }
   if (ReadInt16LE(ob->in) != 0x0009) longjmp(ob->conn->exception,1);
-  if (ReadInt8LE(ob->in) != 0x0C) longjmp(ob->conn->exception,2);
-  if (ReadInt8LE(ob->in) != 0x13) longjmp(ob->conn->exception,3);
+  if (ReadUInt8LE(ob->in) != 0x0C) longjmp(ob->conn->exception,2);
+  if (ReadUInt8LE(ob->in) != 0x13) longjmp(ob->conn->exception,3);
   ret = ReadInt32LE(out);
-  if (ReadInt8LE(ob->in) != 0x80) longjmp(ob->conn->exception,2);
+  if (ReadUInt8LE(ob->in) != 0x80) longjmp(ob->conn->exception,2);
   return ret;
 } 
 
@@ -390,10 +390,10 @@ int32 NetAIOChannelVoltageRange(NetAIO *ob,int32 ch,real32 low,real32 high) {
     }
   }
   if (ReadInt16LE(ob->in) != 0x0009) longjmp(ob->conn->exception,1);
-  if (ReadInt8LE(ob->in) != 0x0D) longjmp(ob->conn->exception,2);
-  if (ReadInt8LE(ob->in) != 0x13) longjmp(ob->conn->exception,3);
+  if (ReadUInt8LE(ob->in) != 0x0D) longjmp(ob->conn->exception,2);
+  if (ReadUInt8LE(ob->in) != 0x13) longjmp(ob->conn->exception,3);
   ret = ReadInt32LE(out);
-  if (ReadInt8LE(ob->in) != 0x80) longjmp(ob->conn->exception,2);
+  if (ReadUInt8LE(ob->in) != 0x80) longjmp(ob->conn->exception,2);
   return ret;
 } 
 
@@ -417,10 +417,10 @@ int32 NetAIOConfiguration(NetAIO *ob,real32* low,real32* high,int32* prec,int32*
     }
   }
   if (ReadInt16LE(ob->in) != 0x0009) longjmp(ob->conn->exception,1);
-  if (ReadInt8LE(ob->in) != 0x0E) longjmp(ob->conn->exception,2);
-  if (ReadInt8LE(ob->in) != 0x13) longjmp(ob->conn->exception,3);
+  if (ReadUInt8LE(ob->in) != 0x0E) longjmp(ob->conn->exception,2);
+  if (ReadUInt8LE(ob->in) != 0x13) longjmp(ob->conn->exception,3);
   ret = ReadInt32LE(out);
-  if (ReadInt8LE(ob->in) != 0x63) longjmp(ob->conn->exception,3);
+  if (ReadUInt8LE(ob->in) != 0x63) longjmp(ob->conn->exception,3);
   if (ReadInt32LE(ob->in)!=ArrayLength(low)) longjmp(ob->conn->exception,5);
   {
     int i;
@@ -428,7 +428,7 @@ int32 NetAIOConfiguration(NetAIO *ob,real32* low,real32* high,int32* prec,int32*
       low[i] = ReadReal32LE(out);
     }
   }
-  if (ReadInt8LE(ob->in) != 0x63) longjmp(ob->conn->exception,3);
+  if (ReadUInt8LE(ob->in) != 0x63) longjmp(ob->conn->exception,3);
   if (ReadInt32LE(ob->in)!=ArrayLength(high)) longjmp(ob->conn->exception,5);
   {
     int i;
@@ -436,7 +436,7 @@ int32 NetAIOConfiguration(NetAIO *ob,real32* low,real32* high,int32* prec,int32*
       high[i] = ReadReal32LE(out);
     }
   }
-  if (ReadInt8LE(ob->in) != 0x53) longjmp(ob->conn->exception,3);
+  if (ReadUInt8LE(ob->in) != 0x53) longjmp(ob->conn->exception,3);
   if (ReadInt32LE(ob->in)!=ArrayLength(prec)) longjmp(ob->conn->exception,5);
   {
     int i;
@@ -444,7 +444,7 @@ int32 NetAIOConfiguration(NetAIO *ob,real32* low,real32* high,int32* prec,int32*
       prec[i] = ReadInt32LE(out);
     }
   }
-  if (ReadInt8LE(ob->in) != 0x53) longjmp(ob->conn->exception,3);
+  if (ReadUInt8LE(ob->in) != 0x53) longjmp(ob->conn->exception,3);
   if (ReadInt32LE(ob->in)!=ArrayLength(t)) longjmp(ob->conn->exception,5);
   {
     int i;
@@ -452,7 +452,7 @@ int32 NetAIOConfiguration(NetAIO *ob,real32* low,real32* high,int32* prec,int32*
       t[i] = ReadInt32LE(out);
     }
   }
-  if (ReadInt8LE(ob->in) != 0x53) longjmp(ob->conn->exception,3);
+  if (ReadUInt8LE(ob->in) != 0x53) longjmp(ob->conn->exception,3);
   if (ReadInt32LE(ob->in)!=ArrayLength(trigger)) longjmp(ob->conn->exception,5);
   {
     int i;
@@ -460,7 +460,7 @@ int32 NetAIOConfiguration(NetAIO *ob,real32* low,real32* high,int32* prec,int32*
       trigger[i] = ReadInt32LE(out);
     }
   }
-  if (ReadInt8LE(ob->in) != 0x53) longjmp(ob->conn->exception,3);
+  if (ReadUInt8LE(ob->in) != 0x53) longjmp(ob->conn->exception,3);
   ReadInt32LE(out);
   {
     int i;
@@ -468,7 +468,7 @@ int32 NetAIOConfiguration(NetAIO *ob,real32* low,real32* high,int32* prec,int32*
       itrig[i] = ReadInt32LE(out);
     }
   }
-  if (ReadInt8LE(ob->in) != 0x80) longjmp(ob->conn->exception,2);
+  if (ReadUInt8LE(ob->in) != 0x80) longjmp(ob->conn->exception,2);
   return ret;
 } 
 
@@ -509,10 +509,10 @@ int32 NetAIOConfigureTest(NetAIO *ob,const real32* low,const real32* high,const 
     }
   }
   if (ReadInt16LE(ob->in) != 0x0009) longjmp(ob->conn->exception,1);
-  if (ReadInt8LE(ob->in) != 0x0F) longjmp(ob->conn->exception,2);
-  if (ReadInt8LE(ob->in) != 0x13) longjmp(ob->conn->exception,3);
+  if (ReadUInt8LE(ob->in) != 0x0F) longjmp(ob->conn->exception,2);
+  if (ReadUInt8LE(ob->in) != 0x13) longjmp(ob->conn->exception,3);
   ret = ReadInt32LE(out);
-  if (ReadInt8LE(ob->in) != 0x80) longjmp(ob->conn->exception,2);
+  if (ReadUInt8LE(ob->in) != 0x80) longjmp(ob->conn->exception,2);
   return ret;
 } 
 
@@ -553,10 +553,10 @@ int32 NetAIOConfigure(NetAIO *ob,const real32* low,const real32* high,const int3
     }
   }
   if (ReadInt16LE(ob->in) != 0x0009) longjmp(ob->conn->exception,1);
-  if (ReadInt8LE(ob->in) != 0x10) longjmp(ob->conn->exception,2);
-  if (ReadInt8LE(ob->in) != 0x13) longjmp(ob->conn->exception,3);
+  if (ReadUInt8LE(ob->in) != 0x10) longjmp(ob->conn->exception,2);
+  if (ReadUInt8LE(ob->in) != 0x13) longjmp(ob->conn->exception,3);
   ret = ReadInt32LE(out);
-  if (ReadInt8LE(ob->in) != 0x80) longjmp(ob->conn->exception,2);
+  if (ReadUInt8LE(ob->in) != 0x80) longjmp(ob->conn->exception,2);
   return ret;
 } 
 
@@ -576,10 +576,10 @@ int32 NetAIOITrig(NetAIO *ob,int32 itrig) {
     }
   }
   if (ReadInt16LE(ob->in) != 0x0009) longjmp(ob->conn->exception,1);
-  if (ReadInt8LE(ob->in) != 0x11) longjmp(ob->conn->exception,2);
-  if (ReadInt8LE(ob->in) != 0x13) longjmp(ob->conn->exception,3);
+  if (ReadUInt8LE(ob->in) != 0x11) longjmp(ob->conn->exception,2);
+  if (ReadUInt8LE(ob->in) != 0x13) longjmp(ob->conn->exception,3);
   ret = ReadInt32LE(out);
-  if (ReadInt8LE(ob->in) != 0x80) longjmp(ob->conn->exception,2);
+  if (ReadUInt8LE(ob->in) != 0x80) longjmp(ob->conn->exception,2);
   return ret;
 } 
 
@@ -599,10 +599,10 @@ int32 NetAIOGet(NetAIO *ob,int32 channel) {
     }
   }
   if (ReadInt16LE(ob->in) != 0x0009) longjmp(ob->conn->exception,1);
-  if (ReadInt8LE(ob->in) != 0x12) longjmp(ob->conn->exception,2);
-  if (ReadInt8LE(ob->in) != 0x13) longjmp(ob->conn->exception,3);
+  if (ReadUInt8LE(ob->in) != 0x12) longjmp(ob->conn->exception,2);
+  if (ReadUInt8LE(ob->in) != 0x13) longjmp(ob->conn->exception,3);
   ret = ReadInt32LE(out);
-  if (ReadInt8LE(ob->in) != 0x80) longjmp(ob->conn->exception,2);
+  if (ReadUInt8LE(ob->in) != 0x80) longjmp(ob->conn->exception,2);
   return ret;
 } 
 
@@ -623,10 +623,10 @@ int32 NetAIOPut(NetAIO *ob,int32 channel,int32 value) {
     }
   }
   if (ReadInt16LE(ob->in) != 0x0009) longjmp(ob->conn->exception,1);
-  if (ReadInt8LE(ob->in) != 0x13) longjmp(ob->conn->exception,2);
-  if (ReadInt8LE(ob->in) != 0x13) longjmp(ob->conn->exception,3);
+  if (ReadUInt8LE(ob->in) != 0x13) longjmp(ob->conn->exception,2);
+  if (ReadUInt8LE(ob->in) != 0x13) longjmp(ob->conn->exception,3);
   ret = ReadInt32LE(out);
-  if (ReadInt8LE(ob->in) != 0x80) longjmp(ob->conn->exception,2);
+  if (ReadUInt8LE(ob->in) != 0x80) longjmp(ob->conn->exception,2);
   return ret;
 } 
 
@@ -646,10 +646,10 @@ int32 NetAIOReady(NetAIO *ob,int32 channel) {
     }
   }
   if (ReadInt16LE(ob->in) != 0x0009) longjmp(ob->conn->exception,1);
-  if (ReadInt8LE(ob->in) != 0x14) longjmp(ob->conn->exception,2);
-  if (ReadInt8LE(ob->in) != 0x13) longjmp(ob->conn->exception,3);
+  if (ReadUInt8LE(ob->in) != 0x14) longjmp(ob->conn->exception,2);
+  if (ReadUInt8LE(ob->in) != 0x13) longjmp(ob->conn->exception,3);
   ret = ReadInt32LE(out);
-  if (ReadInt8LE(ob->in) != 0x80) longjmp(ob->conn->exception,2);
+  if (ReadUInt8LE(ob->in) != 0x80) longjmp(ob->conn->exception,2);
   return ret;
 } 
 
@@ -669,10 +669,10 @@ int32 NetAIOGets8(NetAIO *ob,int8* buf) {
     }
   }
   if (ReadInt16LE(ob->in) != 0x0009) longjmp(ob->conn->exception,1);
-  if (ReadInt8LE(ob->in) != 0x15) longjmp(ob->conn->exception,2);
-  if (ReadInt8LE(ob->in) != 0x13) longjmp(ob->conn->exception,3);
+  if (ReadUInt8LE(ob->in) != 0x15) longjmp(ob->conn->exception,2);
+  if (ReadUInt8LE(ob->in) != 0x13) longjmp(ob->conn->exception,3);
   ret = ReadInt32LE(out);
-  if (ReadInt8LE(ob->in) != 0x50) longjmp(ob->conn->exception,3);
+  if (ReadUInt8LE(ob->in) != 0x50) longjmp(ob->conn->exception,3);
   if (ReadInt32LE(ob->in)!=ArrayLength(buf)) longjmp(ob->conn->exception,5);
   {
     int i;
@@ -680,7 +680,7 @@ int32 NetAIOGets8(NetAIO *ob,int8* buf) {
       buf[i] = ReadInt8LE(out);
     }
   }
-  if (ReadInt8LE(ob->in) != 0x80) longjmp(ob->conn->exception,2);
+  if (ReadUInt8LE(ob->in) != 0x80) longjmp(ob->conn->exception,2);
   return ret;
 } 
 
@@ -700,10 +700,10 @@ int32 NetAIOGets16(NetAIO *ob,int16* buf) {
     }
   }
   if (ReadInt16LE(ob->in) != 0x0009) longjmp(ob->conn->exception,1);
-  if (ReadInt8LE(ob->in) != 0x16) longjmp(ob->conn->exception,2);
-  if (ReadInt8LE(ob->in) != 0x13) longjmp(ob->conn->exception,3);
+  if (ReadUInt8LE(ob->in) != 0x16) longjmp(ob->conn->exception,2);
+  if (ReadUInt8LE(ob->in) != 0x13) longjmp(ob->conn->exception,3);
   ret = ReadInt32LE(out);
-  if (ReadInt8LE(ob->in) != 0x51) longjmp(ob->conn->exception,3);
+  if (ReadUInt8LE(ob->in) != 0x51) longjmp(ob->conn->exception,3);
   if (ReadInt32LE(ob->in)!=ArrayLength(buf)) longjmp(ob->conn->exception,5);
   {
     int i;
@@ -711,7 +711,7 @@ int32 NetAIOGets16(NetAIO *ob,int16* buf) {
       buf[i] = ReadInt16LE(out);
     }
   }
-  if (ReadInt8LE(ob->in) != 0x80) longjmp(ob->conn->exception,2);
+  if (ReadUInt8LE(ob->in) != 0x80) longjmp(ob->conn->exception,2);
   return ret;
 } 
 
@@ -731,10 +731,10 @@ int32 NetAIOGets32(NetAIO *ob,int32* buf) {
     }
   }
   if (ReadInt16LE(ob->in) != 0x0009) longjmp(ob->conn->exception,1);
-  if (ReadInt8LE(ob->in) != 0x17) longjmp(ob->conn->exception,2);
-  if (ReadInt8LE(ob->in) != 0x13) longjmp(ob->conn->exception,3);
+  if (ReadUInt8LE(ob->in) != 0x17) longjmp(ob->conn->exception,2);
+  if (ReadUInt8LE(ob->in) != 0x13) longjmp(ob->conn->exception,3);
   ret = ReadInt32LE(out);
-  if (ReadInt8LE(ob->in) != 0x53) longjmp(ob->conn->exception,3);
+  if (ReadUInt8LE(ob->in) != 0x53) longjmp(ob->conn->exception,3);
   if (ReadInt32LE(ob->in)!=ArrayLength(buf)) longjmp(ob->conn->exception,5);
   {
     int i;
@@ -742,7 +742,7 @@ int32 NetAIOGets32(NetAIO *ob,int32* buf) {
       buf[i] = ReadInt32LE(out);
     }
   }
-  if (ReadInt8LE(ob->in) != 0x80) longjmp(ob->conn->exception,2);
+  if (ReadUInt8LE(ob->in) != 0x80) longjmp(ob->conn->exception,2);
   return ret;
 } 
 
@@ -766,10 +766,10 @@ int32 NetAIOPuts8(NetAIO *ob,const int8* buf) {
     }
   }
   if (ReadInt16LE(ob->in) != 0x0009) longjmp(ob->conn->exception,1);
-  if (ReadInt8LE(ob->in) != 0x18) longjmp(ob->conn->exception,2);
-  if (ReadInt8LE(ob->in) != 0x13) longjmp(ob->conn->exception,3);
+  if (ReadUInt8LE(ob->in) != 0x18) longjmp(ob->conn->exception,2);
+  if (ReadUInt8LE(ob->in) != 0x13) longjmp(ob->conn->exception,3);
   ret = ReadInt32LE(out);
-  if (ReadInt8LE(ob->in) != 0x80) longjmp(ob->conn->exception,2);
+  if (ReadUInt8LE(ob->in) != 0x80) longjmp(ob->conn->exception,2);
   return ret;
 } 
 
@@ -793,10 +793,10 @@ int32 NetAIOPuts16(NetAIO *ob,const int16* buf) {
     }
   }
   if (ReadInt16LE(ob->in) != 0x0009) longjmp(ob->conn->exception,1);
-  if (ReadInt8LE(ob->in) != 0x19) longjmp(ob->conn->exception,2);
-  if (ReadInt8LE(ob->in) != 0x13) longjmp(ob->conn->exception,3);
+  if (ReadUInt8LE(ob->in) != 0x19) longjmp(ob->conn->exception,2);
+  if (ReadUInt8LE(ob->in) != 0x13) longjmp(ob->conn->exception,3);
   ret = ReadInt32LE(out);
-  if (ReadInt8LE(ob->in) != 0x80) longjmp(ob->conn->exception,2);
+  if (ReadUInt8LE(ob->in) != 0x80) longjmp(ob->conn->exception,2);
   return ret;
 } 
 
@@ -820,10 +820,10 @@ int32 NetAIOPuts32(NetAIO *ob,const int32* buf) {
     }
   }
   if (ReadInt16LE(ob->in) != 0x0009) longjmp(ob->conn->exception,1);
-  if (ReadInt8LE(ob->in) != 0x1A) longjmp(ob->conn->exception,2);
-  if (ReadInt8LE(ob->in) != 0x13) longjmp(ob->conn->exception,3);
+  if (ReadUInt8LE(ob->in) != 0x1A) longjmp(ob->conn->exception,2);
+  if (ReadUInt8LE(ob->in) != 0x13) longjmp(ob->conn->exception,3);
   ret = ReadInt32LE(out);
-  if (ReadInt8LE(ob->in) != 0x80) longjmp(ob->conn->exception,2);
+  if (ReadUInt8LE(ob->in) != 0x80) longjmp(ob->conn->exception,2);
   return ret;
 } 
 
@@ -847,10 +847,10 @@ int32 NetAIOReadys8(NetAIO *ob,const int8* buf) {
     }
   }
   if (ReadInt16LE(ob->in) != 0x0009) longjmp(ob->conn->exception,1);
-  if (ReadInt8LE(ob->in) != 0x1B) longjmp(ob->conn->exception,2);
-  if (ReadInt8LE(ob->in) != 0x13) longjmp(ob->conn->exception,3);
+  if (ReadUInt8LE(ob->in) != 0x1B) longjmp(ob->conn->exception,2);
+  if (ReadUInt8LE(ob->in) != 0x13) longjmp(ob->conn->exception,3);
   ret = ReadInt32LE(out);
-  if (ReadInt8LE(ob->in) != 0x80) longjmp(ob->conn->exception,2);
+  if (ReadUInt8LE(ob->in) != 0x80) longjmp(ob->conn->exception,2);
   return ret;
 } 
 
@@ -874,10 +874,10 @@ int32 NetAIOReadys16(NetAIO *ob,const int16* buf) {
     }
   }
   if (ReadInt16LE(ob->in) != 0x0009) longjmp(ob->conn->exception,1);
-  if (ReadInt8LE(ob->in) != 0x1C) longjmp(ob->conn->exception,2);
-  if (ReadInt8LE(ob->in) != 0x13) longjmp(ob->conn->exception,3);
+  if (ReadUInt8LE(ob->in) != 0x1C) longjmp(ob->conn->exception,2);
+  if (ReadUInt8LE(ob->in) != 0x13) longjmp(ob->conn->exception,3);
   ret = ReadInt32LE(out);
-  if (ReadInt8LE(ob->in) != 0x80) longjmp(ob->conn->exception,2);
+  if (ReadUInt8LE(ob->in) != 0x80) longjmp(ob->conn->exception,2);
   return ret;
 } 
 
@@ -901,10 +901,10 @@ int32 NetAIOReadys32(NetAIO *ob,const int32* buf) {
     }
   }
   if (ReadInt16LE(ob->in) != 0x0009) longjmp(ob->conn->exception,1);
-  if (ReadInt8LE(ob->in) != 0x1D) longjmp(ob->conn->exception,2);
-  if (ReadInt8LE(ob->in) != 0x13) longjmp(ob->conn->exception,3);
+  if (ReadUInt8LE(ob->in) != 0x1D) longjmp(ob->conn->exception,2);
+  if (ReadUInt8LE(ob->in) != 0x13) longjmp(ob->conn->exception,3);
   ret = ReadInt32LE(out);
-  if (ReadInt8LE(ob->in) != 0x80) longjmp(ob->conn->exception,2);
+  if (ReadUInt8LE(ob->in) != 0x80) longjmp(ob->conn->exception,2);
   return ret;
 } 
 

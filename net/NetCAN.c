@@ -36,25 +36,25 @@ CANResult NetCANRx(NetCAN *ob,CANMessage message[1]) {
     }
   }
   if (ReadInt16LE(ob->in) != 0x0007) longjmp(ob->conn->exception,1);
-  if (ReadInt8LE(ob->in) != 0x00) longjmp(ob->conn->exception,2);
-  if (ReadInt8LE(ob->in) != 0xCB) longjmp(ob->conn->exception,3);
+  if (ReadUInt8LE(ob->in) != 0x00) longjmp(ob->conn->exception,2);
+  if (ReadUInt8LE(ob->in) != 0xCB) longjmp(ob->conn->exception,3);
   ret = ReadInt32LE(out);
-  if (ReadInt8LE(ob->in) != 0x74) longjmp(ob->conn->exception,3);
+  if (ReadUInt8LE(ob->in) != 0x74) longjmp(ob->conn->exception,3);
   ReadInt32LE(out);
   {
     int i;
     for(i=0;i<1;i++) {
-      if (ReadInt8LE(ob->in) != 0x03) longjmp(ob->conn->exception,3);
+      if (ReadUInt8LE(ob->in) != 0x03) longjmp(ob->conn->exception,3);
       message[i].flags = ReadUInt32LE(out);
-      if (ReadInt8LE(ob->in) != 0x03) longjmp(ob->conn->exception,3);
+      if (ReadUInt8LE(ob->in) != 0x03) longjmp(ob->conn->exception,3);
       message[i].id = ReadUInt32LE(out);
-      if (ReadInt8LE(ob->in) != 0x03) longjmp(ob->conn->exception,3);
+      if (ReadUInt8LE(ob->in) != 0x03) longjmp(ob->conn->exception,3);
       message[i].t_sec = ReadUInt32LE(out);
-      if (ReadInt8LE(ob->in) != 0x03) longjmp(ob->conn->exception,3);
+      if (ReadUInt8LE(ob->in) != 0x03) longjmp(ob->conn->exception,3);
       message[i].t_usec = ReadUInt32LE(out);
-      if (ReadInt8LE(ob->in) != 0x03) longjmp(ob->conn->exception,3);
+      if (ReadUInt8LE(ob->in) != 0x03) longjmp(ob->conn->exception,3);
       message[i].length = ReadUInt32LE(out);
-      if (ReadInt8LE(ob->in) != 0x40) longjmp(ob->conn->exception,3);
+      if (ReadUInt8LE(ob->in) != 0x40) longjmp(ob->conn->exception,3);
       ReadInt32LE(out);
       {
         int k;
@@ -64,7 +64,7 @@ CANResult NetCANRx(NetCAN *ob,CANMessage message[1]) {
       }
     }
   }
-  if (ReadInt8LE(ob->in) != 0x80) longjmp(ob->conn->exception,2);
+  if (ReadUInt8LE(ob->in) != 0x80) longjmp(ob->conn->exception,2);
   return ret;
 } 
 
@@ -90,10 +90,10 @@ CANResult NetCANTx(NetCAN *ob,uint32 flags,uint32 id,const int8* data) {
     }
   }
   if (ReadInt16LE(ob->in) != 0x0007) longjmp(ob->conn->exception,1);
-  if (ReadInt8LE(ob->in) != 0x01) longjmp(ob->conn->exception,2);
-  if (ReadInt8LE(ob->in) != 0xCB) longjmp(ob->conn->exception,3);
+  if (ReadUInt8LE(ob->in) != 0x01) longjmp(ob->conn->exception,2);
+  if (ReadUInt8LE(ob->in) != 0xCB) longjmp(ob->conn->exception,3);
   ret = ReadInt32LE(out);
-  if (ReadInt8LE(ob->in) != 0x80) longjmp(ob->conn->exception,2);
+  if (ReadUInt8LE(ob->in) != 0x80) longjmp(ob->conn->exception,2);
   return ret;
 } 
 
@@ -113,10 +113,10 @@ uint32 NetCANBaudSet(NetCAN *ob,uint32 opt_baud) {
     }
   }
   if (ReadInt16LE(ob->in) != 0x0007) longjmp(ob->conn->exception,1);
-  if (ReadInt8LE(ob->in) != 0x02) longjmp(ob->conn->exception,2);
-  if (ReadInt8LE(ob->in) != 0x03) longjmp(ob->conn->exception,3);
+  if (ReadUInt8LE(ob->in) != 0x02) longjmp(ob->conn->exception,2);
+  if (ReadUInt8LE(ob->in) != 0x03) longjmp(ob->conn->exception,3);
   ret = ReadUInt32LE(out);
-  if (ReadInt8LE(ob->in) != 0x80) longjmp(ob->conn->exception,2);
+  if (ReadUInt8LE(ob->in) != 0x80) longjmp(ob->conn->exception,2);
   return ret;
 } 
 
@@ -135,10 +135,10 @@ uint32 NetCANBaudGet(NetCAN *ob) {
     }
   }
   if (ReadInt16LE(ob->in) != 0x0007) longjmp(ob->conn->exception,1);
-  if (ReadInt8LE(ob->in) != 0x03) longjmp(ob->conn->exception,2);
-  if (ReadInt8LE(ob->in) != 0x03) longjmp(ob->conn->exception,3);
+  if (ReadUInt8LE(ob->in) != 0x03) longjmp(ob->conn->exception,2);
+  if (ReadUInt8LE(ob->in) != 0x03) longjmp(ob->conn->exception,3);
   ret = ReadUInt32LE(out);
-  if (ReadInt8LE(ob->in) != 0x80) longjmp(ob->conn->exception,2);
+  if (ReadUInt8LE(ob->in) != 0x80) longjmp(ob->conn->exception,2);
   return ret;
 } 
 
@@ -152,8 +152,8 @@ void NetCANAbort(NetCAN *ob) {
   if (ob->conn->mode < 2)  ob->out->Flush(ob->out);
   if (ob->conn->mode > 0) return;
   if (ReadInt16LE(ob->in) != 0x0007) longjmp(ob->conn->exception,1);
-  if (ReadInt8LE(ob->in) != 0x04) longjmp(ob->conn->exception,2);
-  if (ReadInt8LE(ob->in) != 0x80) longjmp(ob->conn->exception,2);
+  if (ReadUInt8LE(ob->in) != 0x04) longjmp(ob->conn->exception,2);
+  if (ReadUInt8LE(ob->in) != 0x80) longjmp(ob->conn->exception,2);
 } 
 
 CANResult NetCANRxMulti(NetCAN *ob,CANMessage* msg,int32 min) {
@@ -173,25 +173,25 @@ CANResult NetCANRxMulti(NetCAN *ob,CANMessage* msg,int32 min) {
     }
   }
   if (ReadInt16LE(ob->in) != 0x0007) longjmp(ob->conn->exception,1);
-  if (ReadInt8LE(ob->in) != 0x05) longjmp(ob->conn->exception,2);
-  if (ReadInt8LE(ob->in) != 0xCB) longjmp(ob->conn->exception,3);
+  if (ReadUInt8LE(ob->in) != 0x05) longjmp(ob->conn->exception,2);
+  if (ReadUInt8LE(ob->in) != 0xCB) longjmp(ob->conn->exception,3);
   ret = ReadInt32LE(out);
-  if (ReadInt8LE(ob->in) != 0x74) longjmp(ob->conn->exception,3);
+  if (ReadUInt8LE(ob->in) != 0x74) longjmp(ob->conn->exception,3);
   if (ReadInt32LE(ob->in)!=ArrayLength(msg)) longjmp(ob->conn->exception,5);
   {
     int i;
     for(i=0;i<ArrayLength(msg);i++) {
-      if (ReadInt8LE(ob->in) != 0x03) longjmp(ob->conn->exception,3);
+      if (ReadUInt8LE(ob->in) != 0x03) longjmp(ob->conn->exception,3);
       msg[i].flags = ReadUInt32LE(out);
-      if (ReadInt8LE(ob->in) != 0x03) longjmp(ob->conn->exception,3);
+      if (ReadUInt8LE(ob->in) != 0x03) longjmp(ob->conn->exception,3);
       msg[i].id = ReadUInt32LE(out);
-      if (ReadInt8LE(ob->in) != 0x03) longjmp(ob->conn->exception,3);
+      if (ReadUInt8LE(ob->in) != 0x03) longjmp(ob->conn->exception,3);
       msg[i].t_sec = ReadUInt32LE(out);
-      if (ReadInt8LE(ob->in) != 0x03) longjmp(ob->conn->exception,3);
+      if (ReadUInt8LE(ob->in) != 0x03) longjmp(ob->conn->exception,3);
       msg[i].t_usec = ReadUInt32LE(out);
-      if (ReadInt8LE(ob->in) != 0x03) longjmp(ob->conn->exception,3);
+      if (ReadUInt8LE(ob->in) != 0x03) longjmp(ob->conn->exception,3);
       msg[i].length = ReadUInt32LE(out);
-      if (ReadInt8LE(ob->in) != 0x40) longjmp(ob->conn->exception,3);
+      if (ReadUInt8LE(ob->in) != 0x40) longjmp(ob->conn->exception,3);
       ReadInt32LE(out);
       {
         int k;
@@ -201,7 +201,7 @@ CANResult NetCANRxMulti(NetCAN *ob,CANMessage* msg,int32 min) {
       }
     }
   }
-  if (ReadInt8LE(ob->in) != 0x80) longjmp(ob->conn->exception,2);
+  if (ReadUInt8LE(ob->in) != 0x80) longjmp(ob->conn->exception,2);
   return ret;
 } 
 
