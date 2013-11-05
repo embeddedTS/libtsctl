@@ -11,7 +11,8 @@
 #include <sys/stat.h>
 #include <fcntl.h>
 #include <pthread.h>
-#include "Net.h"
+#include "socket.h"
+#include "NetTsctl.h"
 #include "shell.h"
 #include "IteratorHashTable.c"
 #include "Mode.h"
@@ -226,38 +227,6 @@ int printcmds(char*** cmds) {
   }
 }
 
-int ClientSocketNew(char *host,int port) {
-  int			rc;            /* system calls return value storage */
-  int            	x,s;             /* socket descriptor */
-  struct addrinfo *result,*rp;
-  struct addrinfo hints;
-  char service[8];
-
-  sprintf(service,"%d",port);
-  memset(&hints,0,sizeof(struct addrinfo));
-  hints.ai_family = AF_UNSPEC;
-  hints.ai_socktype = SOCK_STREAM;
-  // next line commented out because when compiling for TS-4500 I get this:
-  // error: `AI_NUMERICSERV' undeclared
-  //hints.ai_flags = AI_NUMERICSERV;
-  if (getaddrinfo(host,service,&hints,&result) < 0) {
-    return -1;
-  }
-  for (rp=result; rp != NULL; rp = rp->ai_next) {
-    s = socket(rp->ai_family, rp->ai_socktype,rp->ai_protocol);
-    if (s < 0) continue;
-    if (setsockopt(s, IPPROTO_TCP, TCP_NODELAY, &x, 4) < 0) {
-      perror("TCP_NO_DELAY");
-      exit(1);
-    }
-    if (connect(s, rp->ai_addr, rp->ai_addrlen) != -1) break;
-    close(s);
-  }
-  if (rp == NULL) return -1;
-  freeaddrinfo(result);
-  return s;
-}
-
 int serverRunning() {
   int socket = ClientSocketNew("127.0.0.1",5001);
   if (socket >= 0) {
@@ -404,7 +373,14 @@ int tsctl_shell(Stream *in,Stream *out) {
 	    ArrayFree(cmd);
 	    count++;
 	    if (ArrayLength(lu) > 0) { // patch lookups into the req stream
-	      System *sys = SystemInit(0);
+	      tsctl *client;
+	      System *sys;
+	      if (HostStream) {
+		client = TsctlClient2(HostStream,NetModeBlocking);
+		sys = NetSystemInit(client,0);
+	      } else {
+		sys =  SystemInit(0);
+	      }
 	      char **names;
 	      int val,i,j,n;
 
