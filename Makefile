@@ -21,8 +21,6 @@ ARCHLIBS=$(SUPPORT:%=libts%.a) libNone.a
 ARCHLINK=$(SUPPORT:%=-lts%) -lNone
 CFLAGS+=$(SUPPORTFLAGS)
 LDFLAGS+=-Wl,-gc-sections -L$(DIR)
-#DEPS=$(shell ls ts/*.[ch])
-#DEPS2=$(shell ls net/*.[ch])
 vpath %.cpp . ts
 vpath %.c . ts net
 vpath %.o $(DIR)
@@ -49,7 +47,7 @@ $(shell mkdir -p $(DIR))
 $(DIR)/libtsctl-pthread.a: $(addprefix $(DIR)/,$(ARCHLIBS) Arch.o PThread.o dioctlConfig.o shell.o opt.o HashTable.o IteratorHashTable.o tcp.o http.o Stream.o socket.o LookupRef.o ts.o)
 	ar -r $@ $^
 
-$(DIR)/libnettsctl.a: $(addprefix $(DIR)/,NetAIO.o NetBus.o NetCAN.o NetDIO.o NetDIORaw.o NetEDIO.o NetPin.o NetSPI.o NetSystem.o NetTime.o NetTsctl.o NetTWI.o)
+$(DIR)/libnettsctl.a: $(addprefix $(DIR)/,NetAIO.o NetBus.o NetCAN.o NetDIO.o NetDIORaw.o NetEDIO.o NetPin.o NetSPI.o NetSystem.o NetTime.o NetTsctl.o NetTWI.o Stream.o socket.o)
 	ar -r $@ $^
 
 $(DIR)/libtsctl.a: $(addprefix $(DIR)/,$(ARCHLIBS) Arch.o NoThread.o dioctlConfig.o shell.o opt.o HashTable.o IteratorHashTable.o tcp.o http.o Stream.o socket.o LookupRef.o ts.o)
@@ -190,20 +188,17 @@ $(DIR)/spictl: $(addprefix $(DIR)/,spictl.o Arch.o PThread.o $(ARCHLIBS) libtsct
 NetTest: $(DIR)/NetTest
 	@true
 
-$(DIR)/NetTest: NetTest.c $(DEPS2)
-	@echo "Building $@";$(CC) $(CFLAGS) -I. -Inet $< $(LDFLAGS) -o $@
+$(DIR)/NetTest: $(addprefix $(DIR)/,NetTest.o libnettsctl.a)
 
 CANNetTx: $(DIR)/CANNetTx
 	@true
 
-$(DIR)/CANNetTx: CANNetTx.c $(DEPS2)
-	@echo "Building $@";$(CC) $(CFLAGS) -I. -Inet $< $(LDFLAGS) -o $@
+$(DIR)/CANNetTx: $(addprefix $(DIR)/,CANNetTx.o libnettsctl.a)
 
 NetTest2: $(DIR)/NetTest2
 	@true
 
-$(DIR)/NetTest2: NetTest2.c $(DEPS2)
-	@echo "Building $@";$(CC) $(CFLAGS) -Inet $< $(LDFLAGS) -o $@
+$(DIR)/NetTest2: $(addprefix $(DIR)/,NetTest2.o libnettsctl.a)
 
 clean:
 	@rm -rf $(DIR)

@@ -1,5 +1,5 @@
 #define THREAD_USE_POSIX
-#include "nettsctl.h"
+#include "NetTsctl.h"
 #include <stdlib.h>
 #include <stdio.h>
 
@@ -37,13 +37,11 @@ int main(int argc,char *argv[]) {
   DIOState val;
   tsctl *conn;
 
-  /*  
-  if (argv < 3) {
-    printf("usage: %s <host> <inst>\n",argv[0]);
+  if (argv < 2) {
+    printf("usage: %s <host>\n",argv[0]);
     return 1;
   }
-  */
-  conn = TsctlClient("127.0.0.1",NetModeBlocking);
+  conn = TsctlClient(argv[1],NetModeBlocking);
   if (!conn) {
     perror("socket:");
     return 1;
