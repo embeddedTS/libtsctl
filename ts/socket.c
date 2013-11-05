@@ -9,13 +9,8 @@
 #include <fcntl.h>
 #include <stdio.h>
 #include <stdlib.h>
-
+#include "socket.h"
 #include "nosig.h"
-
-static inline int FileBlockingSet(int fd,int on) {
-  return fcntl(fd, F_SETFL, on ? 0 : (O_NDELAY | O_NONBLOCK));
-}
-
 
 int ServerSocketNew(int port) {
   int			rc;       /* system calls return value storage  */
