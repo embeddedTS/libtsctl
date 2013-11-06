@@ -17,6 +17,7 @@ Arch *ts4500ArchInit();
 Arch *ts4700ArchInit();
 Arch *ts4800ArchInit();
 Arch *ts7670ArchInit();
+Arch *ts7800ArchInit();
 Arch *ts81x0ArchInit();
 Arch *ts8200ArchInit();
 Arch *ts8390ArchInit();
@@ -24,6 +25,9 @@ Arch *ts8820ArchInit();
 Arch *ts8900ArchInit();
 Arch *ts9490ArchInit();
 Arch *NoneArchInit();
+Arch *tsrelay8ArchInit();
+Arch *tsdio24ArchInit();
+Arch *tscan1ArchInit();
 
 unsigned DIOCount();
 int ArchClassCount(Arch *hw,unsigned class,int recurse);
