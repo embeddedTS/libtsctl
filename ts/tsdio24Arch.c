@@ -12,7 +12,7 @@
 #include "tsDIO24DIORaw.h"
 #include "DummyDIO.h"
 #include "PhysicalDIO.h"
-extern char *tsdio24_dioctl_config[];
+#include "tsdio24_dioctl_config.c"
 
 Arch *tsdio24ArchInit();
 void *tsdio24Function(int class,int inst);
@@ -30,7 +30,7 @@ Arch *tsdio24ArchInit(int model) {
   static Arch *tsdio24;
   if (tsdio24) return tsdio24;
   tsdio24 = &tsdio24Arch;
-  dioctl_config_add(tsdio24_dioctl_config);
+  dioctl_config_add2(Xtsdio24_dioctl_config,Xtsdio24_dioctl_config_len,Ytsdio24_dioctl_config_len);
   return tsdio24;
 }
 

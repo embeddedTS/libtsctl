@@ -85,7 +85,7 @@ CAN *tscan1__CANInit1(CAN *can,int inst) {
   return SJA1000CANInit(&tscan1CAN0,bus,PinInit(0),TimeInit(0));
 }
 
-void *tsdio24Function(int class,int inst) {
+void *tscan1Function(int class,int inst) {
   if (class == ClassBus && inst == 0) return tscan1__BusInit0;
   if (class == ClassBus && inst == 1) return tscan1__BusInit1;
   if (class == ClassCAN && inst == 0) return tscan1__CANInit0;
