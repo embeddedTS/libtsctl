@@ -25,6 +25,12 @@ vpath %.cpp . ts
 vpath %.c . ts net
 vpath %.o $(DIR)
 vpath %.a $(DIR)
+ifeq ($(READLINE),no)
+CFLAGS+=-DDONT_USE_READLINE
+READLINE=
+else
+READLINE=-lreadline -lcurses
+endif
 ifeq ($(DIR_CUSTOM),)
 else
 vpath %.cpp . ts $(DIR_CUSTOM)
@@ -97,6 +103,9 @@ $(DIR)/libts4700.a: $(addprefix $(DIR)/,ts4700Arch.o DummyBus.o MMapBus.o TSMuxB
 $(DIR)/libts4800.a: $(addprefix $(DIR)/,ts4800Arch.o DummyBus.o MMapBus.o TSMuxBus.o CacheBus.o ts4800Pin.o FreescaleIMX51DIORaw.o ts4800DIORaw.o SystemTime.o PhysicalDIO.o AggregateDIO.o LinuxTWI.o WBSPI.o LocalSystem.o SJA1000CAN.o TSTime.o WBWindowBus.o WindowBus.o ts4800_dioctl_config.o)
 	ar -r $@ $^
 
+$(DIR)/libts7800.a: $(addprefix $(DIR)/,ts7800Arch.o MMapBus.o SystemTime.o AggregateDIO.o LocalSystem.o)
+	ar -r $@ $^
+
 $(DIR)/libtsrelay8.a: $(addprefix $(DIR)/,tsrelay8Arch.o tsRelay8DIORaw.o DummyDIO.o PhysicalDIO.o)
 	ar -r $@ $^
 
@@ -109,7 +118,7 @@ $(DIR)/libtscan1.a: $(addprefix $(DIR)/,tscan1Arch.o TSCAN1Bus.o SJA1000CAN.o)
 tsctl: $(DIR)/tsctl
 	@true
 
-$(DIR)/tsctl: $(addprefix $(DIR)/,tsctl.o Arch.o PThread.o command.o command1.o $(ARCHLIBS)) -lreadline -lcurses $(DIR)/libtsctl.a -lbz2 -lpthread $(DIR)/libnettsctl.a
+$(DIR)/tsctl: $(addprefix $(DIR)/,tsctl.o Arch.o PThread.o command.o command1.o $(ARCHLIBS)) $(READLINE) $(DIR)/libtsctl.a -lbz2 -lpthread $(DIR)/libnettsctl.a
 
 # /usr/lib/libreadline.a
 
