@@ -109,6 +109,7 @@ int TSModelGet() {
     }
   case CPU_MARVELL_MV88F5182:
     syscon32 = MemMap(0xE8000000,1);
+    if (!syscon32) return 0; // not root?
     id = (syscon32[0] >> 8);
     MemUnmap(syscon32);
     if (id == 0xB480) {
@@ -119,6 +120,7 @@ int TSModelGet() {
     break;
   case CPU_ATMEL:
     syscon = MemMap(0x30000000,1);
+    if (!syscon) return 0; // not root?
     id = syscon[0];
     MemUnmap(syscon);
     break;
@@ -126,6 +128,7 @@ int TSModelGet() {
     return (modelId=0x86);
   case CPU_MARVELL_PXA168:
     syscon = MemMap(0x80004000,1);
+    if (!syscon) return 0; // not root?
     id = syscon[0];
     MemUnmap(syscon);
     break;
