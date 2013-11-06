@@ -388,7 +388,7 @@ int tsctl_shell(Stream *in,Stream *out) {
 		val = 0;
 		names = split(lu[i].name,'+');
 		for (j=0;j<ArrayLength(names);j++) {
-		  if (client && !setjmp(client->exception)) {
+		  if (!client || !setjmp(client->exception)) {
 		    n = sys->MapLookup(sys,names[j]);
 		  } else {
 		    n = -1; // exception looking up name, treat as failure
