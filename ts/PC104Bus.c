@@ -4,7 +4,7 @@
 #include "PC104Bus.h"
 
 static void PC104BusLockCallback(PC104Bus *bus,unsigned num) {
-  bus->LockCallback(bus,num);
+  if (bus->LockCallback) bus->LockCallback(bus,num);
 }
 
 #define LOCK_TYPE_SHARED
