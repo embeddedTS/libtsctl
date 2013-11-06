@@ -52,6 +52,9 @@ LDFLAGS+=-g
 endif
 CPPFLAGS=$(CFLAGS)
 
+tsctl: $(DIR)/tsctl
+	@true
+
 all: tsctl CAN2 CANTx CANDiag CANRx diotoggle spi8200 ts8160ctl DIOTest canctl spictl NetTest NetTest2
 
 $(shell mkdir -p $(DIR))
@@ -120,9 +123,6 @@ $(DIR)/libtsdio24.a: $(addprefix $(DIR)/,tsdio24Arch.o tsDIO24DIORaw.o DummyDIO.
 
 $(DIR)/libtscan1.a: $(addprefix $(DIR)/,tscan1Arch.o TSCAN1Bus.o SJA1000CAN.o)
 	ar -r $@ $^
-
-tsctl: $(DIR)/tsctl
-	@true
 
 $(DIR)/tsctl: $(addprefix $(DIR)/,tsctl.o Arch.o PThread.o command.o command1.o $(ARCHLIBS)) $(READLINE) $(DIR)/libtsctl.a $(BZ2) -lpthread $(DIR)/libnettsctl.a
 
