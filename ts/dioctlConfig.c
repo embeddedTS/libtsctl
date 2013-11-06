@@ -1,6 +1,9 @@
 #ifndef __dioctlConfig_c
 #define __dioctlConfig_c
+#ifndef DONT_USE_BZ2
 #include <bzlib.h>
+#endif
+#include <stdio.h> // sprintf
 #include "dioctl.dict.c"
 #include "dioctl_map.c"
 #include "shell.h"
@@ -246,13 +249,21 @@ char** decodearch(char **enc) {
 }
 
 char** decodearch2(char *enc,int len,int lenout) {
+#ifndef DONT_USE_BZ2
   char* outarr = ArrayAlloc(lenout,sizeof(char));
   int ret = BZ2_bzBuffToBuffDecompress(outarr,&lenout,enc,len,0,0);
+  ret = (ret == BZ_OK);
+#else
+  char *outarr = enc;
+  int ret = 1;
+#endif
   char** arr=0;
-  if (ret == BZ_OK) {
+  if (ret) {
     arr = split(outarr,'\n');
   }
+#ifndef DONT_USE_BZ2
   ArrayFree(outarr);
+#endif
   return arr;
 }
 

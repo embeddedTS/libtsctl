@@ -3,9 +3,14 @@
 #include "Array.h"
 
 int main(int argc,char *argv[]) {
+  int doCompress = 1;
+
   if (argc < 2) {
     printf("Nothing to do!\n");
     return 1;
+  }
+  if (argc == 3) {
+    doCompress = 0;
   }
   FILE *f = fopen(argv[1],"r");
   if (!f) {
@@ -24,17 +29,21 @@ int main(int argc,char *argv[]) {
   //printf("Read %d bytes\n",ArrayLength(infile));
   unsigned char* outfile = ArrayAlloc(ArrayLength(infile)*101/100+600,1);
   int len = ArrayLength(outfile);
-  int ret = BZ2_bzBuffToBuffCompress(outfile,&len,
-				     infile,ArrayLength(infile),9,0,30);
-  if (ret != BZ_OK) {
-    fprintf(stderr,"Error ");
-    switch (ret) {
-    case BZ_CONFIG_ERROR: fprintf(stderr,"BZ_CONFIG_ERROR\n"); break;
-    case BZ_PARAM_ERROR: fprintf(stderr,"BZ_PARAM_ERROR\n"); break;
-    case BZ_MEM_ERROR: fprintf(stderr,"BZ_MEM_ERROR\n"); break;
-    case BZ_OUTBUFF_FULL: fprintf(stderr,"BZ_OUTBUFF_FULL\n"); break;
-    default: fprintf(stderr,"UNKNOWN\n"); break;
+  if (doCompress) {
+    int ret = BZ2_bzBuffToBuffCompress(outfile,&len,
+				       infile,ArrayLength(infile),9,0,30);
+    if (ret != BZ_OK) {
+      fprintf(stderr,"Error ");
+      switch (ret) {
+      case BZ_CONFIG_ERROR: fprintf(stderr,"BZ_CONFIG_ERROR\n"); break;
+      case BZ_PARAM_ERROR: fprintf(stderr,"BZ_PARAM_ERROR\n"); break;
+      case BZ_MEM_ERROR: fprintf(stderr,"BZ_MEM_ERROR\n"); break;
+      case BZ_OUTBUFF_FULL: fprintf(stderr,"BZ_OUTBUFF_FULL\n"); break;
+      default: fprintf(stderr,"UNKNOWN\n"); break;
+      }
     }
+  } else {
+    memcpy(outfile,infile,len=ArrayLength(infile));
   }
   //printf("Out %d bytes\n",len);
   fprintf(stderr,"%s: %d/%d=%.3f\n",argv[1],ArrayLength(infile),len,(float)ArrayLength(infile)/len);

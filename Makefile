@@ -25,6 +25,12 @@ vpath %.cpp . ts
 vpath %.c . ts net
 vpath %.o $(DIR)
 vpath %.a $(DIR)
+ifeq ($(BZ2),no)
+CFLAGS+=-DDONT_USE_BZ2
+BZ2=
+else
+BZ2=-lbz2
+endif
 ifeq ($(READLINE),no)
 CFLAGS+=-DDONT_USE_READLINE
 READLINE=
@@ -62,7 +68,7 @@ $(DIR)/libtsctl.a: $(addprefix $(DIR)/,$(ARCHLIBS) Arch.o NoThread.o dioctlConfi
 MapDump: $(DIR)/MapDump
 	@true
 
-$(DIR)/MapDump: $(addprefix $(DIR)/,MapDump.o Arch.o NoThread.o $(ARCHLIBS) libtsctl.a) -lbz2 
+$(DIR)/MapDump: $(addprefix $(DIR)/,MapDump.o Arch.o NoThread.o $(ARCHLIBS) libtsctl.a) $(BZ2) 
 
 $(DIR)/%.o: %.c
 	$(CC) $(CFLAGS) $(CPPFLAGS) -c -o $@ $<
@@ -118,7 +124,7 @@ $(DIR)/libtscan1.a: $(addprefix $(DIR)/,tscan1Arch.o TSCAN1Bus.o SJA1000CAN.o)
 tsctl: $(DIR)/tsctl
 	@true
 
-$(DIR)/tsctl: $(addprefix $(DIR)/,tsctl.o Arch.o PThread.o command.o command1.o $(ARCHLIBS)) $(READLINE) $(DIR)/libtsctl.a -lbz2 -lpthread $(DIR)/libnettsctl.a
+$(DIR)/tsctl: $(addprefix $(DIR)/,tsctl.o Arch.o PThread.o command.o command1.o $(ARCHLIBS)) $(READLINE) $(DIR)/libtsctl.a $(BZ2) -lpthread $(DIR)/libnettsctl.a
 
 # /usr/lib/libreadline.a
 
@@ -141,57 +147,57 @@ all: $(PRODUCTS)
 CAN2: $(DIR)/CAN2
 	@true
 
-$(DIR)/CAN2: $(addprefix $(DIR)/,CAN2.o Arch.o PThread.o $(ARCHLIBS) libtsctl.a) -lbz2 -lpthread
+$(DIR)/CAN2: $(addprefix $(DIR)/,CAN2.o Arch.o PThread.o $(ARCHLIBS) libtsctl.a) $(BZ2) -lpthread
 
 CAN3: $(DIR)/CAN3
 	@true
 
-$(DIR)/CAN3: $(addprefix $(DIR)/,CAN3.o Arch.o PThread.o $(ARCHLIBS) libtsctl.a) -lbz2 -lpthread
+$(DIR)/CAN3: $(addprefix $(DIR)/,CAN3.o Arch.o PThread.o $(ARCHLIBS) libtsctl.a) $(BZ2) -lpthread
 
 CANTx: $(DIR)/CANTx
 	@true
 
-$(DIR)/CANTx: $(addprefix $(DIR)/,CANTx.o Arch.o NoThread.o $(ARCHLIBS) libtsctl.a) -lbz2
+$(DIR)/CANTx: $(addprefix $(DIR)/,CANTx.o Arch.o NoThread.o $(ARCHLIBS) libtsctl.a) $(BZ2)
 
 CANDiag: $(DIR)/CANDiag
 	@true
 
-$(DIR)/CANDiag: $(addprefix $(DIR)/,CANDiag.o Arch.o NoThread.o $(ARCHLIBS) libtsctl.a) -lbz2
+$(DIR)/CANDiag: $(addprefix $(DIR)/,CANDiag.o Arch.o NoThread.o $(ARCHLIBS) libtsctl.a) $(BZ2)
 
 CANRx: $(DIR)/CANRx
 	@true
 
-$(DIR)/CANRx: $(addprefix $(DIR)/,CANRx.o Arch.o PThread.o $(ARCHLIBS) libtsctl.a) -lbz2 -lpthread
+$(DIR)/CANRx: $(addprefix $(DIR)/,CANRx.o Arch.o PThread.o $(ARCHLIBS) libtsctl.a) $(BZ2) -lpthread
 
 diotoggle: $(DIR)/diotoggle
 	@true
 
-$(DIR)/diotoggle: $(addprefix $(DIR)/,diotoggle.o Arch.o NoThread.o $(ARCHLIBS) libtsctl.a) -lbz2
+$(DIR)/diotoggle: $(addprefix $(DIR)/,diotoggle.o Arch.o NoThread.o $(ARCHLIBS) libtsctl.a) $(BZ2)
 
 spi8200: $(DIR)/spi8200
 	@true
 
-$(DIR)/spi8200: $(addprefix $(DIR)/,spi8200.o Arch.o NoThread.o $(ARCHLIBS) libtsctl.a) -lbz2
+$(DIR)/spi8200: $(addprefix $(DIR)/,spi8200.o Arch.o NoThread.o $(ARCHLIBS) libtsctl.a) $(BZ2)
 
 ts8160ctl: $(DIR)/ts8160ctl
 	@true
 
-$(DIR)/ts8160ctl: $(addprefix $(DIR)/,ts8160ctl.o Arch.o NoThread.o $(ARCHLIBS) libtsctl.a) -lbz2
+$(DIR)/ts8160ctl: $(addprefix $(DIR)/,ts8160ctl.o Arch.o NoThread.o $(ARCHLIBS) libtsctl.a) $(BZ2)
 
 DIOTest: $(DIR)/DIOTest
 	@true
 
-$(DIR)/DIOTest: $(addprefix $(DIR)/,DIOTest2.o Arch.o NoThread.o $(ARCHLIBS) libtsctl.a) -lbz2
+$(DIR)/DIOTest: $(addprefix $(DIR)/,DIOTest2.o Arch.o NoThread.o $(ARCHLIBS) libtsctl.a) $(BZ2)
 
 canctl: $(DIR)/canctl
 	@true
 
-$(DIR)/canctl: $(addprefix $(DIR)/,canctl.o Arch.o PThread.o $(ARCHLIBS) libtsctl.a) -lbz2 -lpthread
+$(DIR)/canctl: $(addprefix $(DIR)/,canctl.o Arch.o PThread.o $(ARCHLIBS) libtsctl.a) $(BZ2) -lpthread
 
 spictl: $(DIR)/spictl
 	@true
 
-$(DIR)/spictl: $(addprefix $(DIR)/,spictl.o Arch.o PThread.o $(ARCHLIBS) libtsctl.a) -lbz2 -lpthread
+$(DIR)/spictl: $(addprefix $(DIR)/,spictl.o Arch.o PThread.o $(ARCHLIBS) libtsctl.a) $(BZ2) -lpthread
 
 
 NetTest: $(DIR)/NetTest
