@@ -1,6 +1,7 @@
 #ifndef __DummyDIO_c
 #define __DummyDIO_c
 #include "DummyDIO.h"
+#include "Array.h"
 
 /*
   DIO that does nothing but take up a fixed number of DIOs.
