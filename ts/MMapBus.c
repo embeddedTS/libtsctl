@@ -53,7 +53,7 @@ void *MMapBusInit2(void *bus0,void *mem,int Pages) {
   bus->BitsGet16 = (void *)MMapBusBitsGet16;
   bus->BitsGet32 = (void *)MMapBusBitsGet32;
 
-  bus->Mem = mem;
+  bus->Mem = bus->Mem16 = mem;
   bus->InitStatus = 1;
   return bus;
 }
@@ -103,16 +103,30 @@ void *MMapBusInit(MMapBus *bus,int MemBase,int Pages) {
     Pages = 1;
   }
   if (bus->Mem == 0) { // make multiple calls to Init safe
-    bus->Mem = MemMap(MemBase,Pages);
+    bus->Mem = bus->Mem16 = MemMap(MemBase,Pages);
   }
   bus->InitStatus = (bus->Mem == 0) ? MapBusErrorMapping : 1;
   return bus;
 }
 
+void *MMapBusInit3(MMapBus *bus0,int MemBase8,int MemBase16,int Pages) {
+  bus0 = MMapBusInit(bus0,MemBase8,Pages);
+  if (Pages <= 0) Pages = 1;
+  if (bus0->Mem16 == 0) { // make multiple calls to Init safe
+    bus0->Mem16 = MemMap(MemBase16,Pages);
+  }
+  return bus0;
+}
+
+
 void MMapBusFini(MMapBus *bus) {
   if (bus->Mem) {
     MemUnmap(bus->Mem);
     bus->Mem = 0;
+  }
+  if (bus->Mem16) {
+    MemUnmap(bus->Mem16);
+    bus->Mem16 = 0;
   }
   if (bus->InitStatus > 0) bus->InitStatus = 0;
 }
@@ -154,7 +168,7 @@ static inline void _MMapBusPoke8(MMapBus *bus,int adrs,unsigned char val) {
 
 __attribute__((always_inline)) 
 static inline unsigned short _MMapBusPeek16(MMapBus *bus,int adrs) {
-  unsigned short ret = ((volatile unsigned short *)(bus->Mem+adrs))[0];
+  unsigned short ret = ((volatile unsigned short *)(bus->Mem16+adrs))[0];
 #ifdef DEBUG
   if (bus == DEBUG_ADRS)
   fprintf(stderr,"%p:Peek16 0x%X = %04X\n",bus,adrs,ret);
@@ -178,7 +192,7 @@ static inline void _MMapBusPoke16(MMapBus *bus,int adrs,unsigned short val) {
   if (bus == DEBUG_ADRS)
   fprintf(stderr,"%p:Poke16 0x%X,%X\n",bus,adrs,val);
 #endif
-  ((volatile unsigned short *)(bus->Mem+adrs))[0] = val;
+  ((volatile unsigned short *)(bus->Mem16+adrs))[0] = val;
 }
 
 __attribute__((always_inline)) 

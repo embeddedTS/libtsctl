@@ -53,10 +53,12 @@ struct MMapBus {
 	unsigned LockBase;
 	int deferlockW;
 	int deferlockR;
-	volatile char *Mem;
+  volatile char *Mem,*Mem16;
 };
 
 void *MMapBusInit(MMapBus* ob,int MMapBase,int Pages);
+void *MMapBusInit2(void *bus0,void *mem,int Pages);
+void *MMapBusInit3(MMapBus *bus0,int MemBase8,int MemBase16,int Pages);
 void MMapBusFini(MMapBus* ob);
 int MMapBusLock(MMapBus* ob,unsigned num,int flags);
 int MMapBusUnlock(MMapBus* ob,unsigned num,int flags);
