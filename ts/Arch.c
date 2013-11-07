@@ -17,9 +17,9 @@
   to enumerate between 0 and PC104_MAX-1.  This maximum
   value represents the total of all possible supported boards.
  */
-#define PC104_MAX 9
+#define PC104_MAX 6
 int ArchPC104Max() {
-  return PC104_MAX; // TS-RELAY8 + 4 TS-DIO24 + 4 TS-CAN1
+  return PC104_MAX; // TS-RELAY8 + TS-DIO24 + 4 TS-CAN1
 }
 
 Arch *_ArchPC104Init(unsigned n) {
@@ -43,15 +43,11 @@ Arch *_ArchPC104Init(unsigned n) {
 #ifdef ARCH_relay8
     boards[n] = tsrelay8ArchInit(n);
 #endif
-  } else if (n < 5) {
+  } else if (n == 1) {
 #ifdef ARCH_dio24
-    pc104->Lock(pc104,0,SHARED);
-    val = pc104->Peek8(pc104,0x100+8*(n-4));
-    pc104->Unlock(pc104,0,SHARED);
-    if (val != 0x54) return 0;
-    boards[n] = tsdio24ArchInit(n-4);
+    boards[n] = tsdio24ArchInit(n-1);
 #endif
-  } else if (n < 9) {
+  } else if (n < 5) {
 #ifdef ARCH_can1
     pc104->Lock(pc104,0,SHARED);
     val = pc104->Peek8(pc104,0x100+8*(n-8));

@@ -12,6 +12,7 @@
 #include "tsDIO24DIORaw.h"
 #include "DummyDIO.h"
 #include "PhysicalDIO.h"
+#include "Lock.h"
 #include "tsdio24_dioctl_config.c"
 
 Arch *tsdio24ArchInit();
@@ -26,9 +27,24 @@ Arch tsdio24Arch = {
   .NextSubArchSet = tsdio24NextSubArchSet
 };
 
+int dio24present[4];
+
 Arch *tsdio24ArchInit(int model) {
   static Arch *tsdio24;
+  Bus *pc104;
+  int i,val;
+
   if (tsdio24) return tsdio24;
+  pc104 = BusInit(2);
+  pc104->Lock(pc104,0,SHARED);
+  for (i=0;i<4;i++) {
+    val = pc104->Peek8(pc104,0x100+8*i);
+    if (val != 0x54) dio24present[i] = 1;
+  }
+  pc104->Unlock(pc104,0,SHARED);
+  if (dio24present[0] == 0 && dio24present[0] == 0 && dio24present[0] == 0 && dio24present[0] == 0) {
+    return 0;
+  }
   tsdio24 = &tsdio24Arch;
   dioctl_config_add2(Xtsdio24_dioctl_config,Xtsdio24_dioctl_config_len,Ytsdio24_dioctl_config_len);
   return tsdio24;
@@ -77,23 +93,36 @@ Bus *tsdio24__BusInit0(Bus *bus,int inst) {
   return CacheBusInit(&tsDIO24DIOCacheBus,BusInit(2));
 }
 
+DIORaw *tsdio24__DIORawInit3(DIORaw *dioraw0,int inst);
 DIORaw *tsdio24__DIORawInit0(DIORaw *dioraw0,int inst) {
+  if (!dio24present[0]) {
+    return tsdio24__DIORawInit3(dioraw0,inst);
+  }
   return tsDIO24DIORawInit(&dio24[inst],tsdio24__BusInit0(0,0),0x100+inst*8);
 }
 DIORaw *tsdio24__DIORawInit1(DIORaw *dioraw0,int inst) {
+  if (!dio24present[1]) {
+    return tsdio24__DIORawInit0(dioraw0,inst);
+  }
   return tsDIO24DIORawInit(&dio24[inst],tsdio24__BusInit0(0,0),0x100+inst*8);
 }
 DIORaw *tsdio24__DIORawInit2(DIORaw *dioraw0,int inst) {
+  if (!dio24present[2]) {
+    return tsdio24__DIORawInit1(dioraw0,inst);
+  }
   return tsDIO24DIORawInit(&dio24[inst],tsdio24__BusInit0(0,0),0x100+inst*8);
 }
 DIORaw *tsdio24__DIORawInit3(DIORaw *dioraw0,int inst) {
+  if (!dio24present[3]) {
+    return tsdio24__DIORawInit2(dioraw0,inst);
+  }
   return tsDIO24DIORawInit(&dio24[inst],tsdio24__BusInit0(0,0),0x100+inst*8);
 }
 
 DIO *tsdio24__DIOInit0(DIO *dio,int inst) {
   int i;
   DIORaw *dioraw = tsdio24__DIORawInit0(0,inst);
-  if (dioraw) {
+  if (inst >= 0 && inst <= 3 && dio24present[inst]) {
     for (i=0;i<4;i++) {
       DIO24DIOCapabilities[i] = DIO_OUTPUT_ONLY;
     }
