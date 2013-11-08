@@ -133,7 +133,7 @@ Arch *ArchInit() {
 #ifdef ARCH_4200
     case 0x4200:  hardware = ts4200ArchInit(); break;
 #endif
-#ifdef ARCH_4600:
+#ifdef ARCH_4600
     case 0x4600:  
     case 0x7600: hardware = ts4600ArchInit(); break;
 #endif
