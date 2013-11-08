@@ -69,7 +69,7 @@ int main(int argc,char *argv[]) {
   // look up how the DIOs are connected on the base board
   maxconn = Lookup(sys,"attrib.%X.Wire.MaxConnections",bb);
   if (maxconn <= 0) {
-    printf("Error: Max connections=%d\n",maxconn);
+    printf("Error: Max connections=%d (%04X/%04X)\n",maxconn,model,bb);
     return 1;
   }
   wires = Lookup(sys,"attrib.%X.Wire.Count",bb);
@@ -130,6 +130,7 @@ int main(int argc,char *argv[]) {
       if (diocap[i+j*maxconn] & DIO_CAN_DRIVE_LOW) {
 	// set DIO on wire i to output low
 	dio->SetAsync(dio,dionum[i+j*maxconn],LOW);
+	usleep(1000);
 	// check that other wires are low
 	for (i2=0;i2<maxconn;i2++) {
 	  if (dionum[i2+j*maxconn] >= 0
@@ -152,6 +153,7 @@ int main(int argc,char *argv[]) {
       if (diocap[i+j*maxconn] & DIO_CAN_DRIVE_HIGH) {
 	// set DIO on wire i to output high
 	dio->SetAsync(dio,dionum[i+j*maxconn],HIGH);
+	usleep(1000);
 	// check that other wires are high
 	for (i2=0;i2<maxconn;i2++) {
 	  if (dionum[i2+j*maxconn] >= 0
@@ -190,6 +192,7 @@ int main(int argc,char *argv[]) {
   switch ((model << 16) + bb) {
   case 0x42008200: tests = 186; break;
   case 0x45008200: tests = 188; break;
+  case 0x46008200: tests = 182; break;
   case 0x47008200: tests = 180; break;
   case 0x48008200: tests = 174; break;
   

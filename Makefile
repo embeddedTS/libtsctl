@@ -8,7 +8,7 @@ SUPPORT?=4500 81x0 8200 8390 8820 8900 9490 relay8 dio24 can1
 CFLAGS+=-march=armv4
 endif
 ifeq ($(ARCH),noncavium)
-SUPPORT?=4200 4700 4800 81x0 8200 8390 8820 8900 9490 relay8 dio24 can1
+SUPPORT?=4200 4600 4700 4800 81x0 8200 8390 8820 8900 9490 relay8 dio24 can1
 CFLAGS+=-march=armv4
 endif
 ifeq ($(ARCH),x86)
@@ -106,6 +106,9 @@ $(DIR)/libts4200.a: $(addprefix $(DIR)/,ts4200Arch.o DummyBus.o MMapBus.o TSMuxB
 $(DIR)/libts4500.a: $(addprefix $(DIR)/,ts4500Arch.o DummyBus.o MMapBus.o TSMuxBus.o CacheBus.o ts4500Pin.o Cavium2132DIORaw.o ts4500DIORaw.o SystemTime.o PhysicalDIO.o AggregateDIO.o DIOTWI.o WBSPI.o LocalSystem.o SJA1000CAN.o Cavium2132SBus.o Cavium2132SBusWindowBus.o WBWindowBus.o Cavium2132Time.o WBSPI.o ts4500_dioctl_config.o)
 	ar -r $@ $^
 
+$(DIR)/libts4600.a: $(addprefix $(DIR)/,ts4600Arch.o NBus.o DummyBus.o MMapBus.o TSMuxBus.o CacheBus.o LocalSystem.o AggregateDIO.o ts4600DIO.o ts4600_dioctl_config.o)
+	ar -r $@ $^
+
 $(DIR)/libts4700.a: $(addprefix $(DIR)/,ts4700Arch.o DummyBus.o MMapBus.o TSMuxBus.o CacheBus.o ts4700Pin.o MarvellPXA166DIORaw.o ts4700DIORaw.o ts7700DIORaw.o SystemTime.o PhysicalDIO.o AggregateDIO.o DIOTWI.o WBSPI.o LocalSystem.o SJA1000CAN.o ts4700_dioctl_config.o ts7700_dioctl_config.o)
 	ar -r $@ $^
 
@@ -187,7 +190,7 @@ $(DIR)/ts8160ctl: $(addprefix $(DIR)/,ts8160ctl.o Arch.o NoThread.o $(ARCHLIBS) 
 DIOTest: $(DIR)/DIOTest
 	@true
 
-$(DIR)/DIOTest: $(addprefix $(DIR)/,DIOTest2.o Arch.o NoThread.o $(ARCHLIBS) libtsctl.a) $(BZ2)
+$(DIR)/DIOTest: $(addprefix $(DIR)/,DIOTest.o Arch.o NoThread.o $(ARCHLIBS) libtsctl.a) $(BZ2)
 
 canctl: $(DIR)/canctl
 	@true

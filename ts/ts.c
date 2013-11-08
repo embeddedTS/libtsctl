@@ -54,6 +54,8 @@ TS_CPU TSCPUGet(void) {
       cpu = CPU_MARVELL_PXA168;
     } else if (strstr(buf,"TS-7400/TS-7670")) {
       cpu = CPU_7400_7670;
+    } else if (strstr(buf,"TS-7600/TS-4600")) {
+      cpu = CPU_7600_4600;
     } else {
       cpu = CPU_UNKNOWN;
     }
@@ -137,14 +139,13 @@ int TSModelGet() {
     // Don't know how to differentiate the TS-4800 with any future boards
     // that might also use a Freescale CPU...
     break;
+  case CPU_7600_4600:
   case CPU_7400_7670: {
     FILE *f = fopen("/dev/tsmodel","r");
     if (f) {
-      char model[6] = {0,0,0,0,0,0};
-      fread(model,1,5,f);
-      if (!strcmp(model,"7670\n")) {
-	id=0x7670;
-      }
+      char model[8] = {'0','x',0,0,0,0,0,0};
+      fread(model+2,1,5,f);
+      id = strtoul(model,0,16);
       fclose(f);
     }
     break;
@@ -156,5 +157,5 @@ int TSModelGet() {
 
 
 // Author: Michael Schmidt (michael@embeddedARM.com)
-// Copyright (c) 2011, Technologic Systems, All Rights Reserved
+// Copyright (c) 2013, Technologic Systems, All Rights Reserved
 // Refer to the COPYRIGHT file provided with this project for licensing terms.
