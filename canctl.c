@@ -6,10 +6,11 @@
 #include <sys/time.h>
 #include <signal.h>
 #include <sched.h>
+#include <stdio.h>
 #include <time.h>
 #include "SJA1000CAN.h"
 #include "NetCANctl.c"
-#include "Net.c"
+
 
 CAN *Net_CANctlInit(int inst,char *host,int mode){
   int socket = ClientSocketNew(host,7552+inst);
