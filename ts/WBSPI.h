@@ -27,6 +27,7 @@ struct WBSPI {
 	int LockNum;
 	int offset;
 	void (*ChipSelect)(WBSPI *,unsigned num,int asserted);
+       int use8;
 };
 
 void *WBSPIInit(WBSPI* ob,void *bus,void *bus8,int offset,void (*)(WBSPI *,unsigned ,int ));

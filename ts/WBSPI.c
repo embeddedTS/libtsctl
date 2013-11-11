@@ -140,6 +140,7 @@ maybe force the clock state at the start every time.
 or, force it at the end
 either way, the problem is the clock not ending in the same state as it starts
  */
+
 int WBSPIWrite(WBSPI *ob,int adrs,const unsigned char* buf) {
   int n = ArrayLength(buf),reg;
   int de_cs = 1;
@@ -165,32 +166,32 @@ int WBSPIWrite(WBSPI *ob,int adrs,const unsigned char* buf) {
     }
   }
   while (n >= 4) {
-#ifdef USE_OLD
-    ob->bus->Poke16(ob->bus,ob->offset+8,buf[1]+(buf[0]<<8));
-#else
-    ob->bus->Poke8(ob->bus,ob->offset+8,buf[0]);
-    ob->bus->Poke8(ob->bus,ob->offset+8,buf[1]);
-#endif
+    if (!ob->use8) {
+      ob->bus->Poke16(ob->bus,ob->offset+8,buf[1]+(buf[0]<<8));
+    } else {
+      ob->bus->Poke8(ob->bus,ob->offset+8,buf[0]);
+      ob->bus->Poke8(ob->bus,ob->offset+8,buf[1]);
+    }
     buf += 2;
     n -= 2;
   }
   if (n > 2) { // n == 3
-#ifdef USE_OLD
-    ob->bus->Poke16(ob->bus,ob->offset+8,buf[1]+(buf[0]<<8));
-#else
-    ob->bus->Poke8(ob->bus,ob->offset+8,buf[0]);
-    ob->bus->Poke8(ob->bus,ob->offset+8,buf[1]);
-#endif
+    if (!ob->use8) {
+      ob->bus->Poke16(ob->bus,ob->offset+8,buf[1]+(buf[0]<<8));
+    } else {
+      ob->bus->Poke8(ob->bus,ob->offset+8,buf[0]);
+      ob->bus->Poke8(ob->bus,ob->offset+8,buf[1]);
+    }
     buf += 2;
     n -= 2;
     ob->bus->Poke8(ob->bus,ob->offset+(de_cs?0xC:8),buf[0]);
   } else if (n == 2) {
-#ifdef USE_OLD
-    ob->bus->Poke16(ob->bus,ob->offset+(de_cs?0xC:8),buf[1]+(buf[0]<<8));
-#else
-    ob->bus->Poke8(ob->bus,ob->offset+(de_cs?0x8:8),buf[0]);
-    ob->bus->Poke8(ob->bus,ob->offset+(de_cs?0xC:8),buf[1]);
-#endif
+    if (!ob->use8) {
+      ob->bus->Poke16(ob->bus,ob->offset+(de_cs?0xC:8),buf[1]+(buf[0]<<8));
+    } else {
+      ob->bus->Poke8(ob->bus,ob->offset+(de_cs?0x8:8),buf[0]);
+      ob->bus->Poke8(ob->bus,ob->offset+(de_cs?0xC:8),buf[1]);
+    }
     buf += 2;
     n -= 2;
   } else if (n == 1) {
@@ -247,10 +248,11 @@ int WBSPIRead(WBSPI *ob,int adrs,unsigned char* buf) {
     //s = ob->bus->Peek16(ob->bus,ob->offset+0xA); // 0xA pipelined read
     //*buf++ = s >> 8;
     //*buf++ = s & 0xff;
-    *buf++ = ob->bus->Peek8(ob->bus,ob->offset+0x8); // 0xA pipelined read
     //ob->bus->Peek16(ob->bus,ob->offset); // TEMP
-    *buf++ = ob->bus->Peek8(ob->bus,ob->offset+0x8); // 0xA pipelined read
     //ob->bus->Peek16(ob->bus,ob->offset); // TEMP
+
+    *buf++ = ob->bus->Peek8(ob->bus,ob->offset+0x8); // 0xA pipelined read
+    *buf++ = ob->bus->Peek8(ob->bus,ob->offset+0x8); // 0xA pipelined read
     n -= 2;
   }
   if (n > 2) { // n == 3
@@ -302,57 +304,56 @@ int WBSPIReadWrite(WBSPI *ob,int adrs,const unsigned char* wbuf,unsigned char* r
   ob->bus->Lock(ob->bus,0,0);
   reg = ob->bus->Peek16(ob->bus,ob->offset);
   while (n >= 4) {
-#ifdef USE_OLD
-    ob->bus->Poke16(ob->bus,ob->offset+8,wbuf[1]+(wbuf[0]<<8));
-#else
-    ob->bus->Poke8(ob->bus,ob->offset+8,wbuf[0]);
-    ob->bus->Poke8(ob->bus,ob->offset+8,wbuf[1]);
-#endif
+    if (!ob->use8) {
+      ob->bus->Poke16(ob->bus,ob->offset+8,wbuf[1]+(wbuf[0]<<8));
+    } else {
+      ob->bus->Poke8(ob->bus,ob->offset+8,wbuf[0]);
+      *rbuf++ = ob->bus->Peek8(ob->bus,ob->offset+2);
+      ob->bus->Poke8(ob->bus,ob->offset+8,wbuf[1]);
+      *rbuf++ = ob->bus->Peek8(ob->bus,ob->offset+2);
+    }
     //log9(LOG_SPI,"%4: 02X->[%02X]\n",wbuf[1]+(wbuf[0]<<8),ob->offset+8);
     wbuf += 2;
-#ifdef USE_OLD
-    s = ob->bus->Peek16(ob->bus,ob->offset+2);
-    *rbuf++ = s >> 8;
-    *rbuf++ = s & 0xff;
-#else
-    *rbuf++ = ob->bus->Peek8(ob->bus,ob->offset+2);
-    *rbuf++ = ob->bus->Peek8(ob->bus,ob->offset+2);
-#endif
+    if (!ob->use8) {
+      s = ob->bus->Peek16(ob->bus,ob->offset+2);
+      *rbuf++ = s >> 8;
+      *rbuf++ = s & 0xff;
+    }
     n -= 2;
   }
   if (n > 2) { // n == 3
-#ifdef USE_OLD
-    ob->bus->Poke16(ob->bus,ob->offset+8,wbuf[1]+(wbuf[0]<<8));
-    s = ob->bus->Peek16(ob->bus,ob->offset+2);
-    s=0;
-    wbuf += 2;
-    *rbuf++ = s >> 8;
-    *rbuf++ = s & 0xff;
-#else
-    ob->bus->Poke8(ob->bus,ob->offset+8,wbuf[0]);
-    ob->bus->Poke8(ob->bus,ob->offset+8,wbuf[1]);
-    //log9(LOG_SPI,"3a: %02X->[%02X]\n",wbuf[1]+(wbuf[0]<<8),ob->offset+8);
-    *rbuf++ = ob->bus->Peek8(ob->bus,ob->offset+2);
-    *rbuf++ = ob->bus->Peek8(ob->bus,ob->offset+2);
-    wbuf += 2;
-#endif
+    if (!ob->use8) {
+      ob->bus->Poke16(ob->bus,ob->offset+8,wbuf[1]+(wbuf[0]<<8));
+      s = ob->bus->Peek16(ob->bus,ob->offset+2);
+      s=0;
+      wbuf += 2;
+      *rbuf++ = s >> 8;
+      *rbuf++ = s & 0xff;
+    } else {
+      ob->bus->Poke8(ob->bus,ob->offset+8,wbuf[0]);
+      *rbuf++ = ob->bus->Peek8(ob->bus,ob->offset+2);
+      ob->bus->Poke8(ob->bus,ob->offset+8,wbuf[1]);
+      //log9(LOG_SPI,"3a: %02X->[%02X]\n",wbuf[1]+(wbuf[0]<<8),ob->offset+8);
+      *rbuf++ = ob->bus->Peek8(ob->bus,ob->offset+2);
+      wbuf += 2;
+    }
     n -= 2;
     ob->bus8->Poke8(ob->bus,ob->offset+(de_cs?0xC:8),wbuf[0]);
     //log9(LOG_SPI,"3b: %02X->[%02X]\n",wbuf[1]+(wbuf[0]<<8),ob->offset+(de_cs?0xC:8));
     *rbuf=0;
     *rbuf = ob->bus8->Peek8(ob->bus,ob->offset+2);
   } else if (n == 2) {
-#ifdef USE_OLD
-    ob->bus->Poke16(ob->bus,ob->offset+(de_cs?0xC:8),wbuf[1]+(wbuf[0]<<8));
-    s = ob->bus->Peek16(ob->bus,ob->offset+2);
-    *rbuf++ = s >> 8;
-    *rbuf++ = s & 0xff;
-#else
-    ob->bus->Poke8(ob->bus,ob->offset+(de_cs?0x8:8),wbuf[0]);
-    ob->bus->Poke8(ob->bus,ob->offset+(de_cs?0xC:8),wbuf[1]);
-    *rbuf++ = ob->bus->Peek8(ob->bus,ob->offset+2);
-    *rbuf++ = ob->bus->Peek8(ob->bus,ob->offset+3);
-#endif
+    if (!ob->use8) {
+      ob->bus->Poke16(ob->bus,ob->offset+(de_cs?0xC:8),wbuf[1]+(wbuf[0]<<8));
+      s = ob->bus->Peek16(ob->bus,ob->offset+2);
+      *rbuf++ = s >> 8;
+      *rbuf++ = s & 0xff;
+    } else {
+      ob->bus->Poke8(ob->bus,ob->offset+(de_cs?0x8:8),wbuf[0]);
+      *rbuf++ = ob->bus->Peek8(ob->bus,ob->offset+2);
+      ob->bus->Poke8(ob->bus,ob->offset+(de_cs?0xC:8),wbuf[1]);
+      *rbuf++ = ob->bus->Peek8(ob->bus,ob->offset+2);
+    }
     //log9(LOG_SPI,"2: %02X->[%02X]\n",wbuf[1]+(wbuf[0]<<8),ob->offset+(de_cs?0xC:8));
     n -= 2;
   } else if (n == 1) {

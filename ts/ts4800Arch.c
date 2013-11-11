@@ -404,9 +404,13 @@ SPI *ts4800__SPIInit0(SPI *spi,int inst) {
   MemUnmap(reg);
 
   Bus *bus;
+  System *sys = ts4800__SystemInit0(0,0);
   dio0 = ts4800__DIOInit0(0,0); // needed by ts4800SPIChipSelect
   ts4800SPI0.LockNum = 7;
   bus = ts4800__BusInit0(0,0);
+  if (sys->FPGARevision(sys) >= 7) {
+    ts4800SPI0.use8 = 1;
+  }
   return WBSPIInit(&ts4800SPI0,ts4800__BusInit16(0,16),ts4800__BusInit16(0,16),
 		   0,ts4800SPIChipSelect);
 }
