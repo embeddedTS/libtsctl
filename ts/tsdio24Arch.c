@@ -39,7 +39,7 @@ Arch *tsdio24ArchInit(int model) {
   pc104->Lock(pc104,0,SHARED);
   for (i=0;i<4;i++) {
     val = pc104->Peek8(pc104,0x100+8*i);
-    if (val != 0x54) dio24present[i] = 1;
+    if (val == 0x54) dio24present[i] = 1;
   }
   pc104->Unlock(pc104,0,SHARED);
   if (dio24present[0] == 0 && dio24present[0] == 0 && dio24present[0] == 0 && dio24present[0] == 0) {
