@@ -20,7 +20,7 @@ SUPPORTFLAGS=$(SUPPORT:%=-DARCH_%)
 ARCHLIBS=$(SUPPORT:%=libts%.a) libNone.a
 ARCHLINK=$(SUPPORT:%=-lts%) -lNone
 CFLAGS+=$(SUPPORTFLAGS)
-LDFLAGS+=-Wl,-gc-sections -L$(DIR)
+LDFLAGS+=-Wl,-gc-sections -Wl,--allow-multiple-definition -L$(DIR)
 vpath %.cpp . ts
 vpath %.c . ts net
 vpath %.o $(DIR)
@@ -55,18 +55,26 @@ CPPFLAGS=$(CFLAGS)
 tsctl: $(DIR)/tsctl
 	@true
 
-all: tsctl CAN2 CANTx CANDiag CANRx diotoggle spi8200 ts8160ctl DIOTest canctl spictl NetTest NetTest2
+all: $(PRODUCTS)
+
+#all: tsctl CAN2 CANTx CANDiag CANRx diotoggle spi8200 ts8160ctl DIOTest canctl spictl NetTest NetTest2
 
 $(shell mkdir -p $(DIR))
 
-$(DIR)/libtsctl-pthread.a: $(addprefix $(DIR)/,$(ARCHLIBS) Arch.o PThread.o dioctlConfig.o shell.o opt.o HashTable.o IteratorHashTable.o tcp.o http.o Stream.o socket.o LookupRef.o ts.o)
+$(DIR)/libtsctl-pthread.a: $(addprefix $(DIR)/,$(ARCHLIBS) Arch.o PThread.o dioctlConfig.o shell.o opt.o HashTable.o IteratorHashTable.o tcp.o Stream.o socket.o LookupRef.o ts.o)
 	ar -r $@ $^
 
 $(DIR)/libnettsctl.a: $(addprefix $(DIR)/,NetAIO.o NetBus.o NetCAN.o NetDIO.o NetDIORaw.o NetEDIO.o NetPin.o NetSPI.o NetSystem.o NetTime.o NetTsctl.o NetTWI.o Stream.o socket.o)
 	ar -r $@ $^
 
-$(DIR)/libtsctl.a: $(addprefix $(DIR)/,$(ARCHLIBS) Arch.o NoThread.o dioctlConfig.o shell.o opt.o HashTable.o IteratorHashTable.o tcp.o http.o Stream.o socket.o LookupRef.o ts.o)
+$(DIR)/libtsctl.a: $(addprefix $(DIR)/,$(ARCHLIBS) Arch.o NoThread.o dioctlConfig.o shell.o opt.o HashTable.o IteratorHashTable.o tcp.o Stream.o socket.o LookupRef.o ts.o)
 	ar -r $@ $^
+
+libtsctl.so: $(DIR)/libtsctl.so
+	@true
+
+$(DIR)/libtsctl.so: $(addprefix $(DIR)/,$(ARCHLIBS) Arch.o NoThread.o dioctlConfig.o shell.o opt.o IteratorHashTable.o tcp.o Stream.o socket.o LookupRef.o ts.o)
+	$(CC) -shared -Wl,-soname,$(notdir $@) -Wl,--whole-archive $^ -Wl,--no-whole-archive -lbz2 $(LDFLAGS) -o $@
 
 MapDump: $(DIR)/MapDump
 	@true
@@ -127,7 +135,7 @@ $(DIR)/libtsdio24.a: $(addprefix $(DIR)/,tsdio24Arch.o tsDIO24DIORaw.o DummyDIO.
 $(DIR)/libtscan1.a: $(addprefix $(DIR)/,tscan1Arch.o TSCAN1Bus.o SJA1000CAN.o)
 	ar -r $@ $^
 
-$(DIR)/tsctl: $(addprefix $(DIR)/,tsctl.o Arch.o PThread.o command.o command1.o $(ARCHLIBS)) $(READLINE) $(DIR)/libtsctl.a $(BZ2) -lpthread $(DIR)/libnettsctl.a
+$(DIR)/tsctl: $(addprefix $(DIR)/,tsctl.o Arch.o PThread.o command.o command1.o http.o $(ARCHLIBS)) $(READLINE) $(DIR)/libtsctl.a $(BZ2) -lpthread $(DIR)/libnettsctl.a
 
 # /usr/lib/libreadline.a
 
@@ -144,8 +152,6 @@ $(DIR)/MapDump2: $(addprefix $(DIR)/,MapDump2.o Arch.o NoThread.o $(ARCHLIBS) li
 #	@echo "Building --- $@"
 #	$(CXX) $(CFLAGS) $(CFLAGS_$(patsubst %.c,%,$<)) $< \
 #        $(LDFLAGS) $(ARCH)/libtsctl.a -o $@
-
-all: $(PRODUCTS)
 
 CAN2: $(DIR)/CAN2
 	@true
@@ -191,6 +197,7 @@ DIOTest: $(DIR)/DIOTest
 	@true
 
 $(DIR)/DIOTest: $(addprefix $(DIR)/,DIOTest.o Arch.o NoThread.o $(ARCHLIBS) libtsctl.a) $(BZ2)
+
 
 canctl: $(DIR)/canctl
 	@true
