@@ -23,6 +23,6 @@ int main(int argc,char *argv[]) {
     return 1;
   }
   can->BaudSet(can,1000000);
-  can->Tx(can,0,0x1234,data);
+  can->Tx(can,0,0x234,data);
   return 0;
 }
