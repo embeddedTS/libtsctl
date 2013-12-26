@@ -23,8 +23,7 @@
 #include <string.h>
 
 #if 1
-__attribute__((always_inline)) 
-static inline void *ArrayAlloc(unsigned count,unsigned elementBytes) {
+void *ArrayAlloc(unsigned count,unsigned elementBytes) {
   unsigned *ptr = (unsigned *)malloc(elementBytes * (1+count) + 12);
   ptr[0] = 0;
   ptr[1] = elementBytes;
@@ -43,15 +42,13 @@ static inline void *ArrayAlloc(unsigned count,unsigned elementBytes) {
     })
 #endif
 
-__attribute__((always_inline)) 
-static inline void ArrayFree(const void *arr) {
+void ArrayFree(const void *arr) {
   unsigned *ptr = (unsigned *)arr;
   free(ptr-3);
 }
 
 #if 1
-__attribute__((always_inline)) 
-static inline void *ArraySize(void *arr,unsigned count) {
+void *ArraySize(void *arr,unsigned count) {
   unsigned *ptr = (unsigned *)arr;
   ptr -= 3;
   ptr = (unsigned *)realloc(ptr,ptr[1] * (1+count) + 12);
@@ -83,16 +80,14 @@ void *ArraySize2(void *arr,unsigned count) {
 }
 #endif
 
-__attribute__((always_inline)) 
-static inline char *ASCIIZ(const char *str) {
+char *ASCIIZ(const char *str) {
   unsigned len = strlen(str);
   char *str2 = (char *)ArrayAlloc(len,1);
   strncpy(str2,str,len);
   return str2;
 }
 
-__attribute__((always_inline)) 
-static inline void *ArraySizeAuto(void *arr,unsigned count) {
+void *ArraySizeAuto(void *arr,unsigned count) {
   unsigned *ptr = (unsigned *)arr;
   ptr -= 3;
   ptr[2] = count;
@@ -169,31 +164,38 @@ type* name = TEMPLATE(name,_array).arr
 //#define NullQ(type,ptr)
   
 __attribute__((always_inline)) 
-static inline unsigned ArrayElementSize(const void *array) {
+static inline unsigned _ArrayElementSize(const void *array) {
   const unsigned *ptr = (unsigned *)array;
   return ptr[-2];
 }
+unsigned ArrayElementSize(const void *array) {
+  return _ArrayElementSize(array);
+}
 __attribute__((always_inline)) 
-static inline unsigned ArrayLength(const void *array) {
+static inline unsigned _ArrayLength(const void *array) {
   const unsigned *ptr = (unsigned *)array;
   return ptr[-1];
 }
-__attribute__((always_inline)) 
-static inline void ArrayFreeFree(const void *arr0) {
+
+unsigned ArrayLength(const void *array) {
+  return _ArrayLength(array);
+}
+
+void ArrayFreeFree(const void *arr0) {
   const void * const *arr = (const void * const *)arr0;
   int i;
-  for (i=0;i<ArrayLength(arr);i++) {
+  for (i=0;i<_ArrayLength(arr);i++) {
     if (arr[i]) ArrayFree(arr[i]);
   }
   ArrayFree(arr);
 }
-__attribute__((always_inline)) 
-static inline void ArrayFreeFreeFree(const void *arr0) {
+
+void ArrayFreeFreeFree(const void *arr0) {
   const void ** const *arr = (const void ** const *)arr0;
   int i,j;
-  for (i=0;i<ArrayLength(arr);i++) {
+  for (i=0;i<_ArrayLength(arr);i++) {
     if (arr[i]) {
-      for (j=0;j<ArrayLength(arr[i]);j++) {
+      for (j=0;j<_ArrayLength(arr[i]);j++) {
 	if (arr[i][j]) ArrayFree(arr[i][j]);
       }
       ArrayFree(arr[i]);
@@ -202,42 +204,46 @@ static inline void ArrayFreeFreeFree(const void *arr0) {
   ArrayFree(arr);
 }
 __attribute__((always_inline)) 
-static inline void *ArrayCompareFunction(const void *array) {
+static inline void *_ArrayCompareFunction(const void *array) {
   const unsigned *ptr = (const unsigned *)array;
   return (void *)ptr[-3];
+}
+
+void *ArrayCompareFunction(const void *array) {
+  return ArrayCompareFunction(array);
 }
 
 __attribute__((always_inline)) 
 static inline unsigned ArrayIndex(void *arr,int index) {
   if (index >= 0) {
-    if (index > ArrayLength(arr)) return ArrayLength(arr)-1;
+    if (index > _ArrayLength(arr)) return _ArrayLength(arr)-1;
     return index;
   }
-  index += ArrayLength(arr);
+  index += _ArrayLength(arr);
   return (index < 0) ? 0 : index;
 }
 
 __attribute__((always_inline)) 
 static inline void *ArrayDup(const void *arr) {
   unsigned *arr1 = (unsigned *)arr;
-  unsigned *arr2 = (unsigned *)malloc(ArrayElementSize(arr) * (1+ArrayLength(arr)) + 12);
-  memcpy(arr2,&arr1[-3],ArrayElementSize(arr) * (1+ArrayLength(arr)) + 12);
+  unsigned *arr2 = (unsigned *)malloc(_ArrayElementSize(arr) * (1+_ArrayLength(arr)) + 12);
+  memcpy(arr2,&arr1[-3],_ArrayElementSize(arr) * (1+_ArrayLength(arr)) + 12);
   return &arr2[3];
 }
 __attribute__((always_inline)) 
 static inline void *ArrayJoin(void *arr1,void *arr2) {
-  if (ArrayElementSize(arr1) != ArrayElementSize(arr2)) return 0;
-  unsigned *ret = (unsigned *)malloc(ArrayElementSize(arr1) * (1+ArrayLength(arr1)) +
-		      ArrayElementSize(arr2) * ArrayLength(arr2) + 12);
+  if (_ArrayElementSize(arr1) != _ArrayElementSize(arr2)) return 0;
+  unsigned *ret = (unsigned *)malloc(_ArrayElementSize(arr1) * (1+_ArrayLength(arr1)) +
+		      _ArrayElementSize(arr2) * _ArrayLength(arr2) + 12);
   ret[0] = 0;
-  ret[1] = ArrayElementSize(arr1);
-  ret[2] = ArrayLength(arr1) + ArrayLength(arr2);
-  memcpy(&ret[3],arr1,ArrayElementSize(arr1) * ArrayLength(arr1));
-  memcpy(&((char *)ret)[12+ArrayLength(arr1)*ArrayElementSize(arr1)],arr2,
-	 ArrayElementSize(arr2) * ArrayLength(arr2));
-  memset(&((char *)ret)[12+ArrayLength(arr1)*ArrayElementSize(arr1)
-			+ArrayLength(arr2)*ArrayElementSize(arr2)],0,
-	 ArrayElementSize(arr1));
+  ret[1] = _ArrayElementSize(arr1);
+  ret[2] = _ArrayLength(arr1) + _ArrayLength(arr2);
+  memcpy(&ret[3],arr1,_ArrayElementSize(arr1) * _ArrayLength(arr1));
+  memcpy(&((char *)ret)[12+_ArrayLength(arr1)*_ArrayElementSize(arr1)],arr2,
+	 _ArrayElementSize(arr2) * _ArrayLength(arr2));
+  memset(&((char *)ret)[12+_ArrayLength(arr1)*_ArrayElementSize(arr1)
+			+_ArrayLength(arr2)*_ArrayElementSize(arr2)],0,
+	 _ArrayElementSize(arr1));
   return &ret[3];
 }
 
@@ -251,56 +257,56 @@ __attribute__((always_inline))
 static inline void *ArrayRange(void *arr,int index1,int index2) {
   unsigned start = ArrayIndex(arr,index1);
   unsigned end = ArrayIndex(arr,index2);
-  unsigned *ret = (unsigned *)malloc(ArrayElementSize(arr) * (end-start+2) + 12);
+  unsigned *ret = (unsigned *)malloc(_ArrayElementSize(arr) * (end-start+2) + 12);
   char *_arr = (char *)arr;
-  ret[0] = (int)ArrayCompareFunction(arr);
-  ret[1] = ArrayElementSize(arr);
+  ret[0] = (int)_ArrayCompareFunction(arr);
+  ret[1] = _ArrayElementSize(arr);
   ret[2] = (end-start+1);
-  memcpy(&ret[3],&_arr[start*ArrayElementSize(arr)],
-	 ArrayElementSize(arr) * (end-start+1));
-  memset(&((char *)ret)[12+ret[2]*ArrayElementSize(arr)],
-	 0,ArrayElementSize(arr));
+  memcpy(&ret[3],&_arr[start*_ArrayElementSize(arr)],
+	 _ArrayElementSize(arr) * (end-start+1));
+  memset(&((char *)ret)[12+ret[2]*_ArrayElementSize(arr)],
+	 0,_ArrayElementSize(arr));
   return &ret[3];
 }
 __attribute__((always_inline)) 
 static inline int ArrayCompare(const void *arr1,const void *arr2) {
-  //if (ArrayElementSize(arr1) < ArrayElementSize(arr2)) return -1;
-  int ret = memcmp(arr1,arr2,ArrayElementSize(arr1)*ArrayLength(arr1));
-  if (ret == 0 && (ArrayLength(arr1) != ArrayLength(arr2))) {
-    return (ArrayLength(arr1) > ArrayLength(arr2)) ? 1 : -1;
+  //if (_ArrayElementSize(arr1) < _ArrayElementSize(arr2)) return -1;
+  int ret = memcmp(arr1,arr2,_ArrayElementSize(arr1)*_ArrayLength(arr1));
+  if (ret == 0 && (_ArrayLength(arr1) != _ArrayLength(arr2))) {
+    return (_ArrayLength(arr1) > _ArrayLength(arr2)) ? 1 : -1;
   } else {
     return ret;
   }
 }
 __attribute__((always_inline)) 
 static inline int ArrayCompare1(const void *arr1,const void *arr2) {
-  //if (ArrayElementSize(arr1) != ArrayElementSize(arr2)) return 0;
-  //if (ArrayLength(arr2) < ArrayLength(arr1)) return 0;
-  return memcmp(arr1,arr2,ArrayElementSize(arr1)*ArrayLength(arr1));
+  //if (_ArrayElementSize(arr1) != _ArrayElementSize(arr2)) return 0;
+  //if (_ArrayLength(arr2) < _ArrayLength(arr1)) return 0;
+  return memcmp(arr1,arr2,_ArrayElementSize(arr1)*_ArrayLength(arr1));
 }
 
 __attribute__((always_inline)) 
 static inline void *ArrayElemPtr(void *arr,unsigned ind) {
-  return ((char *)arr)+ind*ArrayElementSize(arr);
+  return ((char *)arr)+ind*_ArrayElementSize(arr);
 }
 
 __attribute__((always_inline)) 
 static inline void *ArrayAfter(void *arr,unsigned index,const void *value) {
-    int ind = (ArrayLength(arr) == 0) ? -1 : ArrayIndex(arr,index);
-    arr = ArraySize(arr,ArrayLength(arr)+1);
+    int ind = (_ArrayLength(arr) == 0) ? -1 : ArrayIndex(arr,index);
+    arr = ArraySize(arr,_ArrayLength(arr)+1);
     memmove(ArrayElemPtr(arr,ind+2),ArrayElemPtr(arr,ind+1),
-	    ArrayElementSize(arr)*(ArrayLength(arr)-ind-1));
-    memmove(ArrayElemPtr(arr,ind+1),value,ArrayElementSize(arr));
+	    _ArrayElementSize(arr)*(_ArrayLength(arr)-ind-1));
+    memmove(ArrayElemPtr(arr,ind+1),value,_ArrayElementSize(arr));
     return arr;
 }
 
 __attribute__((always_inline)) 
 static inline void *ArrayBefore(void *arr,unsigned index,const void *value) {
     unsigned ind = ArrayIndex(arr,index);
-    arr = ArraySize(arr,ArrayLength(arr)+1);
+    arr = ArraySize(arr,_ArrayLength(arr)+1);
     memmove(ArrayElemPtr(arr,ind+1),ArrayElemPtr(arr,ind),
-	    ArrayElementSize(arr)*(ArrayLength(arr)-ind-1));
-    memmove(ArrayElemPtr(arr,ind),value,ArrayElementSize(arr));
+	    _ArrayElementSize(arr)*(_ArrayLength(arr)-ind-1));
+    memmove(ArrayElemPtr(arr,ind),value,_ArrayElementSize(arr));
     return arr;
 }
 
@@ -316,33 +322,33 @@ static inline void *ArrayPush(void *arr,const void *value) {
 __attribute__((always_inline)) 
 static inline void *ArrayDelete(void *arr,int index,unsigned len) {
   unsigned start = ArrayIndex(arr,index);
-  if (start + len > ArrayLength(arr)
-      || start + len < start) len = ArrayLength(arr) - start;
-  memmove(((char *)arr)+start*ArrayElementSize(arr),
-	  ((char *)arr)+(start+len)*ArrayElementSize(arr),
-	  ArrayElementSize(arr)*(ArrayLength(arr)-start-len+1));
-  return ArraySize(arr,ArrayLength(arr)-len);
+  if (start + len > _ArrayLength(arr)
+      || start + len < start) len = _ArrayLength(arr) - start;
+  memmove(((char *)arr)+start*_ArrayElementSize(arr),
+	  ((char *)arr)+(start+len)*_ArrayElementSize(arr),
+	  _ArrayElementSize(arr)*(_ArrayLength(arr)-start-len+1));
+  return ArraySize(arr,_ArrayLength(arr)-len);
 }
 
 __attribute__((always_inline)) 
 static inline void *ArrayPop(void *arr,void *value) {
-  memmove(value,ArrayElemPtr(arr,0),ArrayElementSize(arr));
+  memmove(value,ArrayElemPtr(arr,0),_ArrayElementSize(arr));
   return ArrayDelete(arr,0,1);
 }
 
 __attribute__((always_inline)) 
 static inline void *ArrayPull(void *arr,void *value) {
-  memmove(value,ArrayElemPtr(arr,ArrayIndex(arr,-1)),ArrayElementSize(arr));
+  memmove(value,ArrayElemPtr(arr,ArrayIndex(arr,-1)),_ArrayElementSize(arr));
   return ArrayDelete(arr,-1,1);
 }
 
 __attribute__((always_inline)) 
 static inline void ArrayPeek(void *arr,void *value,int index) {
-  memmove(value,ArrayElemPtr(arr,ArrayIndex(arr,index)),ArrayElementSize(arr));
+  memmove(value,ArrayElemPtr(arr,ArrayIndex(arr,index)),_ArrayElementSize(arr));
 }
 __attribute__((always_inline)) 
 static inline void ArrayPoke(void *arr,const void *value,int index) {
-  memmove(ArrayElemPtr(arr,ArrayIndex(arr,index)),value,ArrayElementSize(arr));
+  memmove(ArrayElemPtr(arr,ArrayIndex(arr,index)),value,_ArrayElementSize(arr));
 }
 
 __attribute__((always_inline)) 
@@ -350,7 +356,7 @@ static inline void ArraySort(void *arr,int (*Compare)(const void *,const void *)
   unsigned *ptr = (unsigned *)arr;
   ptr[-3] = (unsigned)Compare;
   if (Compare) {
-    qsort(arr,ArrayLength(arr),ArrayElementSize(arr),Compare);
+    qsort(arr,_ArrayLength(arr),_ArrayElementSize(arr),Compare);
   }
 }
 
@@ -360,14 +366,14 @@ static inline void ArraySort(void *arr,int (*Compare)(const void *,const void *)
 // element at this index.
 __attribute__((always_inline)) 
 static inline unsigned ArrayFind(void *arr,const void *value) {
-  int (*Compare)(const void *,const void *) = (int (*)(const void *,const void *))ArrayCompareFunction(arr);
+  int (*Compare)(const void *,const void *) = (int (*)(const void *,const void *))_ArrayCompareFunction(arr);
   if (Compare) {
-    unsigned mid,low=0,high=ArrayLength(arr);
+    unsigned mid,low=0,high=_ArrayLength(arr);
 
     if (!arr) return 0;
     while (low < high) {
       mid = low + ((high - low) / 2);
-      if (Compare(((char *)arr)+mid*ArrayElementSize(arr),value) < 0) {
+      if (Compare(((char *)arr)+mid*_ArrayElementSize(arr),value) < 0) {
 	low = mid + 1;
       } else {
 	high = mid;
@@ -388,12 +394,12 @@ static inline void *ArrayFindEq(void *arr,const void *value) {
 __attribute__((always_inline)) 
 static inline unsigned ArrayFindWith(void *arr,const void *value,
 		       int (*Compare)(const void *,const void *)) {
-  unsigned mid,low=0,high=ArrayLength(arr);
+  unsigned mid,low=0,high=_ArrayLength(arr);
 
   if (!arr) return 0;
   while (low < high) {
     mid = low + ((high - low) / 2);
-    if (Compare(((char *)arr)+mid*ArrayElementSize(arr),value) < 0) {
+    if (Compare(((char *)arr)+mid*_ArrayElementSize(arr),value) < 0) {
       low = mid + 1;
     } else {
       high = mid;
@@ -404,7 +410,7 @@ static inline unsigned ArrayFindWith(void *arr,const void *value,
 
 __attribute__((always_inline)) 
 static inline void *ArrayInsert(void *arr,const void *value) {
-  int (*Compare)(const void *,const void *) = (int (*)(const void *,const void *))ArrayCompareFunction(arr);
+  int (*Compare)(const void *,const void *) = (int (*)(const void *,const void *))_ArrayCompareFunction(arr);
     if (Compare) {
       unsigned index = ArrayFind(arr,value);
       arr = ArrayBefore(arr,index,value);
@@ -414,14 +420,14 @@ static inline void *ArrayInsert(void *arr,const void *value) {
 
 __attribute__((always_inline)) 
 static inline void *ArrayReplace(void *arr,const void *value) {
-    int (*Compare)(const void *,const void *) = (int (*)(const void *,const void *))ArrayCompareFunction(arr);
+    int (*Compare)(const void *,const void *) = (int (*)(const void *,const void *))_ArrayCompareFunction(arr);
     if (Compare) {
       unsigned index = ArrayFind(arr,value);
-      if (index >= ArrayLength(arr)
+      if (index >= _ArrayLength(arr)
 	  || Compare(ArrayElemPtr(arr,index),value)) {
 	arr = ArrayBefore(arr,index,value);
       } else {
-	memmove(ArrayElemPtr(arr,index),value,ArrayElementSize(arr));
+	memmove(ArrayElemPtr(arr,index),value,_ArrayElementSize(arr));
       }
     }
     return arr;
@@ -431,21 +437,21 @@ __attribute__((always_inline))
 static inline void *ArrayReplaceWith(void *arr,const void *value,    
 		   int (*Compare)(const void *,const void *)) {
   unsigned index = ArrayFind(arr,value);
-  if (index >= ArrayLength(arr)
+  if (index >= _ArrayLength(arr)
       || Compare(ArrayElemPtr(arr,index),value)) {
     arr = ArrayBefore(arr,index,value);
   } else {
-    memmove(ArrayElemPtr(arr,index),value,ArrayElementSize(arr));
+    memmove(ArrayElemPtr(arr,index),value,_ArrayElementSize(arr));
   }
   return arr;
 }
 
 __attribute__((always_inline)) 
 static inline void *ArrayFindDelete(void *arr,void *value) {
-    int (*Compare)(const void *,const void *) = (int (*)(const void *,const void *))ArrayCompareFunction(arr);
+    int (*Compare)(const void *,const void *) = (int (*)(const void *,const void *))_ArrayCompareFunction(arr);
     if (Compare) {
       unsigned index = ArrayFind(arr,value);
-      if (index >= ArrayLength(arr) 
+      if (index >= _ArrayLength(arr) 
 	  || Compare(ArrayElemPtr(arr,index),value)) {
       } else {
 	arr=ArrayDelete(arr,index,1);
