@@ -9,7 +9,7 @@
 #include "cpp.h"
 
 #ifndef LIBTSCTL_VERSION
-#define LIBTSCTL_VERSION "1.0pre1"
+#define LIBTSCTL_VERSION "1.0pre2"
 #endif
 #ifndef LIBTSCTL_ORGANIZATION
 #define LIBTSCTL_ORGANIZATION customer
