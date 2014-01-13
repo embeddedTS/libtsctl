@@ -69,7 +69,7 @@ static int START(DIOTWI *twi)
   twi->t->Delay(twi->t,twi->delay);
   twi->dio->SetAsync(twi->dio,twi->TW_CLK,LOW);
   twi->start = 1;
-  return 0;
+  return TWISuccess;
 }
  
 static int STOP(DIOTWI *twi)
@@ -88,7 +88,7 @@ static int STOP(DIOTWI *twi)
   }
   twi->t->Delay(twi->t,twi->delay);
   twi->start = 0;
-  return 0;
+  return TWISuccess;
 }
  
 static int tx(DIOTWI *twi,unsigned char byte)
