@@ -37,7 +37,7 @@ PinMode ts8820PinModeGet(ts8820Pin *pin,int npin) {
   if (npin0 >= 14 && npin0 <= 19) {
     return pin->bus->BitGet16(pin->bus,8,6+(npin0-14)) ? MODE_PWM : MODE_DIO;
   }
-  if (npin == 20 || npin == 21) {
+  if (npin0 == 20 || npin0 == 21) {
     // TO DO: fall back to DIO mode for 0% or 100% duty cycle
     return MODE_PWM;
   }
