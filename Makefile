@@ -52,6 +52,8 @@ LDFLAGS+=-g
 endif
 CPPFLAGS=$(CFLAGS)
 
+-include Makefile.custom
+
 tsctl: $(DIR)/tsctl
 	@true
 
