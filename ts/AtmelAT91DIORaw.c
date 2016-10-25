@@ -41,7 +41,7 @@ void AtmelAT91DIORawFini(AtmelAT91DIORaw *dio) {
 
 __attribute__((always_inline)) 
 void _AtmelAT91DIORawDirSet(AtmelAT91DIORaw *dio,int Num,int asOutput) {
-  dio->sub->Poke32(dio->sub,asOutput ? I(0x10) : I(0x14),1<<Num);
+  dio->sub->Poke32(dio->sub,asOutput ? I(0x10) : I(0x14),1<<I(Num));
   //dio->sub->Poke32(dio->sub,I(0),1<<Num);
   /*
   dio->sub->BitSet32(dio->sub,I(0),I(Num));
@@ -56,8 +56,8 @@ void AtmelAT91DIORawDirSet(AtmelAT91DIORaw *dio,int Num,int asOutput) {
 
 __attribute__((always_inline)) 
 void _AtmelAT91DIORawDataSet(AtmelAT91DIORaw *dio,int Num,int asHigh) {
-  dio->sub->Poke32(dio->sub,asHigh ? I(0x30) : I(0x34),1<<Num);
-  //dio->sub->BitSet32(dio->sub,asHigh?I(0x30):I(0x34),I(Num));
+  //dio->sub->Poke32(dio->sub,asHigh ? I(0x30) : I(0x34),1<<I(Num));
+  dio->sub->BitSet32(dio->sub,asHigh?I(0x30):I(0x34),I(Num));
 }
 void AtmelAT91DIORawDataSet(AtmelAT91DIORaw *dio,int Num,int asHigh) {
   if (I(Num) > 31) return;
