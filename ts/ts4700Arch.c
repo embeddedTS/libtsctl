@@ -302,8 +302,8 @@ static void ts4700SPIChipSelect(WBSPI *ob,unsigned num,int asserted) {
     if (!dio) dio = ts4700__DIOInit0(0,0);
     switch (num) {
     case 1: dio->SetAsync(dio,101,asserted?LOW:INPUT); break;
-    case 2: dio->SetAsync(dio,101,asserted?LOW:INPUT); break;
-    case 3: dio->SetAsync(dio,101,asserted?LOW:INPUT); break;
+    case 2: dio->SetAsync(dio,100,asserted?LOW:INPUT); break;
+    case 3: dio->SetAsync(dio,99,asserted?LOW:INPUT); break;
     }
     return;
     num = 0;
