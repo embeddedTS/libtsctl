@@ -8,7 +8,7 @@ http://libtsctl.blogspot.com
 
 For up to date documentation on libtsctl, please visit the official
 documentation wiki at:
-http://wiki.embeddedarm.com/wiki/Tsctl
+http://wiki.embeddedTS.com/wiki/Tsctl
 
 The project files are divided into four parts.  The root contains all the
 same source code (libtsctl clients such as tsctl).  The ts/ sub-directory
@@ -22,7 +22,7 @@ To build you must define a variable (i.e. by prefixing the make command
 with an assignment) which defines your architecture.  Currently there are
 three supported: "ARCH=cavium" for all Cavium CNS2132 based CPU boards (e.g.
 TS-4500 and TS-75XX) which do not have a branch-exchange instruction, 
-"ARCH=noncavium" for all other Technologic Systems boards, and "ARCH=x86"
+"ARCH=noncavium" for all other embeddedTS boards, and "ARCH=x86"
 for a PC; this last option is only valid for libnettsctl based builds.  If
 no architecture is specified, "ARCH=noncavium" is assumed.
 

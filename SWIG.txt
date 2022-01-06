@@ -61,7 +61,7 @@ unexplainable compilation errors.
 
 3. Ensure you have the correct compiler
 
-Technologic Systems provides several cross-tools, as well as an on-board
+embeddedTS provides several cross-tools, as well as an on-board
 compiler for most systems.  For best results, you should pick the compiler
 which most closely matches the requirements of the interpreter you are going
 to use.

@@ -492,7 +492,7 @@ int canctl(int argc,char *argv[]) {
     //{ 0, OptionBoolean ,&OptRecover,"reco<v>er","             Automatically recover from bus-off" },
     { 0, OptionBoolean ,&OptVerbose,"<V>erbose" , "           verbose error messages during rxtest" },
     { 0, DoStressTest  ,&OptGoody ,"<G>oody" , "            Run CAN bus stress test" },
-    { 0,0,0,"Technologic Systems CAN controller manipulation.\n","" }
+    { 0,0,0,"embeddedTS CAN controller manipulation.\n","" }
   };
 
   OptionsParse(argc,argv,opts);
@@ -551,6 +551,6 @@ int main(int argc,char *argv[]) {
   but it would only work if the remote server also supports the tsctl
   protocol, which is implemented separately.
  */
-// Author: Michael Schmidt (michael@embeddedARM.com)
-// Copyright (c) 2012, Technologic Systems, All Rights Reserved
+// Author: Michael Schmidt (michael@embeddedTS.com)
+// Copyright (c) 2012-2022 Technologic Systems, Inc. dba embeddedTS, All Rights Reserved
 // Refer to the COPYRIGHT file provided with this project for licensing terms.

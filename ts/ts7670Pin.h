@@ -33,6 +33,6 @@ PinMode ts7670PinModeGet(ts7670Pin* ob,int PinNumber);
 PinResult ts7670PinModeSet(ts7670Pin* ob,int PinNumber,PinMode Mode);
 #endif
 
-// Author: Michael Schmidt (michael@embeddedARM.com)
-// Copyright (c) 2013, Technologic Systems, All Rights Reserved
+// Author: Michael Schmidt (michael@embeddedTS.com)
+// Copyright (c) 2013-2022 Technologic Systems, Inc. dba embeddedTS, All Rights Reserved
 // Refer to the COPYRIGHT file provided with this project for licensing terms.

@@ -43,6 +43,6 @@ SPIResult AtmelAT91SPIClockSet(AtmelAT91SPI* ob,unsigned hz);
 SPIResult AtmelAT91SPIEdgeSet(AtmelAT91SPI* ob,int posedge);
 #endif
 
-// Author: Michael Schmidt (michael@embeddedARM.com)
-// Copyright (c) 2012, Technologic Systems, All Rights Reserved
+// Author: Michael Schmidt (michael@embeddedTS.com)
+// Copyright (c) 2012-2022 Technologic Systems, Inc. dba embeddedTS, All Rights Reserved
 // Refer to the COPYRIGHT file provided with this project for licensing terms.

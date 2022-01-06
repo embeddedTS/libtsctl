@@ -76,6 +76,6 @@ int32 NetAIOReadys8(NetAIO *ob,const int8* buf);
 int32 NetAIOReadys16(NetAIO *ob,const int16* buf);
 int32 NetAIOReadys32(NetAIO *ob,const int32* buf);
 #endif
-// Author: Michael Schmidt (michael@embeddedARM.com)
-// Copyright (c) 2012, Technologic Systems, All Rights Reserved
+// Author: Michael Schmidt (michael@embeddedTS.com)
+// Copyright (c) 2012-2022 Technologic Systems, Inc. dba embeddedTS, All Rights Reserved
 // Refer to the COPYRIGHT file provided with this project for licensing terms.

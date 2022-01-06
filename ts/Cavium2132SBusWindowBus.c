@@ -161,6 +161,6 @@ void Cavium2132SBusWindowBusRefresh(Cavium2132SBusWindowBus *bus) {
 void Cavium2132SBusWindowBusCommit(Cavium2132SBusWindowBus *bus,int forceall) {
   bus->sbus->Commit(bus->sbus,forceall);
 }
-// Author: Michael Schmidt (michael@embeddedARM.com)
-// Copyright (c) 2011, Technologic Systems, All Rights Reserved
+// Author: Michael Schmidt (michael@embeddedTS.com)
+// Copyright (c) 2011-2022 Technologic Systems, Inc. dba embeddedTS, All Rights Reserved
 // Refer to the COPYRIGHT file provided with this project for licensing terms.

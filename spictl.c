@@ -1072,7 +1072,7 @@ int main(int argc, char **argv) {
     { 1, (opt_func)opt_spiseq,&opt_doseq  ,"<l>un", "id             Talk to specified chip number" },
     { 2, (opt_func)opt_int   ,&opt_server ,"<s>erver", "<port>      Daemonize and run as server listening on port" },
     { 1, (opt_func)opt_spiseq,&opt_client ,"<p>ort", "<host><:port> Talk to spictl server" },
-    { 0,0,0,"Technologic Systems SPI controller manipulation.\n\nGeneral options:\n",
+    { 0,0,0,"embeddedTS SPI controller manipulation.\n\nGeneral options:\n",
       "hex octets are hexadecimal bytes. for example,\n"
       "this command reads 32 bytes of CS#1 SPI flash from address 8192:\n"
       "./spictl -l 1 -w 0B:00:20:00:00 -r 32\n"

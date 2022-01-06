@@ -34,6 +34,6 @@ TimeResult Cavium2132TimeTimeoutQ(Cavium2132Time* ob,unsigned start,unsigned end
 unsigned Cavium2132TimeTPS(Cavium2132Time* ob);
 #endif
 
-// Author: Michael Schmidt (michael@embeddedARM.com)
-// Copyright (c) 2012, Technologic Systems, All Rights Reserved
+// Author: Michael Schmidt (michael@embeddedTS.com)
+// Copyright (c) 2012-2022 Technologic Systems, Inc. dba embeddedTS, All Rights Reserved
 // Refer to the COPYRIGHT file provided with this project for licensing terms.

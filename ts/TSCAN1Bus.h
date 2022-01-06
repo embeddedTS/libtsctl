@@ -94,6 +94,6 @@ unsigned short TSCAN1BusBitsGet16(TSCAN1Bus* ob,int Address,int BitMSB,int BitLS
 unsigned TSCAN1BusBitsGet32(TSCAN1Bus* ob,int Address,int BitMSB,int BitLSB);
 #endif
 
-// Author: Michael Schmidt (michael@embeddedARM.com)
-// Copyright (c) 2013, Technologic Systems, All Rights Reserved
+// Author: Michael Schmidt (michael@embeddedTS.com)
+// Copyright (c) 2013-2022 Technologic Systems, Inc. dba embeddedTS, All Rights Reserved
 // Refer to the COPYRIGHT file provided with this project for licensing terms.

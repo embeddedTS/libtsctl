@@ -1,5 +1,5 @@
-// Author: Michael Schmidt (michael@embeddedARM.com)
-// Copyright (c) 2011, Technologic Systems, All Rights Reserved
+// Author: Michael Schmidt (michael@embeddedTS.com)
+// Copyright (c) 2011-2022 Technologic Systems, Inc. dba embeddedTS, All Rights Reserved
 // Refer to the COPYRIGHT file provided with this project for licensing terms.
 
 // build log
@@ -27012,10 +27012,6 @@ It is otherwise accessed like a normal C array (and you should not access
 beyond the bounds of the array), although you must use the functions in 
 Array.h for allocating, freeing, and performing Array functions on it.  
 For a constant length C array, the array is passed instead of a pointer.
-
-More complete documentation on this can be found here:
-http://oz.embeddedARM.com/~michael/Array.html
-http://oz.embeddedARM.com/~michael/Conventions.html
 
 Functions which are affected by this change, and their new prototypes, are
 shown below:

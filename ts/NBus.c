@@ -202,7 +202,7 @@ DefinitionFunctionsBit(NBus,unsigned char,8)
 DefinitionFunctionsBit(NBus,unsigned short,16)
 DefinitionFunctionsBit(NBus,unsigned,32)
 
-// Author: Michael Schmidt (michael@embeddedARM.com)
-// Some portions based on code by Kris Bahnsen (kris@embeddedARM.com)
-// Copyright (c) 2013, Technologic Systems, All Rights Reserved
+// Author: Michael Schmidt (michael@embeddedTS.com)
+// Some portions based on code by Kris Bahnsen (kris@embeddedTS.com)
+// Copyright (c) 2013-2022 Technologic Systems, Inc. dba embeddedTS, All Rights Reserved
 // Refer to the COPYRIGHT file provided with this project for licensing terms.

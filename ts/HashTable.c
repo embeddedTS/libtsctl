@@ -326,7 +326,7 @@ HashTableDestroy(HashTable *h, int free_values)
  * NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS
  * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  *
- * Modifications to original source are Copyright (c)2012, Technologic Systems
+ * Modifications to original source are Copyright (c)2012-2022 Technologic Systems, Inc. dba embeddedTS
 */
 
 int ASCIIZEqual(char *str1,char *str2) {

@@ -23,5 +23,5 @@
 #define co(x)          (__ctx->x)
 #endif
 /*
-  Author: Michael Schmidt (michael@embeddedARM.com)
+  Author: Michael Schmidt (michael@embeddedTS.com)
  */

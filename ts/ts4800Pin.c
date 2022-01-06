@@ -137,7 +137,7 @@ when Mux bus is enabled, these are Mux pins
 when it is disabled, they are DIO pins
 bus adrs 0x12 bit 0 is set for Mux, clear for DIO
  */
-// Author: Michael Schmidt (michael@embeddedARM.com)
-// Copyright (c) 2011, Technologic Systems, All Rights Reserved
+// Author: Michael Schmidt (michael@embeddedTS.com)
+// Copyright (c) 2011-2022 Technologic Systems, Inc. dba embeddedTS, All Rights Reserved
 // Refer to the COPYRIGHT file provided with this project for licensing terms.
 #endif

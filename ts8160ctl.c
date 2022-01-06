@@ -27,7 +27,7 @@ int main(int argc,char *argv[]) {
     { 2, OptionUnsigned, &OptLED,     "<L>ED", "<0|1> set and/or get LED state" },
     { 0, OptionBoolean,  &OptIgnore,  "i<g>nore", "   ignore wake up jumper/signal during sleep" },
     { 0, OptionBoolean,  &OptTemp,    "<t>emp", "     TWI test to read temp sensor, if present" }, 
-    { 0,0,0, "Technologic Systems TS-8160 Control Program\n", 
+    { 0,0,0, "embeddedTS TS-8160 Control Program\n", 
       "\nNote that sleep times will be rounded up to the granularity of sleep, which is\n"
       "8 seconds for sleeps under ~3 days and 2048 seconds for longer sleeps.  Actual\n"
       "sleep time will be +/- 10% the requested time due to low-power oscillator\n"
@@ -218,6 +218,6 @@ int main(int argc,char *argv[]) {
     attempt to sleep longer than the maximum length is an error and
     we will not sleep.
 */
-// Author: Michael Schmidt (michael@embeddedARM.com)
-// Copyright (c) 2011, Technologic Systems, All Rights Reserved
+// Author: Michael Schmidt (michael@embeddedTS.com)
+// Copyright (c) 2011-2022 Technologic Systems, Inc. dba embeddedTS, All Rights Reserved
 // Refer to the COPYRIGHT file provided with this project for licensing terms.

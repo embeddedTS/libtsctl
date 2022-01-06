@@ -45,6 +45,6 @@ DIOCaps ts4200DIOCapabilities(ts4200DIO* ob,unsigned num);
 int ts4200DIOGetMulti(ts4200DIO* ob,char *state,int offset);
 #endif
 
-// Author: Michael Schmidt (michael@embeddedARM.com)
-// Copyright (c) 2012, Technologic Systems, All Rights Reserved
+// Author: Michael Schmidt (michael@embeddedTS.com)
+// Copyright (c) 2012-2022 Technologic Systems, Inc. dba embeddedTS, All Rights Reserved
 // Refer to the COPYRIGHT file provided with this project for licensing terms.

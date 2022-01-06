@@ -486,7 +486,7 @@ int LocalSystemEchoNumber(LocalSystem* ob,int n) {
 
 const char copyright[] 
 __attribute__ ((weak)) 
-  = "Copyright (c) Technologic Systems - " __DATE__ ; 
+  = "Copyright (c) embeddedTS - " __DATE__ ; 
 //const char hoststring[] __attribute__ ((weak)) = 
 //  "CompileHost - $(shell uname -a)"; 
 const char build[] 
